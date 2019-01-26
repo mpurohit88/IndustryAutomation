@@ -7,6 +7,7 @@ import Modal from '../Modals/StandardModal'
 import Create from '../../containers/Quote/Create'
 import { Registration as ConpanyRegistration } from '../../containers/Company'
 import { Registration as UserRegistration } from '../../containers/User'
+import { Add as AddProduct } from '../../containers/Product'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -19,7 +20,8 @@ export default class AppBar extends React.Component {
       lgScShow: false,
       lgShow: false,
       comRegShow: false,
-      userRegShow: false
+      userRegShow: false,
+      productShow: false
     };
   }
 
@@ -30,6 +32,8 @@ export default class AppBar extends React.Component {
   handleCompanyRegClick = (flag) => this.setState({ comRegShow: flag });
 
   handleUserRegClick = (flag) => this.setState({ userRegShow: flag });
+
+  handleProductClick = (flag) => this.setState({ productShow: flag });
 
   render() {
     return (
@@ -91,6 +95,16 @@ export default class AppBar extends React.Component {
         >
           User Registration
         </Button>
+        <Button
+          style={{
+            marginLeft: 40,
+            color: `white`
+          }}
+          onClick={() => this.handleProductClick(true)}
+          variant='primary'
+        >
+          Add Product
+        </Button>
       </div>
         
         <ConpanyRegistration heading='Company Registration' show={this.state.comRegShow} lgClose={() => this.handleCompanyRegClick(false)} handleModelClick={this.handleCompanyRegClick}/>
@@ -98,6 +112,8 @@ export default class AppBar extends React.Component {
         <UserRegistration heading='User Registration' show={this.state.userRegShow} lgClose={() => this.handleUserRegClick(false)} handleModelClick={this.handleUserRegClick}/>
           
         <Create heading='Create Quote' show={this.state.lgShow} lgClose={this.lgClose} handleModelClick={this.handleModelClick}/>
+
+        <AddProduct heading='Add Product' show={this.state.productShow} lgClose={this.handleProductClick} handleModelClick={this.handleProductClick}/>
 
         {/* <Modal
           size="lg"

@@ -1,0 +1,17 @@
+import axios from 'axios';
+
+const host = 'http://localhost:3000/';
+
+export const registerUser = function (newUser) {
+    return new Promise(function (resolve, reject) {
+        axios(host + 'api/user/register', {
+            method: 'POST',
+            data: newUser
+        }).then(res => {
+            resolve(res.data);
+        }).catch(err => {
+                console.log(err);
+                reject(err);
+            });
+    });
+}

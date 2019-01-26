@@ -1,5 +1,6 @@
 const http = require('http')
 const express = require('express')
+const bodyParser=require('body-parser');
 
 const app = express()
 
@@ -10,6 +11,13 @@ app.use(require('morgan')('short'));
   const webpack = require('webpack')
   const webpackConfig = require('./webpack/common.config.babel')
   const compiler = webpack(webpackConfig)
+  const userRouter = require('./server/routes/user.js');
+
+  app.use(bodyParser());
+
+  // app.use(logger('dev'));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
 
   app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true
@@ -20,6 +28,8 @@ app.use(require('morgan')('short'));
   }))
 
   app.use(express.static(__dirname + '/'))
+
+  app.use('/api/user', userRouter);
 })()
 
 app.get(/.*/, function root(req, res) {

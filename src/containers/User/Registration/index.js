@@ -5,6 +5,8 @@ import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
 import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
+
+import { registerUser } from '../../../core/httpClient'
 /* component styles */
 import { styles } from './styles.scss'
 
@@ -21,6 +23,7 @@ class Registration extends Component {
 				area: '',
 				address: '',
 				mobNo: '',
+				email: '',
 				isActive: true
 			},
 			company: [{text: 'Individual', value:1},{text: 'Sole proprietorship', value:2},{text: 'Partnership', value:3},{text: 'Private limited company', value:4}],
@@ -48,11 +51,11 @@ class Registration extends Component {
 		event.preventDefault();
 		let userData = this.state.newUser;
 
-		// registerAssociate(userData).then((response) => {
-		// 		console.log(response);
-		// }).catch(error => {
-		// 	console.log(error.response)
-		// });
+		registerUser(userData).then((response) => {
+				console.log(response);
+		}).catch(error => {
+			console.log(error.response)
+		});
 	}
 
   render() {
@@ -61,7 +64,7 @@ class Registration extends Component {
 				<Form>
 						<Row className="show-grid">
 							<Col xs={4} md={6}>
-                                <Dropdown
+                <Dropdown
 									id='company_name'
 									name='company_name'
 									label='Select Company:'
@@ -79,13 +82,13 @@ class Registration extends Component {
 								<Input label='Area:' type='input' onChange={this.handleInput} value={this.state.area} name='area' id='area' placeholder='Enter Area'/>
 							</Col>
               <Col xs={12} md={12}>
-								<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.address} name='address' id='address' placeholder='Enter Country'/>
+								<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.address} name='address' id='address' placeholder='Enter Address'/>
 							</Col>
               <Col xs={4} md={6}>
 								<Input label='Mob. No.:' type='input' onChange={this.handleInput} value={this.state.mobNo} name='mobNo' id='mobNo' placeholder='Enter Mobile Number'/>
 							</Col>
               <Col xs={4} md={6}>
-								<Input label='Email:' type='input' placeholder='Enter Email'/>
+								<Input label='Email:' type='email' onChange={this.handleInput} value={this.state.email} name='email' id='email'placeholder='Enter Email'/>
 							</Col>
 							<Col xs={4} md={6}>
 								<Checkbox type="checkbox" label="Yes" />
