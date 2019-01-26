@@ -27,6 +27,7 @@ class StandardModal extends Component {
       modalKey,
       modalState,
       title,
+      heading,
       ...other
     } = this.props
     const { open } = this.state
@@ -42,7 +43,7 @@ class StandardModal extends Component {
         >
           <Modal.Header closeButton>
             <Modal.Title id="example-modal-sizes-title-lg">
-              Create Quote
+              {heading}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -50,9 +51,9 @@ class StandardModal extends Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" type="button"
-              onClick={() => this.setState({ lgScShow: true, lgShow: false })}
+              onClick={(e) => this.props.handleSubmit(e)}
               >
-              Create Quote
+              Save
             </Button>
             <Button variant="secondary" type="button" 
               style={{

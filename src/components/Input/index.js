@@ -1,4 +1,4 @@
-import React                   from 'react'
+import React, {Fragment}                   from 'react'
 import PropTypes               from 'prop-types'
 import { Form } from 'react-bootstrap';
 
@@ -6,15 +6,17 @@ import { Form } from 'react-bootstrap';
 import { styles } from './styles.scss'
 
 const Input = (props) => {
-  const { color, children } = props
+  const { color, children, type, onChange, value, placeholder, id, name } = props
   return (
-    <Form.Group controlId="formBasicEmail">
-        <Form.Label>{props.label}</Form.Label>
-        <Form.Control type={props.type} placeholder={props.placeholder} />
-        <Form.Text className="text-muted">
-        	{props.hint}
-        </Form.Text>
-    </Form.Group>
+		<Fragment>
+			<Form.Group controlId={id}>
+				<Form.Label>{props.label}</Form.Label>
+				<Form.Control type={type} placeholder={placeholder} onChange={onChange} value={value} name={name}/>
+				<Form.Text className="text-muted" >
+					{props.hint}
+				</Form.Text>
+			</Form.Group>
+		</Fragment>
   )
 }
 

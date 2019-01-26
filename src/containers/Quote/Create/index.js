@@ -1,23 +1,34 @@
 import React, { Component } from 'react'
 import { Form, Row, Col, Table } from 'react-bootstrap';
 
+import { StandardModal } from '../../../components/Modals'
 import Input from '../../../components/Input'
 import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
 /* component styles */
 import { styles } from './styles.scss'
 
+// Quote Create
 class Create extends Component {
 	constructor(props){
 		super(props);
 	
 		this.state={
+			newQuote: {
+				party_name: '',
+				address: '',
+				phoneNo: '',
+				mobileNo: ''
+			},
 			products: [],
-			natureOfBusiness: [{text: 'Individual', value:1},{text: 'Sole proprietorship', value:2},{text: 'Partnership', value:3},{text: 'Private limited company', value:4}],
+			party_names: [{text: 'Individual', value:1},{text: 'Sole proprietorship', value:2},{text: 'Partnership', value:3},{text: 'Private limited company', value:4}],
 		}
 
 		this.handleAddEvent = this.handleAddEvent.bind(this);
 		this.handleRowDel = this.handleRowDel.bind(this);
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleInput = this.handleInput.bind(this);
 	}
 
 	handleRowDel(product) {
@@ -48,7 +59,32 @@ class Create extends Component {
     }
     this.state.products.push(product);
     this.setState(this.state.products);
-  }
+	}
+		
+	handleInput(e) {
+		let value = e.target.value;
+		let name = e.target.name;
+
+		this.setState( prevState => {
+			 return { 
+					newQuote : {
+									 ...prevState.newQuote, [name]: value
+									}
+			 }
+		}, () => console.log(this.state.newQuote)
+		)
+	}
+
+	handleSubmit(event){
+		event.preventDefault();
+		let userData = this.state.newQuote;
+
+		// registerAssociate(userData).then((response) => {
+		// 		console.log(response);
+		// }).catch(error => {
+		// 	console.log(error.response)
+		// });
+	}
 
   render() {
 		const that = this;
@@ -68,27 +104,28 @@ class Create extends Component {
 		});
 		
     return (
+			<StandardModal heading='Create Quote' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
 				<Form>
 						<Row className="show-grid">
 							<Col xs={8} md={6}>
 								<Dropdown
-									id='nature_of_Business'
-									name='nature_of_Business'
+									id='party_name'
+									name='party_name'
 									label='Select Party Name:'
-									// value={this.state.newUser.nature_of_Business} 
-									// onChange={this.handleInput}
-									placeholder = {'Nature of Business'}
-									options={this.state.natureOfBusiness}
+									value={this.state.newQuote.party_name} 
+									onChange={this.handleInput}
+									placeholder = {'Party Name'}
+									options={this.state.party_names}
 								/>
 							</Col>
 							<Col xs={4} md={6}>
-								<Input label='Address:' type='input' placeholder='Enter Address'/>
+								<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.newQuote.address} name='address' id='address' placeholder='Enter Address'/>
 							</Col>
 							<Col xs={4} md={6}>
-								<Input label='Phone no.:' type='input' placeholder='Enter Phone No'/>
+								<Input label='Phone no.:' type='input' onChange={this.handleInput} value={this.state.newQuote.phoneNo} name='phoneNo' id='phoneNo' placeholder='Enter Phone No'/>
 							</Col>
 							<Col xs={4} md={6}>
-								<Input label='Mobile no.:' type='input' placeholder='Enter Mobile No'/>
+								<Input label='Mobile no.:' type='input' onChange={this.handleInput} value={this.state.newQuote.mobileNo} name='mobileNo' id='mobileNo' placeholder='Enter Mobile No'/>
 							</Col>
 						</Row>
 						<Table responsive>
@@ -140,6 +177,7 @@ class Create extends Component {
 						</Table>
 					<Checkbox type="checkbox" label="Check me out" />
 				</Form>  
+			</StandardModal>
     )
   }
 }

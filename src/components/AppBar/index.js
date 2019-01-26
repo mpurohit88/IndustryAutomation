@@ -5,6 +5,8 @@ import React from 'react'
 import Button from '../Button'
 import Modal from '../Modals/StandardModal'
 import Create from '../../containers/Quote/Create'
+import { Registration as ConpanyRegistration } from '../../containers/Company'
+import { Registration as UserRegistration } from '../../containers/User'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -16,15 +18,20 @@ export default class AppBar extends React.Component {
     this.state = {
       lgScShow: false,
       lgShow: false,
+      comRegShow: false,
+      userRegShow: false
     };
   }
 
   lgClose = () => this.setState({ lgShow: false });
+
   handleModelClick = (flag) => this.setState({ lgShow: flag });
 
-  render() {
-    let lgScClose = () => this.setState({ lgScShow: false });
+  handleCompanyRegClick = (flag) => this.setState({ comRegShow: flag });
 
+  handleUserRegClick = (flag) => this.setState({ userRegShow: flag });
+
+  render() {
     return (
     <div className='test'
       style={{
@@ -64,12 +71,33 @@ export default class AppBar extends React.Component {
         >
           Create Quote
         </Button>
-        
+        <Button
+          style={{
+            marginLeft: 40,
+            color: `white`
+          }}
+          onClick={() => this.handleCompanyRegClick(true)}
+          variant='primary'
+        >
+          Company Registration
+        </Button>
+        <Button
+          style={{
+            marginLeft: 40,
+            color: `white`
+          }}
+          onClick={() => this.handleUserRegClick(true)}
+          variant='primary'
+        >
+          User Registration
+        </Button>
       </div>
+        
+        <ConpanyRegistration heading='Company Registration' show={this.state.comRegShow} lgClose={() => this.handleCompanyRegClick(false)} handleModelClick={this.handleCompanyRegClick}/>
 
-        <Modal show={this.state.lgShow} lgClose={this.lgClose} handleModelClick={this.handleModelClick}>
-          <Create />
-        </Modal>
+        <UserRegistration heading='User Registration' show={this.state.userRegShow} lgClose={() => this.handleUserRegClick(false)} handleModelClick={this.handleUserRegClick}/>
+          
+        <Create heading='Create Quote' show={this.state.lgShow} lgClose={this.lgClose} handleModelClick={this.handleModelClick}/>
 
         {/* <Modal
           size="lg"
