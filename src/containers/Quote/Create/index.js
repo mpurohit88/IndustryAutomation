@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Form, Row, Col, Table } from 'react-bootstrap';
 
 import { StandardModal } from '../../../components/Modals'
@@ -108,6 +108,7 @@ class Create extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
+		const that = this;
 
 		let data = {
 			quote: this.state.newQuote,
@@ -115,7 +116,8 @@ class Create extends Component {
 		}
 
 		createQuote(data).then((response) => {
-				console.log(response);
+			that.props.lgClose(false);
+			that.props.handleSuccess(true, response);
 		}).catch(error => {
 			console.log(error.response)
 		});
@@ -139,6 +141,7 @@ class Create extends Component {
 		});
 		
     return (
+		<Fragment>
 			<StandardModal heading='Create Quote' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
 				<Form>
 						<Row className="show-grid">
@@ -216,6 +219,7 @@ class Create extends Component {
 					<Checkbox type="checkbox" label="Check me out" />
 				</Form>  
 			</StandardModal>
+		</Fragment>
     )
   }
 }
