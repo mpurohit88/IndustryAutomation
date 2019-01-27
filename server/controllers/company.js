@@ -27,4 +27,14 @@ const register = function(req, res, next){
     }
 };
 
-module.exports = {register: register};
+const all = function(req, res, next){
+	try {
+		new Company({}).all().then(function(companyList) {
+			res.send(companyList);
+		});
+ } catch (err) {
+	 console.log("Error: ", err);
+ }
+}
+
+module.exports = {register: register, all: all};

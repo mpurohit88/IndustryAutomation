@@ -7,6 +7,8 @@ import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
 
 import { registerUser } from '../../../core/api/user'
+import { all as getCompanyList } from '../../../core/api/company'
+
 /* component styles */
 import { styles } from './styles.scss'
 
@@ -27,11 +29,23 @@ class Registration extends Component {
 				password: '',
 				isActive: true
 			},
+			companyList: [],
 			company: [{text: 'Individual', value:1},{text: 'Sole proprietorship', value:2},{text: 'Partnership', value:3},{text: 'Private limited company', value:4}],
 		}
 		
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleInput = this.handleInput.bind(this);
+	}
+
+	componentDidMount() {
+		const that = this;
+		getCompanyList().then((companyList) => {
+			let companyDropdownList = companyList.map((company) => {
+				return { text: company.name, value: company.id }
+			});
+
+			that.setState({companyList: companyDropdownList})
+		});
 	}
 	
 	handleInput(e) {
@@ -70,7 +84,8 @@ class Registration extends Component {
 									name='company_name'
 									label='Select Company:'
 									onChange={this.handleInput} value={this.state.name}
-									options={this.state.company}
+									options={this.state.companyList}
+									placeholder='--Select Company--'
 								/>
 							</Col>
 							<Col xs={4} md={6}>
