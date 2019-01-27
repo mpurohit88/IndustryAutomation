@@ -39,7 +39,7 @@ app.use(require('morgan')('short'));
 })()
 
 app.get(/.*/, function root(req, res) {
-  res.sendFile(__dirname + '/src/index.html')
+  res.sendFile(__dirname + '/dist/index.html')
 })
 
 const server = http.createServer(app)

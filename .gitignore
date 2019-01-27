@@ -1,6 +1,6 @@
 *.DS_Store
 yarn-error.log
-dist
+# dist
 node_modules
 npm-debug.log
 .tmp
