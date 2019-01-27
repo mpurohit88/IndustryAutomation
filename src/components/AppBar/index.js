@@ -58,6 +58,15 @@ export default class AppBar extends React.Component {
           flexDirection: `row`
         }}
       >
+      <div 
+       style={{
+        minWidth: 1000,
+        display: `flex`,
+        flex: `0 1 auto`,
+        flexDirection: `row`,
+        alignItems: `stretch`
+      }}
+      >
         <h2 style={{ margin: 0 }}>
           <Link
             to="/"
@@ -109,6 +118,18 @@ export default class AppBar extends React.Component {
         >
           Add Product
         </Button>
+        </div>
+        <div>
+        <Link style={{
+              color: `white`,
+              textDecoration: `none`,
+            }}
+            to="/login">Logout</Link>
+        </div>
+        {/* <Link to="/admin">admin</Link>
+        <Link to="/user">user</Link>
+        <Link to="/test">test</Link> */}
+
       </div>
         
         {
