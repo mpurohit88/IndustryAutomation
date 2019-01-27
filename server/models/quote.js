@@ -14,7 +14,7 @@ Quote.prototype.create = function(){
   return new Promise(function(resolve, reject) {
   connection.getConnection(function(error, connection){
     if (error) {
-			throw error;
+		throw error;
     }
     
     let values = [
@@ -23,7 +23,9 @@ Quote.prototype.create = function(){
 
     connection.query('INSERT INTO quote(party_name,address,phoneNo,mobileNo,isActive,createdBy) VALUES ?', [values], function(error,rows,fields){
       
-        var quote_id = rows.insertId;
+        if(error) reject(error);
+
+        let quote_id = rows.insertId;
 
         let productValues = [
         ];
@@ -32,13 +34,13 @@ Quote.prototype.create = function(){
             productValues.push([quote_id, product.product_id, product.qty, product.gst, that.isActive, that.createdBy])
         });
 
-        connection.query('INSERT INTO quote_product(quote_id,product_id,quantity,gstn,isActive,createdBy) VALUES ?', [productValues], function(error,rows,fields){
+        connection.query('INSERT INTO quote_product(quote_id,product_id,quantity,gstn,isActive,createdBy) VALUES ?', [productValues], function(error,productRows,fields){
       
             if(!error){ 
-            resolve(rows);
+                resolve({'quote_id': quote_id});
             } else {
             console.log("Error...", error);
-            reject(error)
+                reject(error)
             }
 
             connection.release();
