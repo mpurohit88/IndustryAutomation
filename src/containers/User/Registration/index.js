@@ -24,6 +24,7 @@ class Registration extends Component {
 				address: '',
 				mobNo: '',
 				email: '',
+				password: '',
 				isActive: true
 			},
 			company: [{text: 'Individual', value:1},{text: 'Sole proprietorship', value:2},{text: 'Partnership', value:3},{text: 'Private limited company', value:4}],
@@ -63,7 +64,7 @@ class Registration extends Component {
 			<Modal handleSubmit={this.handleSubmit} heading='User Registration' show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
 				<Form>
 						<Row className="show-grid">
-							<Col xs={4} md={6}>
+							<Col xs={12} md={12}>
                 <Dropdown
 									id='company_name'
 									name='company_name'
@@ -72,16 +73,19 @@ class Registration extends Component {
 									options={this.state.company}
 								/>
 							</Col>
-							<Col xs={12} md={12}>
+							<Col xs={4} md={6}>
 								<Input label='Name of User:' type='input' onChange={this.handleInput} value={this.state.name} name='name' id='name' placeholder='Enter Name of User'/>
+							</Col>
+							<Col xs={4} md={6}>
+								<Input label='Password:' type='password' onChange={this.handleInput} value={this.state.password} name='password' id='password' placeholder='Enter Password'/>
 							</Col>
 							<Col xs={4} md={6}>
 								<Input label='Designation:' type='input' onChange={this.handleInput} value={this.state.designation} name='designation' id='designation' placeholder='Enter Designation'/>
 							</Col>
               <Col xs={4} md={6}>
-								<Input label='Area:' type='input' onChange={this.handleInput} value={this.state.area} name='area' id='area' placeholder='Enter Area'/>
+								<Input label='Business Area:' type='input' onChange={this.handleInput} value={this.state.area} name='area' id='area' placeholder='Enter Area'/>
 							</Col>
-              <Col xs={12} md={12}>
+              <Col xs={4} md={6}>
 								<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.address} name='address' id='address' placeholder='Enter Address'/>
 							</Col>
               <Col xs={4} md={6}>

@@ -3,6 +3,8 @@ import { Form, Row, Col, Table } from 'react-bootstrap';
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
+
+import { addProduct } from '../../../core/httpClient'
 /* component styles */
 import { styles } from './styles.scss'
 
@@ -31,27 +33,26 @@ class Add extends Component {
 
 		this.setState( prevState => {
 			 return { 
-					newCompany : {
-									 ...prevState.newCompany, [name]: value
+					newProduct : {
+									 ...prevState.newProduct, [name]: value
 									}
 			 }
-		}, () => console.log(this.state.newCompany)
+		}, () => console.log(this.state.newProduct)
 		)
 	}
 
 	handleSubmit(event){
 		event.preventDefault();
-		let userData = this.state.newCompany;
+		let productData = this.state.newProduct;
 
-		// registerAssociate(userData).then((response) => {
-		// 		console.log(response);
-		// }).catch(error => {
-		// 	console.log(error.response)
-		// });
+		addProduct(productData).then((response) => {
+				console.log(response);
+		}).catch(error => {
+			console.log(error.response)
+		});
 	}
 
   render() {
-		const that = this;
     return (
 			<Modal heading='Add Product' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
 				<Form>

@@ -15,3 +15,17 @@ export const registerUser = function (newUser) {
             });
     });
 }
+
+export const addProduct = function (newUser) {
+    return new Promise(function (resolve, reject) {
+        axios(host + 'api/product/add', {
+            method: 'POST',
+            data: newUser
+        }).then(res => {
+            resolve(res.data);
+        }).catch(err => {
+                console.log(err);
+                reject(err);
+            });
+    });
+}

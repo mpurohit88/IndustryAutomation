@@ -1,7 +1,7 @@
-var User = require("../models/user.js")
-var register = function(req, res, next){
-    console.log('user data: ', req.body);
-    var params = {
+const User = require("../models/user.js")
+
+const register = function(req, res, next){
+    let params = {
 					company_name: req.body.company_name,
 					name:req.body.name,
 					designation: req.body.designation,
@@ -11,7 +11,7 @@ var register = function(req, res, next){
 					isActive: req.body.isActive,
 					email: req.body.email
 			};
-    var newUser = new User(params);
+    const newUser = new User(params);
 
     try {
        newUser.register();
@@ -19,4 +19,5 @@ var register = function(req, res, next){
 			console.log("Error: ", err);
     }
 };
+
 module.exports = {register: register};

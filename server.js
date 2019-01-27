@@ -11,7 +11,8 @@ app.use(require('morgan')('short'));
   const webpack = require('webpack')
   const webpackConfig = require('./webpack/common.config.babel')
   const compiler = webpack(webpackConfig)
-  const userRouter = require('./server/routes/user.js');
+  const userRouter = require('./server/routes/user');
+  const productRouter = require('./server/routes/product');
 
   app.use(bodyParser());
 
@@ -30,6 +31,7 @@ app.use(require('morgan')('short'));
   app.use(express.static(__dirname + '/'))
 
   app.use('/api/user', userRouter);
+  app.use('/api/product', productRouter);
 })()
 
 app.get(/.*/, function root(req, res) {
