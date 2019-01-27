@@ -77,19 +77,42 @@ class Create extends Component {
 
 	handleAddEvent(evt) {
 		const fileArray = this.refs.file.value.split('\\');
-		var id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
+		let id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
+		let isExists = false;
+
+		if(this.refs.name.value === '0') {
+			alert('Please select product.');
+			return false;
+		}
 		
+		this.state.products.map((product) => {
+			if(product.product_id === this.refs.name.value) {
+				isExists = true;
+			}
+		});
+
+		if(isExists) {
+			alert('Product already added.');
+			return false;
+		}
+
 		var product = {
-		id: id,
-		product_id: this.refs.name.value,
-		hsn: this.refs.hsnCode.value,
-		qty: this.refs.qty.value,
-				rate: this.refs.rate.value,
-				gst: this.refs.gst.value,
-				file: fileArray[fileArray.length - 1]
+			id: id,
+			product_id: this.refs.name.value,
+			hsn: this.refs.hsnCode.value,
+			qty: this.refs.qty.value,
+			rate: this.refs.rate.value,
+			gst: this.refs.gst.value,
+			file: fileArray[fileArray.length - 1]
 		}
 		this.state.products.push(product);
 		this.setState(this.state.products);
+
+		this.refs.name.value = '0';
+		this.refs.hsnCode.value = '';
+		this.refs.qty.value = '';
+		this.refs.rate.value = '';
+		this.refs.gst.value = '';
 	}
 		
 	handleInput(e) {
