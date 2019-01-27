@@ -7,6 +7,8 @@ import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
 
 import { all as getAllProductList } from '../../../core/api/product'
+import { all as getAllPartyList } from '../../../core/api/customer'
+
 import { createQuote } from '../../../core/api/quote'
 
 /* component styles */
@@ -28,6 +30,7 @@ class Create extends Component {
 			listOfProduct: [],
 			products: [],
 			productDrpDwn: [],
+			partyDrpDwn: [],
 			party_names: [{text: 'Individual', value:1},{text: 'Sole proprietorship', value:2},{text: 'Partnership', value:3},{text: 'Private limited company', value:4}],
 		}
 
@@ -41,6 +44,15 @@ class Create extends Component {
 
 	componentDidMount() {
 		const that = this;
+
+		getAllPartyList().then(function(listOfParty) {
+
+			let list = listOfParty.map((party) => {
+				return {text: party.name, id: party.id};
+			});
+
+			that.setState({partyDrpDwn: list});
+		});
 
 		getAllProductList().then(function(listOfProduct) {
 
@@ -176,11 +188,11 @@ class Create extends Component {
 								<Dropdown
 									id='party_name'
 									name='party_name'
-									label='Select Party Name:'
+									label='Party Name:'
 									value={this.state.newQuote.party_name} 
 									onChange={this.handleInput}
-									placeholder = {'Party Name'}
-									options={this.state.party_names}
+									placeholder='--Select Party Name--'
+									options={this.state.partyDrpDwn}
 								/>
 							</Col>
 							<Col xs={4} md={6}>

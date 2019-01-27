@@ -46,7 +46,7 @@ Customer.prototype.all = function(){
 
 			const isActive = 1;
 
-			connection.query('select id, name, from customer where isActive=?', [isActive], function(error,rows,fields){
+			connection.query('select id, name from customer where isActive=?', [isActive], function(error,rows,fields){
 			 
 					if(!error){ 
 						resolve(rows);
