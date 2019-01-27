@@ -14,7 +14,9 @@ const register = function(req, res, next){
     const newUser = new User(params);
 
     try {
-       newUser.register();
+       newUser.register().then(function() {
+		   res.send("success");
+	   });
     } catch (err) {
 			console.log("Error: ", err);
     }

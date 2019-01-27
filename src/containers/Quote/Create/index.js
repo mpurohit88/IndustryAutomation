@@ -5,6 +5,8 @@ import { StandardModal } from '../../../components/Modals'
 import Input from '../../../components/Input'
 import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
+
+import { all as getAllProductList } from '../../../core/api/product'
 /* component styles */
 import { styles } from './styles.scss'
 
@@ -20,7 +22,9 @@ class Create extends Component {
 				phoneNo: '',
 				mobileNo: ''
 			},
+			listOfProduct: [],
 			products: [],
+			productDrpDwn: [],
 			party_names: [{text: 'Individual', value:1},{text: 'Sole proprietorship', value:2},{text: 'Partnership', value:3},{text: 'Private limited company', value:4}],
 		}
 
@@ -29,6 +33,31 @@ class Create extends Component {
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleInput = this.handleInput.bind(this);
+		this.handleProductChange = this.handleProductChange.bind(this);
+	}
+
+	componentDidMount() {
+		const that = this;
+
+		getAllProductList().then(function(listOfProduct) {
+
+			let list = listOfProduct.map((product) => {
+				return {text: product.name, id: product.id};
+			});
+
+			that.setState({productDrpDwn: list, listOfProduct: listOfProduct});
+		});
+	}
+
+	handleProductChange(e) {
+		const that = this;
+
+		this.state.listOfProduct.map((product) => {
+			if(product.id === parseInt(e.target.value)) {
+				that.refs.hsnCode.value = product.hsnCode;
+				that.refs.rate.value = product.unit;
+			}
+		});
 	}
 
 	handleRowDel(product) {
@@ -147,10 +176,13 @@ class Create extends Component {
 									<tr>
 										<td></td>
 										<td>
-											<select className='product' ref="name">
-												<option>data 1</option>
-												<option>data 2</option>
-												<option>data 3</option>
+											<select className='product' ref="name" onChange={this.handleProductChange} defaultValue='0'>
+												<option value='0' disabled>--Select Product--</option>
+												{
+													this.state.productDrpDwn.map((product) => {
+														return <option value={product.id}>{product.text}</option>;
+													})
+												}
 											</select>
 										</td>
 										<td>

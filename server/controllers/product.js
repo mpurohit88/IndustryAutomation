@@ -10,10 +10,22 @@ const add = function(req, res, next){
     const newProduct = new Product(params);
 
     try {
-       newProduct.add();
+       newProduct.add().then(function(result) {
+				 res.send("Success");
+			 });
     } catch (err) {
 			console.log("Error: ", err);
     }
 };
 
-module.exports = {add: add};
+const all = function(req, res, next){
+	try {
+		new Product({}).all().then(function(productList) {
+			res.send(productList);
+		});
+ } catch (err) {
+	 console.log("Error: ", err);
+ }
+}
+
+module.exports = {add: add, all: all};

@@ -12,26 +12,26 @@ var User = function(params){
 };
 
 User.prototype.register = function(newUser){
-    const that = this;
-    connection.getConnection(function(error, connection){
-      return new Promise(function(resolve, reject) {
-				console.log("error", error);
-        console.log("connection", connection);
+  const that = this;
+  return new Promise(function(resolve, reject) {
+  connection.getConnection(function(error, connection){
+    console.log("error", error);
+    console.log("connection", connection);
 
-        connection.query('INSERT INTO user(companyId,name,designation,address,area,mobileNo,email,isActive,createdBy) VALUES ("'+that.company_id+'","'+that.name+'","'+that.designation+'","'+that.address+'","'+that.area+'","' + that.mobNo +'","'+that.email+'","'+that.isActive+'","'+that.createdBy+'")', function(error,rows,fields){
-         
-            if(!error){ 
-              resolve(rows);
-            } else {
-							console.log("Error...", error);
-							reject(error)
-						}
+    connection.query('INSERT INTO user(companyId,name,designation,address,area,mobileNo,email,isActive,createdBy) VALUES ("'+that.company_id+'","'+that.name+'","'+that.designation+'","'+that.address+'","'+that.area+'","' + that.mobNo +'","'+that.email+'","'+that.isActive+'","'+that.createdBy+'")', function(error,rows,fields){
+      
+        if(!error){ 
+          resolve(rows);
+        } else {
+          console.log("Error...", error);
+          reject(error)
+        }
 
-            connection.release();
-            console.log('Process Complete %d',connection.threadId);
-          });
-			});
+        connection.release();
+        console.log('Process Complete %d',connection.threadId);
+      });
     });
+  });
 };
 
 module.exports = User;

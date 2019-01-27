@@ -6,7 +6,7 @@ import Input from '../../../components/Input'
 import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
 
-import { registerUser } from '../../../core/httpClient'
+import { registerUser } from '../../../core/api/user'
 /* component styles */
 import { styles } from './styles.scss'
 

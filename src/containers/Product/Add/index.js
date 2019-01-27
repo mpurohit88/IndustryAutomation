@@ -4,7 +4,7 @@ import { Form, Row, Col, Table } from 'react-bootstrap';
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
 
-import { addProduct } from '../../../core/httpClient'
+import { addProduct } from '../../../core/api/product'
 /* component styles */
 import { styles } from './styles.scss'
 

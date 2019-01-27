@@ -3,7 +3,7 @@ import { Form, Row, Col, Table } from 'react-bootstrap';
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
-import { registerCompany } from '../../../core/httpClient'
+import { registerCompany } from '../../../core/api/company'
 /* component styles */
 import { styles } from './styles.scss'
 

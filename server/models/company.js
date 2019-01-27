@@ -18,26 +18,26 @@ var Company = function(params){
 };
 
 Company.prototype.register = function(){
-    const that = this;
-    connection.getConnection(function(error, connection){
-      return new Promise(function(resolve, reject) {
-				console.log("error", error);
-        console.log("connection", connection);
+	const that = this;
+	return new Promise(function(resolve, reject) {
+	connection.getConnection(function(error, connection){
+		console.log("error", error);
+		console.log("connection", connection);
 
-        connection.query('INSERT INTO company(name,address,city,state,country,tele,fax,mobileNo,email,website,gstn,logo,manufacturerOf,isActive,createdBy) VALUES ("'+that.name+'","'+that.address+'","'+that.city+'","'+that.state+'","'+that.country+'","'+that.tele+'","'+that.fax+'","'+that.mobileNo+'","'+that.email+'","'+that.website+'","'+that.gstn+'","'+that.logo+'","'+that.manufacturerOf+'","'+that.isActive+'","'+that.createdBy+'")', function(error,rows,fields){
-         
-            if(!error){ 
-              resolve(rows);
-            } else {
-							console.log("Error...", error);
-							reject(error);
-						}
+		connection.query('INSERT INTO company(name,address,city,state,country,tele,fax,mobileNo,email,website,gstn,logo,manufacturerOf,isActive,createdBy) VALUES ("'+that.name+'","'+that.address+'","'+that.city+'","'+that.state+'","'+that.country+'","'+that.tele+'","'+that.fax+'","'+that.mobileNo+'","'+that.email+'","'+that.website+'","'+that.gstn+'","'+that.logo+'","'+that.manufacturerOf+'","'+that.isActive+'","'+that.createdBy+'")', function(error,rows,fields){
+			
+				if(!error){ 
+					resolve(rows);
+				} else {
+					console.log("Error...", error);
+					reject(error);
+				}
 
-            connection.release();
-            console.log('Process Complete %d',connection.threadId);
-          });
+				connection.release();
+				console.log('Process Complete %d',connection.threadId);
 			});
-    });
+		});
+	});
 };
 
 module.exports = Company;

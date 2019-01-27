@@ -19,7 +19,9 @@ const register = function(req, res, next){
     const newCompany = new Company(params);
 
     try {
-       newCompany.register();
+       newCompany.register().then(function() {
+           res.send("success");
+       });
     } catch (err) {
 			console.log("Error: ", err);
     }
