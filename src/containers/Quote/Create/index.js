@@ -7,6 +7,8 @@ import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
 
 import { all as getAllProductList } from '../../../core/api/product'
+import { createQuote } from '../../../core/api/quote'
+
 /* component styles */
 import { styles } from './styles.scss'
 
@@ -77,17 +79,17 @@ class Create extends Component {
 		const fileArray = this.refs.file.value.split('\\');
 		var id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
 		
-    var product = {
-      id: id,
-      name: this.refs.name.value,
-      hsn: this.refs.hsnCode.value,
-      qty: this.refs.qty.value,
-			rate: this.refs.rate.value,
-			gst: this.refs.gst.value,
-			file: fileArray[fileArray.length - 1]
-    }
-    this.state.products.push(product);
-    this.setState(this.state.products);
+		var product = {
+		id: id,
+		product_id: this.refs.name.value,
+		hsn: this.refs.hsnCode.value,
+		qty: this.refs.qty.value,
+				rate: this.refs.rate.value,
+				gst: this.refs.gst.value,
+				file: fileArray[fileArray.length - 1]
+		}
+		this.state.products.push(product);
+		this.setState(this.state.products);
 	}
 		
 	handleInput(e) {
@@ -106,13 +108,17 @@ class Create extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
-		let userData = this.state.newQuote;
 
-		// registerAssociate(userData).then((response) => {
-		// 		console.log(response);
-		// }).catch(error => {
-		// 	console.log(error.response)
-		// });
+		let data = {
+			quote: this.state.newQuote,
+			productList: this.state.products
+		}
+
+		createQuote(data).then((response) => {
+				console.log(response);
+		}).catch(error => {
+			console.log(error.response)
+		});
 	}
 
   render() {
@@ -121,7 +127,7 @@ class Create extends Component {
       return (
 			<tr key={product.id} className='productList'>
 									<td>{index + 1}</td>
-									<td>{product.name}
+									<td>{product.product_id}
 									</td>
 									<td>{product.hsn}</td>
 									<td>{product.qty}</td>

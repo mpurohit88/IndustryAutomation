@@ -14,6 +14,7 @@ app.use(require('morgan')('short'));
   const userRouter = require('./server/routes/user');
   const productRouter = require('./server/routes/product');
   const companyRouter = require('./server/routes/company');
+  const quoteRouter = require('./server/routes/quote');
 
   app.use(bodyParser());
 
@@ -34,6 +35,7 @@ app.use(require('morgan')('short'));
   app.use('/api/user', userRouter);
   app.use('/api/product', productRouter);
   app.use('/api/company', companyRouter);
+  app.use('/api/quote', quoteRouter);
 })()
 
 app.get(/.*/, function root(req, res) {
