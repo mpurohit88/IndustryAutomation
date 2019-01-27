@@ -1,7 +1,7 @@
 
-export { post } from './httpClient'
+import { post } from './httpClient'
 
-export const addProduct = function (newCompany) {
+export const registerCompany = function (newCompany) {
 	return new Promise(function (resolve, reject) {
 			post('api/company/register', newCompany)
 			.then(res => {

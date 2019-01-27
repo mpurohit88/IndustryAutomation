@@ -55,7 +55,7 @@ class Registration extends Component {
 		registerUser(userData).then((response) => {
 				console.log(response);
 		}).catch(error => {
-			console.log(error.response)
+			console.log(error)
 		});
 	}
 

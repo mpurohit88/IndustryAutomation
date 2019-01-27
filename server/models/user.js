@@ -15,10 +15,15 @@ User.prototype.register = function(newUser){
   const that = this;
   return new Promise(function(resolve, reject) {
   connection.getConnection(function(error, connection){
-    console.log("error", error);
-    console.log("connection", connection);
+    if (error) {
+			throw error;
+    }
+    
+    let values = [
+      [that.company_id, that.name, that.designation, that.address, that.area, that.mobNo, that.email, that.isActive, that.createdBy]
+    ]
 
-    connection.query('INSERT INTO user(companyId,name,designation,address,area,mobileNo,email,isActive,createdBy) VALUES ("'+that.company_id+'","'+that.name+'","'+that.designation+'","'+that.address+'","'+that.area+'","' + that.mobNo +'","'+that.email+'","'+that.isActive+'","'+that.createdBy+'")', function(error,rows,fields){
+    connection.query('INSERT INTO user(companyId,name,designation,address,area,mobileNo,email,isActive,createdBy) VALUES ?', [values], function(error,rows,fields){
       
         if(!error){ 
           resolve(rows);

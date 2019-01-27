@@ -1,5 +1,5 @@
 
-export { post } from './httpClient'
+import { post } from './httpClient'
 
 export const registerUser = function (newUser) {
     return new Promise(function (resolve, reject) {
