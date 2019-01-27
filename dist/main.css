@@ -56,10 +56,12 @@ table thead tr th {
 /* PUT SASS VARIABLES HERE */
 /* PUT SASS VARIABLES HERE */
 /* PUT SASS VARIABLES HERE */
+/* PUT SASS VARIABLES HERE */
 
 ._1hPYVL6Pz_Pmm-R7o-TA5T h2 {
   color: white;
 }
+/* PUT SASS VARIABLES HERE */
 /* PUT SASS VARIABLES HERE */
 /* PUT SASS VARIABLES HERE */
 
@@ -568,6 +570,7 @@ template {
 body {
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
+  background-color: #f5f5f5;
 }
 
 h1,

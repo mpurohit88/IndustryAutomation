@@ -23,13 +23,13 @@ app.use(require('morgan')('short'));
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
 
-  app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true
-  }))
+  // app.use(require('webpack-dev-middleware')(compiler, {
+  //   noInfo: true
+  // }))
 
-  app.use(require('webpack-hot-middleware')(compiler, {
-    log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000
-  }))
+  // app.use(require('webpack-hot-middleware')(compiler, {
+  //   log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000
+  // }))
 
   app.use(express.static(__dirname + '/'))
 
@@ -41,7 +41,7 @@ app.use(require('morgan')('short'));
 })()
 
 app.get(/.*/, function root(req, res) {
-  res.sendFile(__dirname + '/src/index.html')
+  res.sendFile(__dirname + '/dist/index.html')
 })
 
 const server = http.createServer(app)
