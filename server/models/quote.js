@@ -4,9 +4,10 @@ var Quote = function(params){
    this.address = params.address;
    this.phoneNo = params.phoneNo;
    this.mobileNo = params.mobileNo;
-   this.isActive = 1
-   this.createdBy = 'mpurohit88',
-   this.products = params.products
+   this.isActive = 1;
+   this.status = 1;
+   this.createdBy = 'mpurohit88';
+   this.products = params.products;
 };
 
 Quote.prototype.create = function(){
@@ -18,10 +19,10 @@ Quote.prototype.create = function(){
     }
     
     let values = [
-      [that.party_name, that.address, that.phoneNo, that.mobileNo, that.isActive, that.createdBy]
+      [that.party_name, that.address, that.phoneNo, that.mobileNo, that.status, that.isActive, that.createdBy]
     ]
 
-    connection.query('INSERT INTO quote(party_name,address,phoneNo,mobileNo,isActive,createdBy) VALUES ?', [values], function(error,rows,fields){
+    connection.query('INSERT INTO quote(party_id,address,phoneNo,mobileNo,status,isActive,createdBy) VALUES ?', [values], function(error,rows,fields){
       
         if(error) reject(error);
 
@@ -50,5 +51,30 @@ Quote.prototype.create = function(){
     });
   });
 };
+
+Quote.prototype.all = function() {
+  return new Promise(function(resolve, reject) {
+    connection.getConnection(function(error, connection){
+      if (error) {
+        throw error;
+      }
+
+      const isActive = 1;
+
+			connection.query('select id, party_id, address, phoneNo, mobileNo, status, dateTimeCreated from quote where isActive=?', [isActive], function(error,rows,fields){
+			 
+					if(!error){ 
+						resolve(rows);
+					} else {
+						console.log("Error...", error);
+						reject(error);
+					}
+
+					connection.release();
+					console.log('Process Complete %d',connection.threadId);
+				});
+    });
+  });
+}
 
 module.exports = Quote;

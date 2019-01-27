@@ -24,4 +24,14 @@ const create = function(req, res, next){
     }
 };
 
-module.exports = {create: create};
+const all = function(req, res, next){
+	try {
+		new Quote({}).all().then(function(quoteList) {
+			res.send(quoteList);
+		});
+ 	} catch (err) {
+	 	console.log("Error: ", err);
+ }
+}
+
+module.exports = {create: create, all: all};

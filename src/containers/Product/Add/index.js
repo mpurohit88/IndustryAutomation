@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Row, Col, Table } from 'react-bootstrap';
+import { Form, Row, Col } from 'react-bootstrap';
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'

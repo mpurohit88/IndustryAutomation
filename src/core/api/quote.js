@@ -1,5 +1,5 @@
 
-import { post } from './httpClient'
+import { get, post } from './httpClient'
 
 export const createQuote = function (newUser) {
     return new Promise(function (resolve, reject) {
@@ -10,5 +10,17 @@ export const createQuote = function (newUser) {
                 console.log(err);
                 reject(err);
             });
+    });
+}
+
+export const all = function () {
+	return new Promise(function (resolve, reject) {
+		get('api/quote/all', {})
+		.then(result => {
+			resolve(result);
+		}).catch(err => {
+            console.log(err);
+            reject(err);
+        });
     });
 }

@@ -22,5 +22,5 @@ export const all = function () {
 						console.log(err);
 						reject(err);
 				});
-});
+    });
 }
