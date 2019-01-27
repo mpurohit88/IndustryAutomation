@@ -3,6 +3,7 @@ import { Form, Row, Col, Table } from 'react-bootstrap';
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
+import { registerCompany } from '../../../core/httpClient'
 /* component styles */
 import { styles } from './styles.scss'
 
@@ -49,13 +50,13 @@ class Registration extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
-		let userData = this.state.newCompany;
+		let companyData = this.state.newCompany;
 
-		// registerAssociate(userData).then((response) => {
-		// 		console.log(response);
-		// }).catch(error => {
-		// 	console.log(error.response)
-		// });
+		registerCompany(companyData).then((response) => {
+				console.log(response);
+		}).catch(error => {
+			console.log(error.response)
+		});
 	}
 
   render() {

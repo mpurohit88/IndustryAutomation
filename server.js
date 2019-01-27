@@ -13,6 +13,7 @@ app.use(require('morgan')('short'));
   const compiler = webpack(webpackConfig)
   const userRouter = require('./server/routes/user');
   const productRouter = require('./server/routes/product');
+  const companyRouter = require('./server/routes/company');
 
   app.use(bodyParser());
 
@@ -32,6 +33,7 @@ app.use(require('morgan')('short'));
 
   app.use('/api/user', userRouter);
   app.use('/api/product', productRouter);
+  app.use('/api/company', companyRouter);
 })()
 
 app.get(/.*/, function root(req, res) {

@@ -29,3 +29,17 @@ export const addProduct = function (newUser) {
             });
     });
 }
+
+export const registerCompany = function (newComapny) {
+    return new Promise(function (resolve, reject) {
+        axios(host + 'api/company/register', {
+            method: 'POST',
+            data: newComapny
+        }).then(res => {
+            resolve(res.data);
+        }).catch(err => {
+                console.log(err);
+                reject(err);
+            });
+    });
+}
