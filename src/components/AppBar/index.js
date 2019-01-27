@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Form } from 'react-bootstrap';
 
 import Button from '../Button'
 import Modal from '../Modals/StandardModal'
@@ -9,6 +8,7 @@ import Create from '../../containers/Quote/Create'
 import { Registration as ConpanyRegistration } from '../../containers/Company'
 import { Registration as UserRegistration } from '../../containers/User'
 import { Add as AddProduct } from '../../containers/Product'
+import { Add as AddCustomer } from '../../containers/Customer'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -23,7 +23,8 @@ export default class AppBar extends React.Component {
       comRegShow: false,
       userRegShow: false,
       productShow: false,
-      successShow: false
+      successShow: false,
+      customerShow: false
     };
   }
 
@@ -36,6 +37,8 @@ export default class AppBar extends React.Component {
   handleUserRegClick = (flag) => this.setState({ userRegShow: flag });
 
   handleProductClick = (flag) => this.setState({ productShow: flag });
+
+  handleCustomerClick = (flag) => this.setState({ customerShow: flag });
 
   handleSuccessModal = (flag, response) => this.setState({ successShow: flag, msg: response });
 
@@ -60,7 +63,7 @@ export default class AppBar extends React.Component {
       >
       <div 
        style={{
-        minWidth: 1000,
+        minWidth: 1200,
         display: `flex`,
         flex: `0 1 auto`,
         flexDirection: `row`,
@@ -118,6 +121,16 @@ export default class AppBar extends React.Component {
         >
           Add Product
         </Button>
+        <Button
+          style={{
+            marginLeft: 40,
+            color: `white`
+          }}
+          onClick={() => this.handleCustomerClick(true)}
+          variant='primary'
+        >
+          Add Customer
+        </Button>
         </div>
         <div>
         <Link style={{
@@ -146,6 +159,10 @@ export default class AppBar extends React.Component {
 
         {
           this.state.productShow && <AddProduct heading='Add Product' show={this.state.productShow} lgClose={this.handleProductClick} handleModelClick={this.handleProductClick}/>
+        }
+        
+        {
+          this.state.customerShow && <AddCustomer heading='Add Customer' show={this.state.customerShow} lgClose={this.handleCustomerClick} handleModelClick={this.handleCustomerClick}/>
         }
 
         <Modal heading='Success' show={this.state.successShow} lgClose={() => this.handleSuccessModal(false)} handleModelClick={this.handleSuccessModal}>

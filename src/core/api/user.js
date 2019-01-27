@@ -5,7 +5,7 @@ export const registerUser = function (newUser) {
     return new Promise(function (resolve, reject) {
         post('api/user/register', newUser)
         .then(res => {
-            resolve(res.data);
+            resolve(res);
         }).catch(err => {
                 console.log(err);
                 reject(err);

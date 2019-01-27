@@ -1,9 +1,9 @@
 
 import { get, post } from './httpClient'
 
-export const registerCompany = function (newCompany) {
+export const addCustomer = function (newCustomer) {
 	return new Promise(function (resolve, reject) {
-			post('api/company/register', newCompany)
+			post('api/customer/add', newCustomer)
 			.then(res => {
 				resolve(res);
 			}).catch(err => {
@@ -15,7 +15,7 @@ export const registerCompany = function (newCompany) {
 
 export const all = function () {
 	return new Promise(function (resolve, reject) {
-		get('api/company/all', {})
+		get('api/customer/all', {})
 		.then(result => {
 				resolve(result);
 		}).catch(err => {
