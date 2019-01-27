@@ -18,6 +18,7 @@ class Create extends Component {
 		super(props);
 	
 		this.state={
+			isLoading: false,
 			newQuote: {
 				party_name: '',
 				address: '',
@@ -138,7 +139,10 @@ class Create extends Component {
 			productList: this.state.products
 		}
 
+		this.setState({isLoading: true});
+		
 		createQuote(data).then((response) => {
+			this.setState({isLoading: false});
 			that.props.lgClose(false);
 			that.props.handleSuccess(true, response);
 		}).catch(error => {
@@ -165,7 +169,7 @@ class Create extends Component {
 		
     return (
 		<Fragment>
-			<StandardModal heading='Create Quote' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
+			<StandardModal heading='Create Quote' isLoading={this.state.isLoading} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
 				<Form>
 						<Row className="show-grid">
 							<Col xs={8} md={6}>
