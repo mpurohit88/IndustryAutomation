@@ -29,6 +29,7 @@ class Login extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
+        const that = this;
 
         this.setState({ submitted: true });
         const { username, password, returnUrl } = this.state;
@@ -46,7 +47,10 @@ class Login extends React.Component {
                     this.props.history.push(from);
                 },
                 error => this.setState({ error, loading: false })
-            );
+            ).catch((error) => {
+                console.log("Error", error)
+                that.setState({ error, loading: false })
+            });
     }
 
     render() {

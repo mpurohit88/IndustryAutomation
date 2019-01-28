@@ -1,6 +1,7 @@
 var connection = require("../lib/connection.js");
 var User = function(params){
    this.email = params.email;
+   this.password = params.password;
    this.company_id = params.company_name,
    this.name = params.name,
    this.designation = params.designation,
@@ -19,11 +20,11 @@ User.prototype.register = function(newUser){
 			throw error;
     }
     
-    let values = [
-      [that.company_id, that.name, that.designation, that.address, that.area, that.mobNo, that.email, that.isActive, that.createdBy]
-    ]
+    // let values = [
+    //   [that.company_id, that.name, AES_ENCRYPT(that.password, 'secret'), that.designation, that.address, that.area, that.mobNo, that.email, that.isActive, that.createdBy]
+    // ]
 
-    connection.query('INSERT INTO user(companyId,name,designation,address,area,mobileNo,email,isActive,createdBy) VALUES ?', [values], function(error,rows,fields){
+    connection.query('INSERT INTO user(companyId,name,password,designation,address,area,mobileNo,email,isActive,createdBy) VALUES ("' + that.company_id + '", "' + that.name + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.designation + '", "' + that.area + '", "' + that.address + '", "' + that.mobNo + '", "' + that.email + '", "' + that.isActive + '", "' + that.createdBy + '")', function(error,rows,fields){
       
         if(!error){ 
           resolve(rows);

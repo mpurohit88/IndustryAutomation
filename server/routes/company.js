@@ -1,9 +1,11 @@
 const express = require('express')
 const Company = require('../controllers/company.js');
 
+const validateToken = require('../utils').validateToken;
+
 const companyRouter = express.Router();
 
-companyRouter.post("/register", Company.register);
-companyRouter.get("/all", Company.all);
+companyRouter.route("/register").post(validateToken, Company.register);
+companyRouter.route("/all").get(validateToken, Company.all);
 
 module.exports = companyRouter;

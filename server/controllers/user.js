@@ -4,11 +4,12 @@ const register = function(req, res, next){
     let params = {
 					company_name: req.body.company_name,
 					name:req.body.name,
+					password:req.body.password,
 					designation: req.body.designation,
 					area: req.body.area,
 					address: req.body.address,
 					mobNo: req.body.mobNo,
-					isActive: req.body.isActive,
+					isActive: 1,
 					email: req.body.email
 			};
     const newUser = new User(params);

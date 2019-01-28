@@ -1,6 +1,8 @@
 const http = require('http')
 const express = require('express')
 const bodyParser=require('body-parser');
+const helmet = require('helmet');
+const cors = require('cors');
 
 const app = express()
 
@@ -16,8 +18,13 @@ app.use(require('morgan')('short'));
   const companyRouter = require('./server/routes/company');
   const quoteRouter = require('./server/routes/quote');
   const customerRouter = require('./server/routes/customer');
+  const authRouter = require('./server/routes/auth');
 
-  app.use(bodyParser());
+  app.use(bodyParser.json());
+
+  app.use(helmet());
+
+  app.use(cors());
 
   // app.use(logger('dev'));
   app.use(express.json());
@@ -38,6 +45,7 @@ app.use(require('morgan')('short'));
   app.use('/api/company', companyRouter);
   app.use('/api/quote', quoteRouter);
   app.use('/api/customer', customerRouter);
+  app.use('/api/auth', authRouter);
 })()
 
 app.get(/.*/, function root(req, res) {
