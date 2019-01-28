@@ -2,8 +2,6 @@ const Auth = require("../models/auth.js")
 const jwt = require('jsonwebtoken');
 
 const login = function(req, res, next){
-    console.log("req.body**************", req.body);
-
     let params = {
                 name:req.body.userName,
                 password:req.body.password
