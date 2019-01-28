@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { authHeader } from '../services/auth-header';
 
-const host = 'http://localhost:3000/';
+let url = window.location.href
+let arr = url.split("/");
+let host = arr[0] + "//" + arr[2]
 
 export const get = function(uri, data) {
     return new Promise(function (resolve, reject) {
