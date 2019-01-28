@@ -3,7 +3,7 @@ import { authHeader } from '../services/auth-header';
 
 let url = window.location.href
 let arr = url.split("/");
-let host = arr[0] + "//" + arr[2]
+let host = arr[0] + "//" + arr[2] + '/'
 
 export const get = function(uri, data) {
     return new Promise(function (resolve, reject) {
