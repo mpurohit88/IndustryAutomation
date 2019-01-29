@@ -48,7 +48,7 @@ class Create extends Component {
 		getAllPartyList().then(function(listOfParty) {
 
 			let list = listOfParty.map((party) => {
-				return {text: party.name, id: party.id};
+				return {text: party.name, value: party.id};
 			});
 
 			that.setState({partyDrpDwn: list});
@@ -57,7 +57,7 @@ class Create extends Component {
 		getAllProductList().then(function(listOfProduct) {
 
 			let list = listOfProduct.map((product) => {
-				return {text: product.name, id: product.id};
+				return {text: product.name, value: product.id};
 			});
 
 			that.setState({productDrpDwn: list, listOfProduct: listOfProduct});
@@ -79,7 +79,7 @@ class Create extends Component {
 		var index = -1;	
 		var clength = this.state.products.length;
 		for( var i = 0; i < clength; i++ ) {
-			if( this.state.products[i].id === product.id ) {
+			if( this.state.products[i].id === product.value ) {
 				index = i;
 				break;
 			}
@@ -228,7 +228,7 @@ class Create extends Component {
 												<option value='0' disabled>--Select Product--</option>
 												{
 													this.state.productDrpDwn.map((product) => {
-														return <option value={product.id}>{product.text}</option>;
+														return <option value={product.value}>{product.text}</option>;
 													})
 												}
 											</select>
