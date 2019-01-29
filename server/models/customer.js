@@ -37,7 +37,7 @@ Customer.prototype.add = function(){
 	});
 };
 
-Customer.prototype.all = function(){
+Customer.prototype.allByUserId = function(userId){
 	return new Promise(function(resolve, reject) {
 		connection.getConnection(function(error, connection){
 			if (error) {
@@ -46,7 +46,7 @@ Customer.prototype.all = function(){
 
 			const isActive = 1;
 
-			connection.query('select id, name from customer where isActive=?', [isActive], function(error,rows,fields){
+			connection.query('select id, name from customer where isActive=? and createdBy=?', [isActive, userId], function(error,rows,fields){
 			 
 					if(!error){ 
 						resolve(rows);

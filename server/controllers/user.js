@@ -11,6 +11,7 @@ const register = function(req, res, next){
 					area: req.body.area,
 					address: req.body.address,
 					mobNo: req.body.mobNo,
+					role: 'user',
 					isActive: 1,
 					email: req.body.email
 			};

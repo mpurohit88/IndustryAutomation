@@ -43,6 +43,10 @@ export default class AppBar extends React.Component {
   handleSuccessModal = (flag, response) => this.setState({ successShow: flag, msg: response });
 
   render() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    let name = user.result;
+    let isAdmin = user.role == 'admin';
+
     return (
     <div className='test'
       style={{
@@ -81,62 +85,78 @@ export default class AppBar extends React.Component {
             {this.props.children}
           </Link>
         </h2>
-        <Button
-          style={{
-            marginLeft: 40,
-            color: `white`
-          }}
-          onClick={() => this.setState({ lgShow: true })}
-          variant='primary'
-        >
-          Create Quote
-        </Button>
-        <Button
-          style={{
-            marginLeft: 40,
-            color: `white`
-          }}
-          onClick={() => this.handleCompanyRegClick(true)}
-          variant='primary'
-        >
-          Company Registration
-        </Button>
-        <Button
-          style={{
-            marginLeft: 40,
-            color: `white`
-          }}
-          onClick={() => this.handleUserRegClick(true)}
-          variant='primary'
-        >
-          User Registration
-        </Button>
-        <Button
-          style={{
-            marginLeft: 40,
-            color: `white`
-          }}
-          onClick={() => this.handleProductClick(true)}
-          variant='primary'
-        >
-          Add Product
-        </Button>
-        <Button
-          style={{
-            marginLeft: 40,
-            color: `white`
-          }}
-          onClick={() => this.handleCustomerClick(true)}
-          variant='primary'
-        >
-          Add Customer
-        </Button>
+        { !isAdmin && 
+          <Button
+            style={{
+              marginLeft: 40,
+              color: `white`
+            }}
+            onClick={() => this.setState({ lgShow: true })}
+            variant='primary'
+          >
+            Create Quote
+          </Button>
+        }
+
+        { isAdmin &&
+          <Button
+            style={{
+              marginLeft: 40,
+              color: `white`
+            }}
+            onClick={() => this.handleCompanyRegClick(true)}
+            variant='primary'
+          >
+            Company Registration
+          </Button>
+        }
+
+        { isAdmin &&
+          <Button
+            style={{
+              marginLeft: 40,
+              color: `white`
+            }}
+            onClick={() => this.handleUserRegClick(true)}
+            variant='primary'
+          >
+            User Registration
+          </Button>
+        }
+
+        { !isAdmin && 
+          <Button
+            style={{
+              marginLeft: 40,
+              color: `white`
+            }}
+            onClick={() => this.handleProductClick(true)}
+            variant='primary'
+          >
+            Add Product
+          </Button>
+        }
+
+        { !isAdmin && 
+          <Button
+            style={{
+              marginLeft: 40,
+              color: `white`
+            }}
+            onClick={() => this.handleCustomerClick(true)}
+            variant='primary'
+          >
+            Add Customer
+          </Button>
+        }
         </div>
+
         <label  style={{
               color: `white`,
               textDecoration: `none`,
-            }}>Welcome: {JSON.parse(localStorage.getItem('user')).result}</label>
-        <div> | 
+              marginRight: 10
+            }}>Welcome: {name}</label>
+        <div>
         <Link style={{
               color: `white`,
               textDecoration: `none`,

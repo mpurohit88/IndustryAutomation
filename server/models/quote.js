@@ -77,4 +77,30 @@ Quote.prototype.all = function() {
   });
 }
 
+
+Quote.prototype.allByUserId = function(userId) {
+  return new Promise(function(resolve, reject) {
+    connection.getConnection(function(error, connection){
+      if (error) {
+        throw error;
+      }
+
+      const isActive = 1;
+
+			connection.query('select id, party_id, address, phoneNo, mobileNo, status, dateTimeCreated from quote where isActive=? and createdBy=?', [isActive, userId], function(error,rows,fields){
+			 
+					if(!error){ 
+						resolve(rows);
+					} else {
+						console.log("Error...", error);
+						reject(error);
+					}
+
+					connection.release();
+					console.log('Process Complete %d',connection.threadId);
+				});
+    });
+  });
+}
+
 module.exports = Quote;
