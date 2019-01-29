@@ -3,7 +3,8 @@ import { post } from '../api/httpClient';
 
 export const userService = {
     login,
-    logout
+	logout,
+	getName
 };
 
 function login(username, password) {
@@ -30,4 +31,9 @@ function login(username, password) {
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
+}
+
+function getName() {
+    // remove user from local storage to log user out
+    JSON.parse(localStorage.getItem('user')).result;
 }

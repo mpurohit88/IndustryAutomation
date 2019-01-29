@@ -6,7 +6,7 @@ var Quote = function(params){
    this.mobileNo = params.mobileNo;
    this.isActive = 1;
    this.status = 1;
-   this.createdBy = 'mpurohit88';
+   this.createdBy = params.createdBy,
    this.products = params.products;
 };
 

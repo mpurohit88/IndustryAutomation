@@ -3,6 +3,7 @@ const Quote = require("../models/quote.js")
 const create = function(req, res, next){
 
     let params = {
+        createdBy: req.decoded.id,
         party_name: req.body.quote.party_name, 
         address: req.body.quote.address,
         phoneNo: req.body.quote.phoneNo,

@@ -2,7 +2,9 @@ const User = require("../models/user.js")
 
 const register = function(req, res, next){
     let params = {
-					company_name: req.body.company_name,
+					createdBy: req.decoded.id,
+					organizationId: req.decoded.organizationId,
+					companyId: req.body.company_name,
 					name:req.body.name,
 					password:req.body.password,
 					designation: req.body.designation,

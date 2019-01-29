@@ -63,7 +63,7 @@ export default class AppBar extends React.Component {
       >
       <div 
        style={{
-        minWidth: 1200,
+        minWidth: 1036,
         display: `flex`,
         flex: `0 1 auto`,
         flexDirection: `row`,
@@ -132,7 +132,11 @@ export default class AppBar extends React.Component {
           Add Customer
         </Button>
         </div>
-        <div>
+        <label  style={{
+              color: `white`,
+              textDecoration: `none`,
+            }}>Welcome: {JSON.parse(localStorage.getItem('user')).result}</label>
+        <div> | 
         <Link style={{
               color: `white`,
               textDecoration: `none`,

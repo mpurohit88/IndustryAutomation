@@ -6,7 +6,7 @@ let Customer = function(params){
     this.tele = params.tele,
     this.gstn = params.gstn,
     this.email = params.email
-    this.createdBy = 'mpurohi88'
+    this.createdBy = params.createdBy,
     this.isActive = 1
 };
 
