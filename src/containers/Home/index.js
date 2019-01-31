@@ -3,6 +3,7 @@ import { Tabs, Tab } from 'react-bootstrap'
 
 import List from '../Quote/List'
 import { List as ProductList } from '../Product/List'
+import { UserList } from '../User'
 
 import { getAdmin } from '../../containers/helper'
 
@@ -43,7 +44,7 @@ class Home extends Component {
           }
           {
           isAdmin && <Tab eventKey="user" title="User">
-                      <List />
+                      <UserList />
                     </Tab>
           }
         </Tabs>

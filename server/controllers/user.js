@@ -26,4 +26,20 @@ const register = function(req, res, next){
     }
 };
 
-module.exports = {register: register};
+
+const all = function(req, res, next){
+	console.log("**************", req.decoded);
+	try {
+        if(req.decoded.role === 'admin') {
+			new User({}).all().then(function(userList) {
+				res.send(userList);
+			});
+		} else {
+			res.send([]);
+		}
+ 	} catch (err) {
+	 	console.log("Error: ", err);
+ 	}
+}
+
+module.exports = {register: register, all: all};
