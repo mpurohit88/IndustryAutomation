@@ -61,4 +61,4 @@ class List extends Component {
   }
 }
 
-export { List }
+export default List

@@ -28,7 +28,6 @@ const register = function(req, res, next){
 
 
 const all = function(req, res, next){
-	console.log("**************", req.decoded);
 	try {
         if(req.decoded.role === 'admin') {
 			new User({}).all().then(function(userList) {

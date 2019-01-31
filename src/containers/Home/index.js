@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 
 import List from '../Quote/List'
-import { List as ProductList } from '../Product/List'
+import { ProductList } from '../Product'
+import { CompanyList } from '../Company'
+import { CustomerList } from '../Customer'
 import { UserList } from '../User'
 
 import { getAdmin } from '../../containers/helper'
@@ -35,11 +37,11 @@ class Home extends Component {
             <ProductList />
           </Tab>
           <Tab eventKey="customer" title="Customer">
-            <List />
+            <CustomerList />
           </Tab>
           {
           isAdmin && <Tab eventKey="company" title="Company">
-                      <List />
+                      <CompanyList />
                     </Tab>
           }
           {
