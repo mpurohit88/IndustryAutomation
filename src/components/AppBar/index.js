@@ -54,120 +54,34 @@ export default class AppBar extends React.Component {
         marginBottom: `1.45rem`,
       }}
     >
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 1300,
-          padding: `1.45rem 1.0875rem`,
-          display: `flex`,
-          alignItems: `baseline`,
-          flex: `0 auto`,
-          flexDirection: `row`
-        }}
-      >
-      <div 
-       style={{
-        minWidth: 1036,
-        display: `flex`,
-        flex: `0 1 auto`,
-        flexDirection: `row`,
-        alignItems: `stretch`
-      }}
-      >
-        <h2 style={{ margin: 0 }}>
-          <Link
-            to="/"
-            style={{
-              color: `white`,
-              textDecoration: `none`,
-            }}
-          >
-            {this.props.children}
-          </Link>
-        </h2>
-        { !isAdmin && 
-          <Button
-            style={{
-              marginLeft: 40,
-              color: `white`
-            }}
-            onClick={() => this.setState({ lgShow: true })}
-            variant='primary'
-          >
-            Create Quote
-          </Button>
-        }
-
-        { isAdmin &&
-          <Button
-            style={{
-              marginLeft: 40,
-              color: `white`
-            }}
-            onClick={() => this.handleCompanyRegClick(true)}
-            variant='primary'
-          >
-            Company Registration
-          </Button>
-        }
-
-        { isAdmin &&
-          <Button
-            style={{
-              marginLeft: 40,
-              color: `white`
-            }}
-            onClick={() => this.handleUserRegClick(true)}
-            variant='primary'
-          >
-            User Registration
-          </Button>
-        }
-
-        { !isAdmin && 
-          <Button
-            style={{
-              marginLeft: 40,
-              color: `white`
-            }}
-            onClick={() => this.handleProductClick(true)}
-            variant='primary'
-          >
-            Add Product
-          </Button>
-        }
-
-        { !isAdmin && 
-          <Button
-            style={{
-              marginLeft: 40,
-              color: `white`
-            }}
-            onClick={() => this.handleCustomerClick(true)}
-            variant='primary'
-          >
-            Add Customer
-          </Button>
-        }
-        </div>
-
-        <label  style={{
-              color: `white`,
-              textDecoration: `none`,
-              marginRight: 10
-            }}>Welcome: {name}</label>
-        <div>
-        <Link style={{
-              color: `white`,
-              textDecoration: `none`,
-            }}
-            to="/login">Logout</Link>
-        </div>
-        {/* <Link to="/admin">admin</Link>
-        <Link to="/user">user</Link>
-        <Link to="/test">test</Link> */}
-
-      </div>
+      <header>
+        <Link
+          to="/"
+          className="logo"
+        >
+          {this.props.children}
+        </Link>
+        <nav className="nav-collapse">
+          <ul>
+            {/* active */}
+            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.setState({ lgShow: true })}>Create Quote</a></li> }
+            { isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCompanyRegClick(true)}>Company Registration</a></li> }
+            { isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleUserRegClick(true)}>User Registration</a></li> }
+            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleProductClick(true)}>Add Product</a></li> }
+            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCustomerClick(true)}>Add Customer</a></li> }
+            <li className="menu-item user">
+              <a>
+                <span>Welcome: {name.toUpperCase()}</span>
+              </a>
+            </li>
+            <li className="menu-item"><Link style={{
+                color: `white`,
+                textDecoration: `none`,
+              }}
+              to="/login">Logout</Link></li>
+          </ul>
+        </nav>
+      </header>
         
         {
           this.state.comRegShow && <ConpanyRegistration heading='Company Registration' show={this.state.comRegShow} lgClose={() => this.handleCompanyRegClick(false)} handleModelClick={this.handleCompanyRegClick}/>

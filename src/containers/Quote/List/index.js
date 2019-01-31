@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Form, Row, Col, Table } from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 
 import { all as getAllQuote } from '../../../core/api/quote'
 
@@ -30,13 +30,12 @@ class List extends Component {
   render() {
     return (
 			<Fragment>
-				<h2>Quote List</h2>
 				<hr />
-				<Table responsive>
+				<Table responsive striped bordered hover className={styles}>
 					<thead>
 						<tr>
 							<td>Id</td>
-							<td>Party Id</td>
+							<td>Customer Name</td>
 							<td>Address</td>
 							<td>Phone Number</td>
 							<td>Mobile Number</td>
@@ -50,7 +49,7 @@ class List extends Component {
 							this.state.quoteList && this.state.quoteList.map((quote, index) => {
 								return <tr key={index}>
 									<td>{quote.id}</td>
-									<td>{quote.party_id}</td>
+									<td>{quote.companyName}</td>
 									<td>{quote.address}</td>
 									<td>{quote.phoneNo}</td>
 									<td>{quote.mobileNo}</td>
