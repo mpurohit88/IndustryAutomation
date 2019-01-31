@@ -42,6 +42,7 @@ class List extends Component {
 							<td>Mobile Number</td>
 							<td>Status</td>
 							<td>Created Time</td>
+							<td>Created By</td>
 						</tr>
 					</thead>
 					<tbody>
@@ -55,6 +56,7 @@ class List extends Component {
 									<td>{quote.mobileNo}</td>
 									<td>{getStatus(quote.status)}</td>
 									<td>{getISODateTime(quote.dateTimeCreated)}</td>
+									<td>{quote.name}</td>
 								</tr>
 							})
 						}

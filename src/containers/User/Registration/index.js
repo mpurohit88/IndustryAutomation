@@ -5,6 +5,7 @@ import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
 import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
+import { Success } from '../../../components/Alerts'
 
 import { registerUser } from '../../../core/api/user'
 import { all as getCompanyList } from '../../../core/api/company'
@@ -26,14 +27,13 @@ class Registration extends Component {
 				address: '',
 				mobNo: '',
 				email: '',
-				password: '',
 				isActive: true
 			},
-			companyList: [],
-			company: [{text: 'Individual', value:1},{text: 'Sole proprietorship', value:2},{text: 'Partnership', value:3},{text: 'Private limited company', value:4}],
+			companyList: []
 		}
 		
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleReset = this.handleReset.bind(this);
 		this.handleInput = this.handleInput.bind(this);
 	}
 
@@ -48,6 +48,21 @@ class Registration extends Component {
 		});
 	}
 	
+	handleReset() {
+		this.setState({
+			newUser: {
+				company_name: '',
+				name: '',
+				designation: '',
+				area: '',
+				address: '',
+				mobNo: '',
+				email: '',
+				isActive: true
+			}
+		})
+	}
+
 	handleInput(e) {
 		let value = e.target.value;
 		let name = e.target.name;
@@ -64,22 +79,29 @@ class Registration extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
+		const that = this;
 		let userData = this.state.newUser;
 
 		registerUser(userData).then((response) => {
-				console.log(response);
+			that.setState({response});
+			that.handleReset();
 		}).catch(error => {
 			console.log(error)
 		});
 	}
 
   render() {
+	const { response } = this.state;
+
     return (
 			<Modal handleSubmit={this.handleSubmit} heading='User Registration' show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
 				<Form>
 						<Row className="show-grid">
+							{
+								response && <Col xs={12} md={12}><Success id='userSuccess'>Credentials For '{response.userName}' => UserId: {response.userId} | Password: {response.password}</Success></Col>
+							}
 							<Col xs={12} md={12}>
-                <Dropdown
+                				<Dropdown
 									id='company_name'
 									name='company_name'
 									label='Select Company:'
@@ -90,9 +112,6 @@ class Registration extends Component {
 							</Col>
 							<Col xs={4} md={6}>
 								<Input label='Name of User:' type='input' onChange={this.handleInput} value={this.state.name} name='name' id='name' placeholder='Enter Name of User'/>
-							</Col>
-							<Col xs={4} md={6}>
-								<Input label='Password:' type='password' onChange={this.handleInput} value={this.state.password} name='password' id='password' placeholder='Enter Password'/>
 							</Col>
 							<Col xs={4} md={6}>
 								<Input label='Designation:' type='input' onChange={this.handleInput} value={this.state.designation} name='designation' id='designation' placeholder='Enter Designation'/>
