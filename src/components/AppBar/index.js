@@ -2,13 +2,13 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-import Button from '../Button'
 import Modal from '../Modals/StandardModal'
 import Create from '../../containers/Quote/Create'
 import { Registration as ConpanyRegistration } from '../../containers/Company'
 import { Registration as UserRegistration } from '../../containers/User'
 import { Add as AddProduct } from '../../containers/Product'
 import { Add as AddCustomer } from '../../containers/Customer'
+import { getAdmin, getUserName } from '../../containers/helper'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -43,9 +43,7 @@ export default class AppBar extends React.Component {
   handleSuccessModal = (flag, response) => this.setState({ successShow: flag, msg: response });
 
   render() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    let name = user.result;
-    let isAdmin = user.role == 'admin';
+    const isAdmin = getAdmin(), name = getUserName();
 
     return (
     <div className='test'

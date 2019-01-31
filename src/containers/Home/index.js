@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 
 import List from '../Quote/List'
+import { List as ProductList } from '../Product/List'
+
+import { getAdmin } from '../../containers/helper'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -15,6 +18,8 @@ class Home extends Component {
   }
 
   render() {
+    const isAdmin = getAdmin();
+
     return (
       <div className={styles} >
         <Tabs
@@ -26,17 +31,21 @@ class Home extends Component {
             <List />
           </Tab>
           <Tab eventKey="product" title="Product">
-            <List />
+            <ProductList />
           </Tab>
           <Tab eventKey="customer" title="Customer">
             <List />
           </Tab>
-          <Tab eventKey="company" title="Company">
-            <List />
-          </Tab>
-          <Tab eventKey="user" title="User">
-            <List />
-          </Tab>
+          {
+          isAdmin && <Tab eventKey="company" title="Company">
+                      <List />
+                    </Tab>
+          }
+          {
+          isAdmin && <Tab eventKey="user" title="User">
+                      <List />
+                    </Tab>
+          }
         </Tabs>
       </div>
     )
