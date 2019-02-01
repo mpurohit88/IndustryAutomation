@@ -19,6 +19,7 @@ class Registration extends Component {
 		super(props);
 	
 		this.state={
+			showSucess: false,
 			newUser: {
 				company_name: '',
 				name: '',
@@ -35,6 +36,7 @@ class Registration extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.handleInput = this.handleInput.bind(this);
+		this.resetSuccess = this.resetSuccess.bind(this);
 	}
 
 	componentDidMount() {
@@ -59,7 +61,8 @@ class Registration extends Component {
 				mobNo: '',
 				email: '',
 				isActive: true
-			}
+			},
+			showSucess: true
 		})
 	}
 
@@ -79,15 +82,15 @@ class Registration extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
-		const that = this;
-		let userData = this.state.newUser;
-
-		registerUser(userData).then((response) => {
-			that.setState({response});
-			that.handleReset();
+		registerUser(this.state.newUser).then((response) => {
+			this.handleReset();
 		}).catch(error => {
 			console.log(error)
 		});
+	}
+
+	resetSuccess() {
+		this.setState({showSucess: false});
 	}
 
   render() {
@@ -95,6 +98,7 @@ class Registration extends Component {
 
     return (
 			<Modal handleSubmit={this.handleSubmit} heading='User Registration' show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
+				{ this.state.showSucess ? <Success>User Registered Successfully!</Success> : null }
 				<Form>
 						<Row className="show-grid">
 							{
@@ -105,28 +109,29 @@ class Registration extends Component {
 									id='company_name'
 									name='company_name'
 									label='Select Company:'
-									onChange={this.handleInput} value={this.state.name}
+									onChange={this.handleInput} 
+									value={this.state.newUser.company_name}
 									options={this.state.companyList}
 									placeholder='--Select Company--'
 								/>
 							</Col>
 							<Col xs={4} md={6}>
-								<Input label='Name of User:' type='input' onChange={this.handleInput} value={this.state.name} name='name' id='name' placeholder='Enter Name of User'/>
+								<Input label='Name of User:' type='input' onChange={this.handleInput} onBlur={this.resetSuccess} value={this.state.newUser.name} name='name' id='name' placeholder='Enter Name of User'/>
 							</Col>
 							<Col xs={4} md={6}>
-								<Input label='Designation:' type='input' onChange={this.handleInput} value={this.state.designation} name='designation' id='designation' placeholder='Enter Designation'/>
+								<Input label='Designation:' type='input' onChange={this.handleInput} value={this.state.newUser.designation} name='designation' id='designation' placeholder='Enter Designation'/>
 							</Col>
               <Col xs={4} md={6}>
-								<Input label='Business Area:' type='input' onChange={this.handleInput} value={this.state.area} name='area' id='area' placeholder='Enter Area'/>
+								<Input label='Business Area:' type='input' onChange={this.handleInput} value={this.state.newUser.area} name='area' id='area' placeholder='Enter Area'/>
 							</Col>
               <Col xs={4} md={6}>
-								<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.address} name='address' id='address' placeholder='Enter Address'/>
+								<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.newUser.address} name='address' id='address' placeholder='Enter Address'/>
 							</Col>
               <Col xs={4} md={6}>
-								<Input label='Mob. No.:' type='input' onChange={this.handleInput} value={this.state.mobNo} name='mobNo' id='mobNo' placeholder='Enter Mobile Number'/>
+								<Input label='Mobile No.:' type='input' onChange={this.handleInput} value={this.state.newUser.mobNo} name='mobNo' id='mobNo' placeholder='Enter Mobile Number'/>
 							</Col>
               <Col xs={4} md={6}>
-								<Input label='Email:' type='email' onChange={this.handleInput} value={this.state.email} name='email' id='email'placeholder='Enter Email'/>
+								<Input label='Email:' type='email' onChange={this.handleInput} value={this.state.newUser.email} name='email' id='email'placeholder='Enter Email'/>
 							</Col>
 							<Col xs={4} md={6}>
 								<Checkbox type="checkbox" label="Yes" />

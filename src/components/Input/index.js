@@ -6,12 +6,12 @@ import { Form } from 'react-bootstrap';
 import { styles } from './styles.scss'
 
 const Input = (props) => {
-  const { color, children, type, onChange, value, placeholder, id, name } = props
+  const { type, onChange, value, placeholder, id, name, onBlur } = props
   return (
 		<Fragment>
 			<Form.Group controlId={id}>
 				<Form.Label>{props.label}</Form.Label>
-				<Form.Control type={type} placeholder={placeholder} onChange={onChange} value={value} name={name}/>
+				<Form.Control type={type} placeholder={placeholder} onChange={onChange} value={value} name={name} onBlur={onBlur}/>
 				<Form.Text className="text-muted" >
 					{props.hint}
 				</Form.Text>

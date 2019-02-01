@@ -3,6 +3,7 @@ import { Form, Row, Col } from 'react-bootstrap';
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
+import { Success } from '../../../components/Alerts'
 
 import { addCustomer } from '../../../core/api/customer'
 /* component styles */
@@ -14,6 +15,7 @@ class Add extends Component {
 		super(props);
 	
 		this.state={
+			showSucess: false,
 			newCustomer: {
 				name: '',
 				address: '',
@@ -26,6 +28,8 @@ class Add extends Component {
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleInput = this.handleInput.bind(this);
+		this.handleReset = this.handleReset.bind(this);
+		this.resetSuccess = this.resetSuccess.bind(this);
 	}
 
 	handleInput(e) {
@@ -44,28 +48,45 @@ class Add extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
-		let customerData = this.state.newCustomer;
-
-		addCustomer(customerData).then((response) => {
-				console.log(response);
+		addCustomer(this.state.newCustomer).then((response) => {
+			this.handleReset();
 		}).catch(error => {
 			console.log(error)
 		});
+	}
+
+	handleReset() {
+		this.setState({
+			showSucess: true,
+			newCustomer: {
+				name: '',
+				address: '',
+				contact_person: '',
+				tele: '',
+				gstn: '',
+				email: ''
+			}
+		})
+	}
+
+	resetSuccess() {
+		this.setState({showSucess: false});
 	}
 
   render() {
     return (
 			<Modal heading='Add Customer' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
 				<Form>
+				{ this.state.showSucess ? <Success>Customer Added Successfully!</Success> : null }
 					<Row className="show-grid">
 						<Col xs={4} md={6}>
-							<Input label='Firm Name:' onChange={this.handleInput} value={this.state.newCustomer.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
+							<Input label='Firm Name:' onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCustomer.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.newCustomer.address} name='address' id='address' placeholder='Enter Addrress'/>
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Cotanct Person:' type='input' onChange={this.handleInput} value={this.state.newCustomer.contact_person} name='contact_person' id='contact_person' placeholder='Enter Contact Person'/>
+							<Input label='Contact Person:' type='input' onChange={this.handleInput} value={this.state.newCustomer.contact_person} name='contact_person' id='contact_person' placeholder='Enter Contact Person'/>
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Telephone Number:' type='input' onChange={this.handleInput} value={this.state.newCustomer.tele} name='tele' id='tele' placeholder='Enter Telephone Number'/>

@@ -5,6 +5,7 @@ import { StandardModal } from '../../../components/Modals'
 import Input from '../../../components/Input'
 import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
+import { Success } from '../../../components/Alerts'
 
 import { all as getAllProductList } from '../../../core/api/product'
 import { all as getAllPartyList } from '../../../core/api/customer'
@@ -21,6 +22,7 @@ class Create extends Component {
 	
 		this.state={
 			isLoading: false,
+			showSucess: false,
 			newQuote: {
 				party_name: '',
 				address: '',
@@ -37,9 +39,11 @@ class Create extends Component {
 		this.handleAddEvent = this.handleAddEvent.bind(this);
 		this.handleRowDel = this.handleRowDel.bind(this);
 
+		this.handleReset = this.handleReset.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleInput = this.handleInput.bind(this);
 		this.handleProductChange = this.handleProductChange.bind(this);
+		this.resetSuccess = this.resetSuccess.bind(this);
 	}
 
 	componentDidMount() {
@@ -144,27 +148,42 @@ class Create extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
-		const that = this;
-
-		let data = {
-			quote: this.state.newQuote,
-			productList: this.state.products
-		}
-
 		this.setState({isLoading: true});
 		
-		createQuote(data).then((response) => {
-			this.setState({isLoading: false});
-			that.props.lgClose(false);
-			that.props.handleSuccess(true, response);
+		createQuote({
+			quote: this.state.newQuote,
+			productList: this.state.products
+		}).then((response) => {
+			this.handleReset();
 		}).catch(error => {
 			console.log(error.response)
 		});
 	}
 
+	handleReset() {
+		this.setState({
+			isLoading: false,
+			showSucess: true,
+			newQuote: {
+				party_name: '',
+				address: '',
+				phoneNo: '',
+				mobileNo: ''
+			},
+			products: []
+		})
+
+		// this.props.lgClose(false);
+		this.props.handleSuccess(true, response);
+	}
+
+	resetSuccess() {
+		this.setState({showSucess: false});
+	}
+
   render() {
 		const that = this;
-		var product = this.state.products.map(function(product, index) {
+		let product = this.state.products.map(function(product, index) {
       return (
 			<tr key={product.id} className='productList'>
 									<td>{index + 1}</td>
@@ -183,6 +202,7 @@ class Create extends Component {
 		<Fragment>
 			<StandardModal heading='Create Quote' isLoading={this.state.isLoading} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
 				<Form>
+					{ this.state.showSucess ? <Success>Quote Created Successfully!</Success> : null }
 						<Row className="show-grid">
 							<Col xs={8} md={6}>
 								<Dropdown
@@ -196,7 +216,7 @@ class Create extends Component {
 								/>
 							</Col>
 							<Col xs={4} md={6}>
-								<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.newQuote.address} name='address' id='address' placeholder='Enter Address'/>
+								<Input label='Address:' onBlur={this.resetSuccess} type='input' onChange={this.handleInput} value={this.state.newQuote.address} name='address' id='address' placeholder='Enter Address'/>
 							</Col>
 							<Col xs={4} md={6}>
 								<Input label='Phone no.:' type='input' onChange={this.handleInput} value={this.state.newQuote.phoneNo} name='phoneNo' id='phoneNo' placeholder='Enter Phone No'/>

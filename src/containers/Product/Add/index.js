@@ -3,6 +3,7 @@ import { Form, Row, Col } from 'react-bootstrap';
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
+import { Success } from '../../../components/Alerts'
 
 import { addProduct } from '../../../core/api/product'
 /* component styles */
@@ -25,6 +26,8 @@ class Add extends Component {
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleInput = this.handleInput.bind(this);
+		this.resetSuccess = this.resetSuccess.bind(this);
+		this.handleReset = this.handleReset.bind(this);
 	}
 
 	handleInput(e) {
@@ -43,22 +46,38 @@ class Add extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
-		let productData = this.state.newProduct;
-
-		addProduct(productData).then((response) => {
-				console.log(response);
+		addProduct(this.state.newProduct).then((response) => {
+			this.handleReset();
 		}).catch(error => {
 			console.log(error)
 		});
+	}
+
+	handleReset() {
+		this.setState({
+			showSucess: true,
+			newProduct: {
+				name: '',
+				description: '',
+				unit: '',
+				img: '',
+				hsnCode: ''
+			}
+		})
+	}
+
+	resetSuccess() {
+		this.setState({showSucess: false});
 	}
 
   render() {
     return (
 			<Modal heading='Add Product' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
 				<Form>
+					{ this.state.showSucess ? <Success>Product Added Successfully!</Success> : null }
 					<Row className="show-grid">
 						<Col xs={4} md={6}>
-							<Input label='Name Of Product:' onChange={this.handleInput} value={this.state.newProduct.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
+							<Input label='Name Of Product:' onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newProduct.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Description:' type='input' onChange={this.handleInput} value={this.state.newProduct.description} name='description' id='description' placeholder='Enter Description'/>
