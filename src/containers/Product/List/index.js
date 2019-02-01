@@ -50,7 +50,7 @@ class List extends Component {
 									<td>{product.unit}</td>
 									<td>{product.hsnCode}</td>
 									<td>{getISODateTime(product.dateTimeCreated)}</td>
-									<td>{product.name}</td>
+									<td>{product.createdBy}</td>
 								</tr>
 							})
 						}
