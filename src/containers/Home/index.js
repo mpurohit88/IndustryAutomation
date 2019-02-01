@@ -7,21 +7,20 @@ import { CompanyList } from '../Company'
 import { CustomerList } from '../Customer'
 import { UserList } from '../User'
 
-import { getAdmin } from '../../containers/helper'
-
 /* component styles */
 import { styles } from './styles.scss'
 
 class Home extends Component {
   constructor(props, context) {
     super(props, context);
+
     this.state = {
       key: 'quote',
     };
   }
 
   render() {
-    const isAdmin = getAdmin();
+    const { isAdmin } = this.props;
 
     return (
       <div className={styles} >
