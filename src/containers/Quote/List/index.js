@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react'
-import { Table } from 'react-bootstrap'
+import { Table, OverlayTrigger, Popover, Button } from 'react-bootstrap'
 
 import { all as getAllQuote } from '../../../core/api/quote'
+import { getByQuoteId } from '../../../core/api/quoteProduct'
 
 import { getStatus } from '../helper'
 import { getISODateTime } from '../../helper'
@@ -15,8 +16,11 @@ class List extends Component {
 		super(props);
 
 		this.state = {
-			quoteList: []
+			quoteList: [],
+			quoteProductList: []
 		}
+
+		this.getProductList = this.getProductList.bind(this);
 	}
 
 	componentDidMount() {
@@ -27,7 +31,30 @@ class List extends Component {
     });
   }
 
+  getProductList(quoteId) {
+	getByQuoteId(quoteId).then((quoteProductList) => {
+		this.setState({quoteProductList})
+	});
+  }
+
   render() {
+	const popover = (
+		<Popover id="popover-basic" title="Product List">
+			<table>
+				<thead><tr><th>Name</th><th>Quantity</th><th>GSTN</th></tr></thead>
+				<tbody>
+					{this.state.quoteProductList.map((list) => {
+						return <tr>
+								<td>{list.name}</td>
+								<td>{list.quantity}</td>
+								<td> {list.gstn}</td>
+							</tr>
+					})}
+				</tbody>
+			</table>
+		</Popover>
+	  );
+	  
     return (
 			<Fragment>
 				<hr />
@@ -39,6 +66,7 @@ class List extends Component {
 							<td>Address</td>
 							<td>Phone Number</td>
 							<td>Mobile Number</td>
+							<td>Products</td>
 							<td>Status</td>
 							<td>Created Time</td>
 							<td>Created By</td>
@@ -53,6 +81,12 @@ class List extends Component {
 									<td>{quote.address}</td>
 									<td>{quote.phoneNo}</td>
 									<td>{quote.mobileNo}</td>
+									<td>
+									<OverlayTrigger trigger="click" placement="right" overlay={popover}>
+										<Button variant="success" onClick={() => this.getProductList(quote.id)}>View</Button>
+									</OverlayTrigger>
+										{/* <a href="#" onClick={() => this.getProductList(quote.id)}>View</a> */}
+									</td>
 									<td>{getStatus(quote.status)}</td>
 									<td>{getISODateTime(quote.dateTimeCreated)}</td>
 									<td>{quote.name}</td>
