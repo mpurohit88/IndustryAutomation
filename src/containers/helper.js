@@ -9,3 +9,7 @@ export const getAdmin = function() {
 export const getUserName = function() {
 	return JSON.parse(localStorage.getItem('user')).result;
 }
+
+export const getCompanyName = function() {
+	return JSON.parse(localStorage.getItem('user')).cname;
+}

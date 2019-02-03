@@ -42,7 +42,7 @@ export default class AppBar extends React.Component {
   handleSuccessModal = (flag, response) => this.setState({ successShow: flag, msg: response });
 
   render() {
-    const { isAdmin, name } = this.props;
+    const { isAdmin, name, cname } = this.props;
 
     return (
     <div className='test'
@@ -56,7 +56,7 @@ export default class AppBar extends React.Component {
           to="/"
           className="logo"
         >
-          {this.props.children}
+          {this.props.children} {cname && `| ${cname}`}
         </Link>
         <nav className="nav-collapse">
           <ul>
