@@ -1,4 +1,4 @@
-import {USER_LIST_ARE_LOADING, USER_LIST_FETCH_DATA_SUCCESS} from '../constants/user';
+import {USER_LIST_ARE_LOADING, USER_LIST_FETCH_DATA_SUCCESS, USER_CLEAR_CREDENTIALS} from '../constants/user';
 import objectAssign from 'object-assign';
 import initialState from './initialState';
 
@@ -11,6 +11,9 @@ export default function user(state = initialState.user, action) {
 
     case USER_LIST_FETCH_DATA_SUCCESS:
       return objectAssign({}, state, {list: action.list.userList, credentials: action.list.credentials});
+    
+    case USER_CLEAR_CREDENTIALS:
+      return objectAssign({}, state, {credentials: undefined});
 
     default:
       return state;

@@ -20,3 +20,9 @@ export function userListFetchDataSuccess(list) {
         list
     };
 }
+
+export function userClearCredentials(list) {
+    return {
+        type: types.USER_CLEAR_CREDENTIALS
+    };
+}

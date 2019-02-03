@@ -8,7 +8,7 @@ import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
 import { Success } from '../../../components/Alerts'
 
-import { registerUser } from '../../../core/api/user'
+import { registerUser, clearCredentials } from '../../../core/api/user'
 
 // User Registration Component
 class Registration extends Component {
@@ -25,13 +25,14 @@ class Registration extends Component {
 				mobNo: '',
 				email: '',
 				isActive: true
-			}
+			},
+			businessArea: [{text: 'Marketing', value: 'Marketing'},{text: 'Dispatch', value: 'Dispatch'},{text: 'Reminder', value: 'Reminder'}]
 		}
 		
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.handleInput = this.handleInput.bind(this);
-		this.resetSuccess = this.resetSuccess.bind(this);
+		this.handleModelClick = this.handleModelClick.bind(this);
 	}
 
 	handleReset() {
@@ -68,6 +69,11 @@ class Registration extends Component {
 		this.props.register({data: this.state.newUser, cb: this.handleReset});
 	}
 
+	handleModelClick(flag) {
+		this.props.clear();
+		this.props.handleModelClick(flag);
+	}
+
   render() {
 		const { credentials, companyList } = this.props;
 
@@ -76,7 +82,7 @@ class Registration extends Component {
 		});
 
     return (
-			<Modal handleSubmit={this.handleSubmit} heading='User Registration' show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
+			<Modal handleSubmit={this.handleSubmit} heading='User Registration' show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={(flag) => this.handleModelClick(flag)}>
 				<Form>
 						<Row className="show-grid">
 							{
@@ -94,13 +100,21 @@ class Registration extends Component {
 								/>
 							</Col>
 							<Col xs={4} md={6}>
-								<Input label='Name of User:' type='input' onChange={this.handleInput} onBlur={this.resetSuccess} value={this.state.newUser.name} name='name' id='name' placeholder='Enter Name of User'/>
+								<Input label='Name of User:' type='input' onChange={this.handleInput} value={this.state.newUser.name} name='name' id='name' placeholder='Enter Name of User'/>
 							</Col>
 							<Col xs={4} md={6}>
 								<Input label='Designation:' type='input' onChange={this.handleInput} value={this.state.newUser.designation} name='designation' id='designation' placeholder='Enter Designation'/>
 							</Col>
               <Col xs={4} md={6}>
-								<Input label='Business Area:' type='input' onChange={this.handleInput} value={this.state.newUser.area} name='area' id='area' placeholder='Enter Area'/>
+								<Dropdown
+									id='area'
+									name='area'
+									label='Select Business Area:'
+									onChange={this.handleInput} 
+									value={this.state.newUser.area}
+									options={this.state.businessArea}
+									placeholder='--Select Business Area--'
+								/>
 							</Col>
               <Col xs={4} md={6}>
 								<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.newUser.address} name='address' id='address' placeholder='Enter Address'/>
@@ -130,7 +144,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		register: (newUser) => dispatch(registerUser(newUser))
+		register: (newUser) => dispatch(registerUser(newUser)),
+		clear: () => dispatch(clearCredentials())
 	};
 };
 

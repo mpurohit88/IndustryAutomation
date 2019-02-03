@@ -26,3 +26,9 @@ export function itemsFetchData() {
 			.catch(() => dispatch(userAction.userListHaveError(true)));
 	};
 }
+
+export function clearCredentials() {
+	return (dispatch) => {
+		dispatch(userAction.userClearCredentials());
+	};
+}
