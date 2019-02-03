@@ -5,6 +5,7 @@ import merge        from 'webpack-merge'
 import autoprefixer from 'autoprefixer'
 import development  from './dev.config.babel'
 import production   from './prod.config.babel'
+import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'; 
 
 const TARGET = process.env.npm_lifecycle_event
 
@@ -17,6 +18,9 @@ process.env.BABEL_ENV = TARGET
 const common = {
   entry: [
     'babel-polyfill',
+    './src/webpack-public-path',
+    'react-hot-loader/patch',
+    'webpack-hot-middleware/client?reload=true',
     path.resolve(PATHS.app, 'index.js')
   ],
 
@@ -38,8 +42,15 @@ const common = {
       }
     ]
   },
+  
+  devServer: {
+    historyApiFallback: true,
+  },
 
   plugins: [
+    new HardSourceWebpackPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.LoaderOptionsPlugin({
       options: {
         context: __dirname,

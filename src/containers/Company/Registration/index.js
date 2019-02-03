@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
-import { Form, Row, Col, Table } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { Form, Row, Col } from 'react-bootstrap';
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
 import { registerCompany } from '../../../core/api/company'
 import { Success } from '../../../components/Alerts'
-/* component styles */
-import { styles } from './styles.scss'
 
 // Company Registration Component
 class Registration extends Component {
 	constructor(props){
 		super(props);
+
+		this.nameInput = React.createRef();
 	
 		this.state={
 			showSucess: false,
@@ -71,15 +72,15 @@ class Registration extends Component {
 			},
 			showSucess: true
 		});
+
+		// Explicitly focus the text input using the raw DOM API
+		// Note: we're accessing "current" to get the DOM node
+		this.nameInput.current.focus();
 	}
 	
 	handleSubmit(event){
 		event.preventDefault();
-		registerCompany(this.state.newCompany).then((response) => {
-				this.handleReset();
-		}).catch(error => {
-			console.log(error)
-		});
+		this.props.register({data: this.state.newCompany, cb: this.handleReset});
 	}
 
 	resetSuccess() {
@@ -93,7 +94,7 @@ class Registration extends Component {
 						{ this.state.showSucess ? <Success>Company Registered Successfully!</Success> : null }
 						<Row className="show-grid">
 							<Col xs={6} md={6}>
-								<Input label='Name Of Company:' onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCompany.name} name='name' id='name' type='input' placeholder='Enter Name Of Company'/>
+								<Input label='Name Of Company:' inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCompany.name} name='name' id='name' type='input' placeholder='Enter Name Of Company'/>
 							</Col>
 							<Col xs={6} md={6}>
 								<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.newCompany.address} name='address' id='address' placeholder='Enter Address'/>
@@ -138,4 +139,10 @@ class Registration extends Component {
   }
 }
 
-export default Registration
+const mapDispatchToProps = (dispatch) => {
+	return {
+		register: (newCompany) => dispatch(registerCompany(newCompany))
+	};
+};
+
+export default connect(null, mapDispatchToProps)(Registration);

@@ -12,7 +12,7 @@ const MyContext = React.createContext(false);
 // global styles for entire app
 import './styles.scss'
 
-class App extends Component {
+class App1 extends Component {
   render() {
     const isAdmin = getAdmin(), userName = getUserName();
 
@@ -27,4 +27,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default App1

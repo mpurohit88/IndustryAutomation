@@ -12,6 +12,10 @@ export const get = function(uri, data) {
 						params: data,
 						headers: authHeader()
         }).then(res => {
+            if (res.status !== 200) {
+                throw Error(res.statusText);
+            }
+
             resolve(res.data);
         }).catch(err => {
                 console.log(err);

@@ -1,34 +1,28 @@
 import React          from 'react'
-import ReactDOM       from 'react-dom'
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { render } from 'react-dom';
+import { AppContainer } from 'react-hot-loader';
 
-// import configureStore from 'core/store/configureStore'
-import App            from './containers/App'
-import Login					from './containers/Login'
-import { hasRole, isAllowed } from './containers/auth';
+import configureStore, { history } from './store/configureStore';
+import Root from './containers/Root';
 
-import { PrivateRoute } from './containers/PrivateRoute'
+// require('./favicon.ico'); // Tell webpack to load favicon.ico
+const store = configureStore();
 
-// const store = configureStore()
+render(  
+<AppContainer>
+  <Root store={store} history={history} />
+</AppContainer>, 
+document.getElementById('root')
+)
 
-const user = {
-  roles: ['admin'],
-  rights: ['can_view_articles']
-};
-
-const admin = {
-  roles: ['user', 'admin'],
-  rights: ['can_view_articles', 'can_view_users']
-};
-
-ReactDOM.render((
-  <BrowserRouter>
-     <main>
-			<PrivateRoute exact path="/" component={App} />
-			{hasRole(admin, ['user']) && <PrivateRoute exact path='/user' component={App} />}
-			{hasRole(admin, ['admin']) && <PrivateRoute exact path='/admin' component={App} />}
-			<Route path="/login" component={Login} />
-			{/* <Route exact path='/' component={App}/> */}
-		</main>
-  </BrowserRouter>
-), document.getElementById('root'))
+if (module.hot) {
+  module.hot.accept('./containers/Root', () => {
+    const NewRoot = require('./containers/Root').default;
+    render(
+      <AppContainer>
+        <NewRoot store={store} history={history} />
+      </AppContainer>,
+      document.getElementById('root')
+    );
+  });
+}

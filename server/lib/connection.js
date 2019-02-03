@@ -17,17 +17,4 @@ const getConnection = function(done){
    connectionPool.getConnection(done);
 };
 
-
-function dbconnect()
-{
-  var pool =MySQL.createPool({
-    
-    host:'localhost',
-    user     : 'root',
-    password : '',
-    database : 'work_manamgement'
-  });
-  return pool; 
-}
-
-module.exports = {getConnection: getConnection, dbconnect: dbconnect};
+module.exports = {getConnection: getConnection};

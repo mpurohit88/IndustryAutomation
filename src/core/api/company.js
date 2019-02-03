@@ -1,26 +1,34 @@
 
 import { get, post } from './httpClient'
+import * as companyAction from '../../actions/company'
 
-export const registerCompany = function (newCompany) {
-	return new Promise(function (resolve, reject) {
-			post('api/company/register', newCompany)
-			.then(res => {
-				resolve(res);
-			}).catch(err => {
-				console.log(err);
-				reject(err);
-			});
-	});
+export function registerCompany(newCompany) {
+	return (dispatch) => {
+		dispatch(companyAction.listAreLoading(true));
+
+		post('api/company/register', newCompany.data)
+			// .then((data) => {
+			// 	dispatch(companyAction.listAreLoading(false));
+			// 	return data;
+			// })
+			.then((data) => { 
+				newCompany.cb(); 
+				dispatch(companyAction.listFetchDataSuccess(data))
+			})
+			.catch(() => dispatch(companyAction.listHaveError(true)));
+	};
 }
 
-export const all = function () {
-	return new Promise(function (resolve, reject) {
-		get('api/company/all', {})
-		.then(result => {
-				resolve(result);
-		}).catch(err => {
-						console.log(err);
-						reject(err);
-				});
-    });
+export function itemsFetchData() {
+	return (dispatch) => {
+		dispatch(companyAction.listAreLoading(true));
+
+		get('api/company/all')
+			.then((data) => {
+				dispatch(companyAction.listAreLoading(false));
+				return data;
+			})
+			.then((data) => dispatch(companyAction.listFetchDataSuccess(data)))
+			.catch(() => dispatch(companyAction.listHaveError(true)));
+	};
 }
