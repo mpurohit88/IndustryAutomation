@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { Table, OverlayTrigger, Popover, Button } from 'react-bootstrap'
+import { Table, OverlayTrigger, Popover, Button, Badge } from 'react-bootstrap'
 
 import { itemsFetchData } from '../../../core/api/quote'
 import { getByQuoteId } from '../../../core/api/quoteProduct'
@@ -90,7 +90,7 @@ class List extends Component {
 									</OverlayTrigger>
 										{/* <a href="#" onClick={() => this.getProductList(quote.id)}>View</a> */}
 									</td>
-									<td>{getStatus(quote.status)}</td>
+									<td><Badge pill variant="primary">{getStatus(quote.status)}</Badge></td>
 									<td>{getISODateTime(quote.dateTimeCreated)}</td>
 									<td>{quote.name}</td>
 								</tr>
