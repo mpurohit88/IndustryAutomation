@@ -76,19 +76,19 @@ class Add extends Component {
 					{ this.state.showSucess ? <Success>Product Added Successfully!</Success> : null }
 					<Row className="show-grid">
 						<Col xs={4} md={6}>
-							<Input label='Name Of Product:' inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newProduct.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
+							<Input label='Name Of Product:' validationType='string' min={2} max={50} isRequired={true} inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newProduct.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Description:' type='input' onChange={this.handleInput} value={this.state.newProduct.description} name='description' id='description' placeholder='Enter Description'/>
+							<Input label='Description:' validationType='string' min={2} max={150} type='input' onChange={this.handleInput} value={this.state.newProduct.description} name='description' id='description' placeholder='Enter Description'/>
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Name Of Unit:' type='input' onChange={this.handleInput} value={this.state.newProduct.unit} name='unit' id='unit' placeholder='Enter Unit'/>
+							<Input label='Name Of Unit:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newProduct.unit} name='unit' id='unit' placeholder='Enter Unit'/>
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Browse Image:' type='file' onChange={this.handleInput} value={this.state.newProduct.img} name='img' id='img' placeholder='Enter State'/>
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='HSN Code:' onChange={this.handleInput} value={this.state.newProduct.hsnCode} name='hsnCode' id='hsnCode' type='input' placeholder='Enter HSN Code'/>
+							<Input label='HSN Code:' isRequired={true} onChange={this.handleInput} value={this.state.newProduct.hsnCode} name='hsnCode' id='hsnCode' type='input' placeholder='Enter HSN Code'/>
 						</Col>
 					</Row>
 				</Form>  

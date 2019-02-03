@@ -100,7 +100,7 @@ class Registration extends Component {
 								/>
 							</Col>
 							<Col xs={4} md={6}>
-								<Input label='Name of User:' type='input' onChange={this.handleInput} value={this.state.newUser.name} name='name' id='name' placeholder='Enter Name of User'/>
+								<Input label='Name of User:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newUser.name} name='name' id='name' placeholder='Enter Name of User'/>
 							</Col>
 							<Col xs={4} md={6}>
 								<Input label='Designation:' type='input' onChange={this.handleInput} value={this.state.newUser.designation} name='designation' id='designation' placeholder='Enter Designation'/>

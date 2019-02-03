@@ -59,7 +59,12 @@ const common = {
         ]
       }
     })
-  ]
+  ],
+  node: {
+    net: 'empty',
+    tls: 'empty',
+    dns: 'empty'
+  }
 
 }
 

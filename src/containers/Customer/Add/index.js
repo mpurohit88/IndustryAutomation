@@ -17,6 +17,7 @@ class Add extends Component {
 
 		this.state={
 			showSucess: false,
+			errors: [],
 			newCustomer: {
 				name: '',
 				address: '',
@@ -31,6 +32,15 @@ class Add extends Component {
 		this.handleInput = this.handleInput.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.resetSuccess = this.resetSuccess.bind(this);
+		this.handleError = this.handleError.bind(this);
+	}
+
+	handleError(obj) {
+		let error = Object.assign( [], this.state.errors );
+
+		error[obj.id] = obj.isError;
+
+		this.setState({errors: error})
 	}
 
 	handleInput(e) {
@@ -49,7 +59,15 @@ class Add extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
-		this.props.register({data: this.state.newCustomer, cb: this.handleReset});
+		let errorExists = false;
+
+		Object.values(this.state.errors).map((isError) => {
+			if(isError) {
+				errorExists = true;
+			}
+		});
+
+		errorExists ? alert("Please fix the errors first") : this.props.register({data: this.state.newCustomer, cb: this.handleReset});
 	}
 
 	handleReset() {
@@ -79,26 +97,26 @@ class Add extends Component {
 				{ this.state.showSucess ? <Success>Customer Added Successfully!</Success> : null }
 					<Row className="show-grid">
 						<Col xs={4} md={6}>
-							<Input label='Firm Name:' inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCustomer.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
+							<Input label='Firm Name:' handleError={this.handleError} isRequired={true} inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCustomer.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.newCustomer.address} name='address' id='address' placeholder='Enter Addrress'/>
+							<Input label='Address:' handleError={this.handleError} isRequired={true} type='input' onChange={this.handleInput} value={this.state.newCustomer.address} name='address' id='address' placeholder='Enter Addrress'/>
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Contact Person:' type='input' onChange={this.handleInput} value={this.state.newCustomer.contact_person} name='contact_person' id='contact_person' placeholder='Enter Contact Person'/>
+							<Input label='Contact Person:' handleError={this.handleError} isRequired={true} type='input' onChange={this.handleInput} value={this.state.newCustomer.contact_person} name='contact_person' id='contact_person' placeholder='Enter Contact Person'/>
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Telephone Number:' type='input' onChange={this.handleInput} value={this.state.newCustomer.tele} name='tele' id='tele' placeholder='Enter Telephone Number'/>
+							<Input label='Telephone Number:' handleError={this.handleError} isRequired={true} type='input' onChange={this.handleInput} value={this.state.newCustomer.tele} name='tele' id='tele' placeholder='Enter Telephone Number'/>
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='GSTN:' onChange={this.handleInput} value={this.state.newCustomer.gstn} name='gstn' id='gstn' type='input' placeholder='Enter GSTN'/>
+							<Input label='GSTN:' handleError={this.handleError} isRequired={true} onChange={this.handleInput} value={this.state.newCustomer.gstn} name='gstn' id='gstn' type='input' placeholder='Enter GSTN'/>
 						</Col>
-                        <Col xs={4} md={6}>
-							<Input label='Email:' onChange={this.handleInput} value={this.state.newCustomer.email} name='email' id='email' type='input' placeholder='Enter Email'/>
+            <Col xs={4} md={6}>
+							<Input label='Email:' handleError={this.handleError} isRequired={true} onChange={this.handleInput} value={this.state.newCustomer.email} name='email' id='email' type='email' placeholder='Enter Email'/>
 						</Col>
 					</Row>
 				</Form>  
-        </Modal>
+      </Modal>
     )
   }
 }

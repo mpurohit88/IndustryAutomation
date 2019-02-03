@@ -118,7 +118,7 @@ class Registration extends Component {
 								<Input label='Mobile No.:' onChange={this.handleInput} value={this.state.newCompany.mobileNo} name='mobileNo' id='mobileNo' type='input' placeholder='Enter Mobile Number'/>
 							</Col>
               <Col xs={4} md={6}>
-								<Input label='Email:' onChange={this.handleInput} value={this.state.newCompany.email} name='email' id='email' type='input' placeholder='Enter Email'/>
+								<Input label='Email:' onChange={this.handleInput} value={this.state.newCompany.email} name='email' id='email' type='email' placeholder='Enter Email'/>
 							</Col>
               <Col xs={4} md={6}>
 								<Input label='Website:' onChange={this.handleInput} value={this.state.newCompany.website} name='website' id='website' type='input' placeholder='Enter Website'/>
