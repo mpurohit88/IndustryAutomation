@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Table, OverlayTrigger, Popover, Button } from 'react-bootstrap'
 
-import { all as getAllQuote } from '../../../core/api/quote'
+import { itemsFetchData } from '../../../core/api/quote'
 import { getByQuoteId } from '../../../core/api/quoteProduct'
 
 import { getStatus } from '../helper'
@@ -16,7 +17,6 @@ class List extends Component {
 		super(props);
 
 		this.state = {
-			quoteList: [],
 			quoteProductList: []
 		}
 
@@ -24,20 +24,23 @@ class List extends Component {
 	}
 
 	componentDidMount() {
-		const that = this;
-
-    getAllQuote().then((quoteList) => {
-      that.setState({quoteList: quoteList})
-    });
+		this.props.fetchQuoteList();
   }
 
   getProductList(quoteId) {
-	getByQuoteId(quoteId).then((quoteProductList) => {
-		this.setState({quoteProductList})
-	});
+		getByQuoteId(quoteId).then((quoteProductList) => {
+			this.setState({quoteProductList})
+		});
   }
 
   render() {
+		const { quoteList, hasError, isLoading} = this.props;
+
+		if(isLoading) 
+		{
+			return <div>...Loading</div>
+		}
+
 	const popover = (
 		<Popover id="popover-basic" title="Product List">
 			<table>
@@ -47,7 +50,7 @@ class List extends Component {
 						return <tr>
 								<td>{list.name}</td>
 								<td>{list.quantity}</td>
-								<td> {list.gstn}</td>
+								<td>{list.gstn}</td>
 							</tr>
 					})}
 				</tbody>
@@ -74,7 +77,7 @@ class List extends Component {
 					</thead>
 					<tbody>
 						{
-							this.state.quoteList && this.state.quoteList.map((quote, index) => {
+							quoteList && quoteList.map((quote, index) => {
 								return <tr key={index}>
 									<td>{quote.id}</td>
 									<td>{quote.companyName}</td>
@@ -100,4 +103,18 @@ class List extends Component {
   }
 }
 
-export default List
+const mapStateToProps = (state) => {
+	return {
+			quoteList: state.quote.list,
+			hasError: state.quote.hasError,
+			isLoading: state.quote.isLoading
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		fetchQuoteList: () => dispatch(itemsFetchData())
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(List);

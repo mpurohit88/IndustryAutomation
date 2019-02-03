@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Form, Row, Col } from 'react-bootstrap';
+import { connect } from 'react-redux'
+import { Form, Row, Col } from 'react-bootstrap'
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
@@ -8,10 +9,6 @@ import Dropdown from '../../../components/Dropdown'
 import { Success } from '../../../components/Alerts'
 
 import { registerUser } from '../../../core/api/user'
-import { all as getCompanyList } from '../../../core/api/company'
-
-/* component styles */
-import { styles } from './styles.scss'
 
 // User Registration Component
 class Registration extends Component {
@@ -19,7 +16,6 @@ class Registration extends Component {
 		super(props);
 	
 		this.state={
-			showSucess: false,
 			newUser: {
 				company_name: '',
 				name: '',
@@ -29,8 +25,7 @@ class Registration extends Component {
 				mobNo: '',
 				email: '',
 				isActive: true
-			},
-			companyList: []
+			}
 		}
 		
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,17 +34,6 @@ class Registration extends Component {
 		this.resetSuccess = this.resetSuccess.bind(this);
 	}
 
-	componentDidMount() {
-		const that = this;
-		getCompanyList().then((companyList) => {
-			let companyDropdownList = companyList.map((company) => {
-				return { text: company.name, value: company.id }
-			});
-
-			that.setState({companyList: companyDropdownList})
-		});
-	}
-	
 	handleReset() {
 		this.setState({
 			newUser: {
@@ -61,8 +45,7 @@ class Registration extends Component {
 				mobNo: '',
 				email: '',
 				isActive: true
-			},
-			showSucess: true
+			}
 		})
 	}
 
@@ -82,36 +65,31 @@ class Registration extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
-		registerUser(this.state.newUser).then((response) => {
-			this.handleReset();
-		}).catch(error => {
-			console.log(error)
-		});
-	}
-
-	resetSuccess() {
-		this.setState({showSucess: false});
+		this.props.register({data: this.state.newUser, cb: this.handleReset});
 	}
 
   render() {
-	const { response } = this.state;
+		const { credentials, companyList } = this.props;
+
+		let companyDropdownList = companyList.map((company) => {
+			return { text: company.name, value: company.id }
+		});
 
     return (
 			<Modal handleSubmit={this.handleSubmit} heading='User Registration' show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
-				{ this.state.showSucess ? <Success>User Registered Successfully!</Success> : null }
 				<Form>
 						<Row className="show-grid">
 							{
-								response && <Col xs={12} md={12}><Success id='userSuccess'>Credentials For '{response.userName}' => UserId: {response.userId} | Password: {response.password}</Success></Col>
+								credentials && <Col xs={12} md={12}><Success id='userSuccess'>Credentials For '{credentials.userName}' => UserId: {credentials.userId} | Password: {credentials.password}</Success></Col>
 							}
 							<Col xs={12} md={12}>
-                				<Dropdown
+                <Dropdown
 									id='company_name'
 									name='company_name'
 									label='Select Company:'
 									onChange={this.handleInput} 
 									value={this.state.newUser.company_name}
-									options={this.state.companyList}
+									options={companyDropdownList}
 									placeholder='--Select Company--'
 								/>
 							</Col>
@@ -143,4 +121,17 @@ class Registration extends Component {
   }
 }
 
-export default Registration
+const mapStateToProps = (state) => {
+	return {
+			companyList: state.company.list,
+			credentials: state.user.credentials
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		register: (newUser) => dispatch(registerUser(newUser))
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Registration);

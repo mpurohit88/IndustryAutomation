@@ -11,10 +11,6 @@ import { styles } from './styles.scss'
 
 // List Of Company Component
 class List extends Component {
-	constructor(props){
-		super(props);
-	}
-
 	componentDidMount() {
 		this.props.fetchCompanyList();
   }
@@ -24,7 +20,7 @@ class List extends Component {
 
 		if(isLoading) 
 		{
-			<div>...Loading</div>
+			return <div>...Loading</div>
 		}
 
     return (

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Form, Row, Col } from 'react-bootstrap';
 
 import Modal from '../../../components/Modals/StandardModal'
@@ -6,13 +7,13 @@ import Input from '../../../components/Input'
 import { Success } from '../../../components/Alerts'
 
 import { addProduct } from '../../../core/api/product'
-/* component styles */
-import { styles } from './styles.scss'
 
 // Add Product Component
 class Add extends Component {
 	constructor(props){
 		super(props);
+
+		this.nameInput = React.createRef();
 	
 		this.state={
 			newProduct: {
@@ -46,11 +47,7 @@ class Add extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
-		addProduct(this.state.newProduct).then((response) => {
-			this.handleReset();
-		}).catch(error => {
-			console.log(error)
-		});
+		this.props.register({data: this.state.newProduct, cb: this.handleReset});
 	}
 
 	handleReset() {
@@ -63,7 +60,9 @@ class Add extends Component {
 				img: '',
 				hsnCode: ''
 			}
-		})
+		});
+
+		this.nameInput.current.focus();
 	}
 
 	resetSuccess() {
@@ -77,7 +76,7 @@ class Add extends Component {
 					{ this.state.showSucess ? <Success>Product Added Successfully!</Success> : null }
 					<Row className="show-grid">
 						<Col xs={4} md={6}>
-							<Input label='Name Of Product:' onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newProduct.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
+							<Input label='Name Of Product:' inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newProduct.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Description:' type='input' onChange={this.handleInput} value={this.state.newProduct.description} name='description' id='description' placeholder='Enter Description'/>
@@ -98,4 +97,10 @@ class Add extends Component {
   }
 }
 
-export default Add
+const mapDispatchToProps = (dispatch) => {
+	return {
+		register: (newProduct) => dispatch(addProduct(newProduct))
+	};
+};
+
+export default connect(null, mapDispatchToProps)(Add);

@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import { Form, Row, Col, Table } from 'react-bootstrap';
+import { connect } from 'react-redux'
+import { Form, Row, Col, Table } from 'react-bootstrap'
 
 import { StandardModal } from '../../../components/Modals'
 import Input from '../../../components/Input'
@@ -30,10 +31,7 @@ class Create extends Component {
 				mobileNo: ''
 			},
 			listOfProduct: [],
-			products: [],
-			productDrpDwn: [],
-			partyDrpDwn: [],
-			party_names: [{text: 'Individual', value:1},{text: 'Sole proprietorship', value:2},{text: 'Partnership', value:3},{text: 'Private limited company', value:4}],
+			products: []
 		}
 
 		this.handleAddEvent = this.handleAddEvent.bind(this);
@@ -46,32 +44,10 @@ class Create extends Component {
 		this.resetSuccess = this.resetSuccess.bind(this);
 	}
 
-	componentDidMount() {
-		const that = this;
-
-		getAllPartyList().then(function(listOfParty) {
-
-			let list = listOfParty.map((party) => {
-				return {text: party.name, value: party.id};
-			});
-
-			that.setState({partyDrpDwn: list});
-		});
-
-		getAllProductList().then(function(listOfProduct) {
-
-			let list = listOfProduct.map((product) => {
-				return {text: product.name, value: product.id};
-			});
-
-			that.setState({productDrpDwn: list, listOfProduct: listOfProduct});
-		});
-	}
-
 	handleProductChange(e) {
 		const that = this;
 
-		this.state.listOfProduct.map((product) => {
+		that.props.productList.map((product) => {
 			if(product.id === parseInt(e.target.value)) {
 				that.refs.hsnCode.value = product.hsnCode;
 				that.refs.rate.value = product.unit;
@@ -92,7 +68,7 @@ class Create extends Component {
 		this.setState( {products: this.state.products} );
   };
 
-	handleAddEvent(evt) {
+	handleAddEvent() {
 		const fileArray = this.refs.file.value.split('\\');
 		let id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
 		let isExists = false;
@@ -150,14 +126,10 @@ class Create extends Component {
 		event.preventDefault();
 		this.setState({isLoading: true});
 		
-		createQuote({
+		this.props.create({data: {
 			quote: this.state.newQuote,
 			productList: this.state.products
-		}).then((response) => {
-			this.handleReset();
-		}).catch(error => {
-			console.log(error.response)
-		});
+		}, cb: this.handleReset});
 	}
 
 	handleReset() {
@@ -174,7 +146,7 @@ class Create extends Component {
 		})
 
 		// this.props.lgClose(false);
-		this.props.handleSuccess(true, response);
+		// this.props.handleSuccess(true, response);
 	}
 
 	resetSuccess() {
@@ -183,6 +155,16 @@ class Create extends Component {
 
   render() {
 		const that = this;
+		const { partyList, productList} = that.props;
+
+		let partyDrpDwn = partyList.map((party) => {
+			return {text: party.name, value: party.id};
+		});
+
+		let productDrpDwn = productList.map((party) => {
+			return {text: party.name, value: party.id};
+		});
+
 		let product = this.state.products.map(function(product, index) {
       return (
 			<tr key={product.id} className='productList'>
@@ -212,7 +194,7 @@ class Create extends Component {
 									value={this.state.newQuote.party_name} 
 									onChange={this.handleInput}
 									placeholder='--Select Party Name--'
-									options={this.state.partyDrpDwn}
+									options={partyDrpDwn}
 								/>
 							</Col>
 							<Col xs={4} md={6}>
@@ -247,7 +229,7 @@ class Create extends Component {
 											<select className='product' ref="name" onChange={this.handleProductChange} defaultValue='0'>
 												<option value='0' disabled>--Select Product--</option>
 												{
-													this.state.productDrpDwn.map((product) => {
+													productDrpDwn.map((product) => {
 														return <option value={product.value}>{product.text}</option>;
 													})
 												}
@@ -283,4 +265,18 @@ class Create extends Component {
   }
 }
 
-export default Create
+const mapStateToProps = (state) => {
+	return {
+			quoteList: state.quote.list,
+			partyList: state.customer.list,
+			productList: state.product.list
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		create: (newQuote) => dispatch(createQuote(newQuote))
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Create);

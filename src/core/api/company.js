@@ -4,13 +4,7 @@ import * as companyAction from '../../actions/company'
 
 export function registerCompany(newCompany) {
 	return (dispatch) => {
-		dispatch(companyAction.listAreLoading(true));
-
 		post('api/company/register', newCompany.data)
-			// .then((data) => {
-			// 	dispatch(companyAction.listAreLoading(false));
-			// 	return data;
-			// })
 			.then((data) => { 
 				newCompany.cb(); 
 				dispatch(companyAction.listFetchDataSuccess(data))

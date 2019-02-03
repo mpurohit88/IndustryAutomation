@@ -2,6 +2,18 @@ export default {
   company: {
     list: []
   },
+  customer: {
+    list: []
+  },
+  product: {
+    list: []
+  },
+  quote: {
+    list: []
+  },
+  user: {
+    list: []
+  },
   fuelSavings: {
     newMpg: '',
     tradeMpg: '',

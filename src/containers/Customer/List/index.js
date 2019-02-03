@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Table } from 'react-bootstrap'
 
-import { all as getAllCustomer } from '../../../core/api/customer'
+import { itemsFetchData } from '../../../core/api/customer'
 
 import { getISODateTime } from '../../helper'
 
@@ -10,23 +11,18 @@ import { styles } from './styles.scss'
 
 // List Of customer Component
 class List extends Component {
-	constructor(props){
-		super(props);
-
-		this.state = {
-			customerList: []
-		}
-	}
-
 	componentDidMount() {
-		const that = this;
-
-        getAllCustomer().then((customerList) => {
-      that.setState({customerList: customerList})
-    });
+		this.props.fetchCustomerList();
   }
 
   render() {
+		const { customerList, hasError, isLoading} = this.props;
+
+		if(isLoading) 
+		{
+			return <div>...Loading</div>
+		}
+
     return (
 			<Fragment>
 				<hr />
@@ -37,23 +33,23 @@ class List extends Component {
 							<td>Name</td>
 							<td>Address</td>
 							<td>Contact Person</td>
-                            <td>telephone</td>
-                            <td>GSTN</td>
-                            <td>Email</td>
+							<td>telephone</td>
+							<td>GSTN</td>
+							<td>Email</td>
 							<td>Created Time</td>
 						</tr>
 					</thead>
 					<tbody>
 						{
-							this.state.customerList && this.state.customerList.map((customer, index) => {
+							customerList && customerList.map((customer, index) => {
 								return <tr key={index}>
 									<td>{customer.id}</td>
 									<td>{customer.name}</td>
 									<td>{customer.address}</td>
 									<td>{customer.contactPerson}</td>
-                                    <td>{customer.telephone}</td>
-                                    <td>{customer.gstn}</td>
-                                    <td>{customer.email}</td>
+									<td>{customer.telephone}</td>
+									<td>{customer.gstn}</td>
+									<td>{customer.email}</td>
 									<td>{getISODateTime(customer.dateTimeCreated)}</td>
 								</tr>
 							})
@@ -65,4 +61,18 @@ class List extends Component {
   }
 }
 
-export default List
+const mapStateToProps = (state) => {
+	return {
+			customerList: state.customer.list,
+			hasError: state.customer.hasError,
+			isLoading: state.customer.isLoading
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		fetchCustomerList: () => dispatch(itemsFetchData())
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(List);

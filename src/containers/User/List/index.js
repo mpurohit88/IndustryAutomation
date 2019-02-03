@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Table } from 'react-bootstrap'
 
-import { all as getAllUser } from '../../../core/api/user'
+import { itemsFetchData } from '../../../core/api/user'
 
 import { getISODateTime } from '../../helper'
 
@@ -10,23 +11,18 @@ import { styles } from './styles.scss'
 
 // List Of User Component
 class List extends Component {
-	constructor(props){
-		super(props);
-
-		this.state = {
-			userList: []
-		}
-	}
-
 	componentDidMount() {
-		const that = this;
-
-    getAllUser().then((userList) => {
-      that.setState({userList: userList})
-    });
+		this.props.fetchUserList();
   }
 
   render() {
+		const { userList, hasError, isLoading} = this.props;
+
+		if(isLoading) 
+		{
+			return <div>...Loading</div>
+		}
+
     return (
 			<Fragment>
 				<hr />
@@ -34,8 +30,8 @@ class List extends Component {
 					<thead>
 						<tr>
 							<td>Id</td>
-							<td>Company Name</td>
 							<td>Name</td>
+							<td>Company Name</td>
 							<td>User Id</td>
 							<td>Designation</td>
 							<td>Area</td>
@@ -47,11 +43,11 @@ class List extends Component {
 					</thead>
 					<tbody>
 						{
-							this.state.userList && this.state.userList.map((user, index) => {
+							userList && userList.map((user, index) => {
 								return <tr key={index}>
 									<td>{user.id}</td>
-									<td>{user.companyName}</td>
 									<td>{user.name}</td>
+									<td>{user.companyName}</td>
 									<td>{user.userId}</td>
 									<td>{user.designation}</td>
 									<td>{user.area}</td>
@@ -69,4 +65,19 @@ class List extends Component {
   }
 }
 
-export default List
+const mapStateToProps = (state) => {
+	return {
+			userList: state.user.list,
+			hasError: state.user.hasError,
+			isLoading: state.user.isLoading
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		fetchUserList: () => dispatch(itemsFetchData())
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(List);
+

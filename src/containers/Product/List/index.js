@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Table } from 'react-bootstrap'
 
-import { all as getAllProduct } from '../../../core/api/product'
+import { itemsFetchData } from '../../../core/api/product'
 
 import { getISODateTime } from '../../helper'
 
@@ -10,23 +11,18 @@ import { styles } from './styles.scss'
 
 // List Of Quote Component
 class List extends Component {
-	constructor(props){
-		super(props);
-
-		this.state = {
-			productList: []
-		}
-	}
-
 	componentDidMount() {
-		const that = this;
-
-    getAllProduct().then((productList) => {
-      that.setState({productList: productList})
-    });
+    this.props.fetchProductList();
   }
 
   render() {
+		const { productList, hasError, isLoading} = this.props;
+
+		if(isLoading) 
+		{
+			return <div>...Loading</div>
+		}
+
     return (
 			<Fragment>
 				<hr />
@@ -43,7 +39,7 @@ class List extends Component {
 					</thead>
 					<tbody>
 						{
-							this.state.productList && this.state.productList.map((product, index) => {
+							productList && productList.map((product, index) => {
 								return <tr key={index}>
 									<td>{product.id}</td>
 									<td>{product.name}</td>
@@ -61,4 +57,19 @@ class List extends Component {
   }
 }
 
-export default List
+const mapStateToProps = (state) => {
+	return {
+			productList: state.product.list,
+			hasError: state.product.hasError,
+			isLoading: state.product.isLoading
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		fetchProductList: () => dispatch(itemsFetchData())
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(List);
+

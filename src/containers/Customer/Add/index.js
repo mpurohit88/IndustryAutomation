@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
-import { Form, Row, Col } from 'react-bootstrap';
+import { connect } from 'react-redux'
+import { Form, Row, Col } from 'react-bootstrap'
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
 import { Success } from '../../../components/Alerts'
 
 import { addCustomer } from '../../../core/api/customer'
-/* component styles */
-import { styles } from './styles.scss'
 
 // Add Product Component
 class Add extends Component {
 	constructor(props){
 		super(props);
-	
+
+		this.nameInput = React.createRef();
+
 		this.state={
 			showSucess: false,
 			newCustomer: {
@@ -48,11 +49,7 @@ class Add extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
-		addCustomer(this.state.newCustomer).then((response) => {
-			this.handleReset();
-		}).catch(error => {
-			console.log(error)
-		});
+		this.props.register({data: this.state.newCustomer, cb: this.handleReset});
 	}
 
 	handleReset() {
@@ -66,7 +63,9 @@ class Add extends Component {
 				gstn: '',
 				email: ''
 			}
-		})
+		});
+
+		this.nameInput.current.focus();
 	}
 
 	resetSuccess() {
@@ -80,7 +79,7 @@ class Add extends Component {
 				{ this.state.showSucess ? <Success>Customer Added Successfully!</Success> : null }
 					<Row className="show-grid">
 						<Col xs={4} md={6}>
-							<Input label='Firm Name:' onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCustomer.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
+							<Input label='Firm Name:' inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCustomer.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.newCustomer.address} name='address' id='address' placeholder='Enter Addrress'/>
@@ -104,4 +103,10 @@ class Add extends Component {
   }
 }
 
-export default Add
+const mapDispatchToProps = (dispatch) => {
+	return {
+		register: (newCustomer) => dispatch(addCustomer(newCustomer))
+	};
+};
+
+export default connect(null, mapDispatchToProps)(Add);

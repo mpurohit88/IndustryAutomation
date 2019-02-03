@@ -1,26 +1,28 @@
 
 import { get, post } from './httpClient'
+import * as quoteAction from '../../actions/quote'
 
-export const createQuote = function (newUser) {
-    return new Promise(function (resolve, reject) {
-        post('api/quote/create', newUser)
-        .then(res => {
-            resolve(res);
-        }).catch(err => {
-                console.log(err);
-                reject(err);
-            });
-    });
+export function createQuote(newQuote) {
+	return (dispatch) => {
+		post('api/quote/create', newQuote.data)
+			.then((data) => { 
+				newQuote.cb(); 
+				dispatch(quoteAction.quoteListFetchDataSuccess(data))
+			})
+			.catch(() => dispatch(quoteAction.quoteListHaveError(true)));
+	};
 }
 
-export const all = function () {
-	return new Promise(function (resolve, reject) {
-		get('api/quote/all', {})
-		.then(result => {
-			resolve(result);
-		}).catch(err => {
-            console.log(err);
-            reject(err);
-        });
-    });
+export function itemsFetchData() {
+	return (dispatch) => {
+		dispatch(quoteAction.quoteListAreLoading(true));
+
+		get('api/quote/all')
+			.then((data) => {
+				dispatch(quoteAction.quoteListAreLoading(false));
+				return data;
+			})
+			.then((data) => dispatch(quoteAction.quoteListFetchDataSuccess(data)))
+			.catch(() => dispatch(quoteAction.quoteListHaveError(true)));
+	};
 }

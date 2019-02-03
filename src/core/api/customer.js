@@ -1,26 +1,29 @@
 
 import { get, post } from './httpClient'
 
-export const addCustomer = function (newCustomer) {
-	return new Promise(function (resolve, reject) {
-			post('api/customer/add', newCustomer)
-			.then(res => {
-				resolve(res);
-			}).catch(err => {
-				console.log(err);
-				reject(err);
-			});
-	});
+import * as customerAction from '../../actions/customer'
+
+export function addCustomer(newCustomer) {
+	return (dispatch) => {
+		post('api/customer/add', newCustomer.data)
+			.then((data) => { 
+				newCustomer.cb(); 
+				dispatch(customerAction.customerListFetchDataSuccess(data))
+			})
+			.catch(() => dispatch(customerAction.customerListHaveError(true)));
+	};
 }
 
-export const all = function () {
-	return new Promise(function (resolve, reject) {
-		get('api/customer/all', {})
-		.then(result => {
-				resolve(result);
-		}).catch(err => {
-						console.log(err);
-						reject(err);
-				});
-    });
+export function itemsFetchData() {
+	return (dispatch) => {
+		dispatch(customerAction.customerListAreLoading(true));
+
+		get('api/customer/all')
+			.then((data) => {
+				dispatch(customerAction.customerListAreLoading(false));
+				return data;
+			})
+			.then((data) => dispatch(customerAction.customerListFetchDataSuccess(data)))
+			.catch(() => dispatch(customerAction.customerListHaveError(true)));
+	};
 }
