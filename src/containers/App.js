@@ -30,9 +30,9 @@ class App extends React.Component {
   render() {
     return (
       <Switch>
-        <App1>
+        {/* <App1> */}
           <main>
-            <PrivateRoute exact path="/" component={Home} />
+            <PrivateRoute exact path="/" component={App1} />
             <Route path="/quote/:quoteId" component={QuoteHome} />
             {/* {hasRole(admin, ['user']) && <PrivateRoute exact path='/user' component={App} />} */}
             {/* {hasRole(admin, ['admin']) && <PrivateRoute exact path='/admin' component={App} />} */}
@@ -43,7 +43,7 @@ class App extends React.Component {
           {/* <Route path="/fuel-savings" component={FuelSavingsPage} />
           <Route path="/about" component={AboutPage} /> */}
           {/* <Route component={NotFoundPage} /> */}
-        </App1>
+        {/* </App1> */}
       </Switch>
     );
   }

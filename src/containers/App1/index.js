@@ -19,7 +19,7 @@ class App1 extends Component {
     return (
       <div>
         <AppBar isAdmin={isAdmin} name={userName} cname={cname}>{appConfig.name}</AppBar>
-        {this.props.children}
+        <Home />
       </div>
     )
   }
