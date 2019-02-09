@@ -1,9 +1,11 @@
 /* eslint-disable import/no-named-as-default */
 import { NavLink, Route, Switch } from "react-router-dom";
-
+import { BrowserRouter as Router } from 'react-router-dom'
 import { PrivateRoute } from "./PrivateRoute"
 import Login from "./Login"
 import App1 from './App1';
+import Home from './Home';
+import { QuoteHome } from './Quote';
 
 import NotFoundPage from "./NotFoundPage";
 import PropTypes from "prop-types";
@@ -26,20 +28,22 @@ const admin = {
 
 class App extends React.Component {
   render() {
-    const activeStyle = { color: 'blue' };
     return (
       <Switch>
-        <main>
-          <PrivateRoute exact path="/" component={App1} />
-          {/* {hasRole(admin, ['user']) && <PrivateRoute exact path='/user' component={App} />} */}
-          {/* {hasRole(admin, ['admin']) && <PrivateRoute exact path='/admin' component={App} />} */}
-          <Route path="/login" component={Login} />
-          {/* <Route exact path='/' component={Login}/> */}
-        </main>
+        <App1>
+          <main>
+            <PrivateRoute exact path="/" component={Home} />
+            <Route path="/quote/:quoteId" component={QuoteHome} />
+            {/* {hasRole(admin, ['user']) && <PrivateRoute exact path='/user' component={App} />} */}
+            {/* {hasRole(admin, ['admin']) && <PrivateRoute exact path='/admin' component={App} />} */}
+            <Route path="/login" component={Login} />
+            {/* <Route exact path='/' component={Login}/> */}
+          </main>
 
-        {/* <Route path="/fuel-savings" component={FuelSavingsPage} />
-        <Route path="/about" component={AboutPage} /> */}
-        <Route component={NotFoundPage} />
+          {/* <Route path="/fuel-savings" component={FuelSavingsPage} />
+          <Route path="/about" component={AboutPage} /> */}
+          {/* <Route component={NotFoundPage} /> */}
+        </App1>
       </Switch>
     );
   }

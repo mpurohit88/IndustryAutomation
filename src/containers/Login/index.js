@@ -57,7 +57,7 @@ class Login extends React.Component {
         const { username, password, submitted, loading, error } = this.state;
         return (
             <div className="col-md-6 col-md-offset-3 login">
-							<div className="card card-signin my-5">
+							<div className="card card-signin">
 								<div className="card-body">
 									{/* <div className="alert alert-info">
 											Username: test<br />

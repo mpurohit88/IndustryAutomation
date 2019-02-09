@@ -51,6 +51,7 @@ export default class AppBar extends React.Component {
         marginBottom: `1.45rem`,
       }}
     >
+      
       <header>
         <Link
           to="/"
@@ -58,26 +59,32 @@ export default class AppBar extends React.Component {
         >
           {this.props.children} {cname && `| ${cname}`}
         </Link>
-        <nav className="nav-collapse">
-          <ul>
-            {/* active */}
-            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.setState({ lgShow: true })}>Create Quote</a></li> }
-            { isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCompanyRegClick(true)}>Company Registration</a></li> }
-            { isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleUserRegClick(true)}>User Registration</a></li> }
-            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleProductClick(true)}>Add Product</a></li> }
-            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCustomerClick(true)}>Add Customer</a></li> }
-            <li className="menu-item user">
-              <a>
-                <span>Welcome: {name.toUpperCase()}</span>
-              </a>
-            </li>
-            <li className="menu-item"><Link style={{
-                color: `white`,
-                textDecoration: `none`,
-              }}
-              to="/login">Logout</Link></li>
-          </ul>
+        {
+          <nav className="navbar navbar-expand-md navbar-dark fixed-top">
+          <a className="navbar-brand" href="#">Carousel</a>
+          <button className="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="navbar-collapse collapse" id="navbarCollapse">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item active">
+                <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">Link</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link disabled" href="#">Disabled</a>
+              </li>
+            </ul>
+            <form className="form-inline mt-2 mt-md-0">
+              <input className="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" />
+              <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+          </div>
         </nav>
+        }
+        
       </header>
         
         {

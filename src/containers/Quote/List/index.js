@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
+import { Link } from "react-router-dom";
 import { Table, OverlayTrigger, Popover, Button, Badge } from 'react-bootstrap'
 
 import { itemsFetchData } from '../../../core/api/quote'
@@ -79,7 +80,7 @@ class List extends Component {
 						{
 							quoteList && quoteList.map((quote, index) => {
 								return <tr key={index}>
-									<td>{quote.id}</td>
+									<td><Link to={`/quote/${quote.id}`}>{quote.id}</Link></td>
 									<td>{quote.companyName}</td>
 									<td>{quote.address}</td>
 									<td>{quote.phoneNo}</td>

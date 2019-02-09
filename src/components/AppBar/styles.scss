@@ -20,7 +20,7 @@ a:hover {
   RESPONSIVE NAV STYLES
 --------------------------------------------- */
 
-.nav-collapse ul {
+.navbar ul {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -28,12 +28,12 @@ a:hover {
   list-style: none;
 }
 
-.nav-collapse li {
+.navbar li {
   width: 100%;
   display: block;
 }
 
-.js .nav-collapse {
+.js .navbar {
   clip: rect(0 0 0 0);
   max-height: 0;
   position: absolute;
@@ -42,7 +42,7 @@ a:hover {
   zoom: 1;
 }
 
-.nav-collapse.opened {
+.navbar.opened {
   max-height: 9999px;
 }
 
@@ -61,10 +61,10 @@ a:hover {
 }
 
 @media screen and (min-width: 40em) {
-  .js .nav-collapse {
+  .js .navbar {
     position: relative;
   }
-  .js .nav-collapse.closed {
+  .js .navbar.closed {
     max-height: none;
   }
   .nav-toggle {
@@ -185,39 +185,39 @@ header a:hover {
   top: 0;
 }
 
-.nav-collapse,
-.nav-collapse * {
+.navbar,
+.navbar * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-.nav-collapse,
-.nav-collapse ul {
+.navbar,
+.navbar ul {
   list-style: none;
   width: 100%;
   float: left;
 }
 
 @media screen and (min-width: 40em) {
-  .nav-collapse {
+  .navbar {
     float: right;
     width: auto;
   }
 }
 
-.nav-collapse li {
+.navbar li {
   float: left;
   width: 100%;
 }
 
 @media screen and (min-width: 40em) {
-  .nav-collapse li {
+  .navbar li {
     width: auto;
   }
 }
 
-.nav-collapse a {
+.navbar a {
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   border-top: 1px solid white;
   text-decoration: none;
@@ -237,13 +237,13 @@ header a:hover {
   background: linear-gradient(to bottom, #51bbd2 0%, #26788a 100%);
 }
 
-.nav-collapse a:hover,
-.nav-collapse .active a {
+.navbar a:hover,
+.navbar .active a {
   background: $mainColor;
 }
 
-.nav-collapse a:active,
-.nav-collapse .active a {
+.navbar a:active,
+.navbar .active a {
   background: $mainColor;
 }
 @import url('https://fonts.googleapis.com/css?family=Roboto');
@@ -323,7 +323,7 @@ h6{
 }
 
 @media screen and (min-width: 40em) {
-  .nav-collapse a {
+  .navbar a {
     border-left: 1px solid white;
     padding: 1.02em 2em;
     text-align: center;
@@ -333,17 +333,22 @@ h6{
   }
 }
 
-.nav-collapse ul ul a {
+.navbar ul ul a {
   background: #ca3716;
   padding-left: 2em;
 }
 
 @media screen and (min-width: 40em) {
-  .nav-collapse ul ul a {
+  .navbar ul ul a {
     display: none;
   }
 }
 
+@media screen and (max-width: 40em) {
+  .navbar ul li a {
+    display: none;
+  }
+}
 
 /* ------------------------------------------
   NAV TOGGLE STYLES
@@ -389,4 +394,10 @@ h6{
 .nav-toggle.active:before {
   font-size: 24px;
   content: "\78"; /* Close icon */
+}
+
+@media (min-width: 768px) {
+  .navbar .navbar-toggler {
+      display: none;
+  }
 }

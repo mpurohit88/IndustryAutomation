@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 
+import { getAdmin }                from 'configs/user'
+
 import List from '../Quote/List'
 import { ProductList } from '../Product'
 import { CompanyList } from '../Company'
@@ -20,10 +22,10 @@ class Home extends Component {
   }
 
   render() {
-    const { isAdmin } = this.props;
+    const { isAdmin } = getAdmin();
 
     return (
-      <div className={styles} >
+      <div className={styles}>
         <Tabs
           id="controlled-tab-example"
           activeKey={this.state.key}

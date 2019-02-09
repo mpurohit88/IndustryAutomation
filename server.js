@@ -48,10 +48,7 @@ app.use(require('morgan')('short'));
   app.use('/api/customer', customerRouter); 
   app.use('/api/quoteProduct', quoteProductRouter);
   app.use('/api/auth', authRouter);
-
-  app.get('/*', function root(req, res) {
-    res.sendFile(__dirname + '/src/index.html')
-  })
+  console.log("****************")
 })()
 
 app.get('/*', function root(req, res) {

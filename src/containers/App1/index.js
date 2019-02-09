@@ -17,12 +17,10 @@ class App1 extends Component {
     const isAdmin = getAdmin(), userName = getUserName(), cname = getCompanyName();
 
     return (
-      // <MuiThemeProvider theme={theme}>
-      <MyContext.Provider value={isAdmin}>
+      <div>
         <AppBar isAdmin={isAdmin} name={userName} cname={cname}>{appConfig.name}</AppBar>
-        <Home isAdmin={isAdmin}/>
-      </MyContext.Provider>
-      // </MuiThemeProvider>
+        {this.props.children}
+      </div>
     )
   }
 }

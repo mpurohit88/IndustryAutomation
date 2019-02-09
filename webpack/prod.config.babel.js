@@ -1,4 +1,5 @@
 import path                 from 'path'
+import webpack              from 'webpack'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import HtmlWebpackPlugin    from 'html-webpack-plugin'
 import CopyWebpackPlugin    from 'copy-webpack-plugin'
@@ -38,6 +39,7 @@ module.exports = {
   },
 
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css'

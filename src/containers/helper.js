@@ -3,13 +3,16 @@ export const getISODateTime = function(dateTime) {
 }
 
 export const getAdmin = function() {
-	return JSON.parse(localStorage.getItem('user')).role == 'admin';
+	const user = JSON.parse(localStorage.getItem('user'));
+	return user ? user.role == 'admin' : false;
 }
 
 export const getUserName = function() {
-	return JSON.parse(localStorage.getItem('user')).result;
+	const user = JSON.parse(localStorage.getItem('user'));
+	return user ? user.result : undefined;
 }
 
 export const getCompanyName = function() {
-	return JSON.parse(localStorage.getItem('user')).cname;
+	const user = JSON.parse(localStorage.getItem('user'));
+	return user ? user.cname : undefined;
 }
