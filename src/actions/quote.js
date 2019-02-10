@@ -20,3 +20,24 @@ export function quoteListFetchDataSuccess(list) {
         list
     };
 }
+
+export function quoteDetailsHaveError(bool) {
+    return {
+        type: types.QUOTE_DETAILS_HAVE_ERROR,
+        hasError: bool
+    };
+}
+
+export function quoteDetailsAreLoading(bool) {
+    return {
+        type: types.QUOTE_DETAILS_ARE_LOADING,
+        isLoading: bool
+    };
+}
+
+export function quoteDetailsFetchDataSuccess(details) {
+    return {
+        type: types.QUOTE_DETAILS_FETCH_DATA_SUCCESS,
+        details
+    };
+}

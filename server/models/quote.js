@@ -106,4 +106,31 @@ Quote.prototype.allByUserId = function(userId) {
   });
 }
 
+Quote.prototype.getQuoteDetail = function(userId, quoteId) {
+  return new Promise(function(resolve, reject) {
+    connection.getConnection(function(error, connection){
+      console.log('Process Started %d All',connection.threadId);
+
+      if (error) {
+        throw error;
+      }
+
+      const isActive = 1;
+
+			connection.query('select q.id, c.name as companyName, q.address, q.phoneNo, q.mobileNo, q.status, q.dateTimeCreated, u.name as userName from quote q inner join customer c on q.party_id = c.id inner join user as u on q.createdBy = u.id where q.isActive=? and q.id = ? order by q.id desc', [isActive, quoteId], function(error,rows,fields){
+			 
+					if(!error){ 
+						resolve(rows);
+					} else {
+						console.log("Error...", error);
+						reject(error);
+					}
+
+					connection.release();
+					console.log('Process Complete %d',connection.threadId);
+				});
+    });
+  });
+}
+
 module.exports = Quote;

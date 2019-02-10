@@ -49,4 +49,20 @@ const all = function(req, res, next){
  	}
 }
 
-module.exports = {create: create, all: all};
+const getQuoteDetail = function(req, res, next){
+	try {
+        // if(req.decoded.role === 'admin') {
+					new Quote({}).getQuoteDetail(req.decoded.id, req.query.quoteId).then(function(quoteList) {
+						res.send(quoteList);
+					});
+        // } else {
+		// 			new Quote({}).allByUserId(req.decoded.id).then(function(quoteList) {
+		// 				res.send(quoteList);
+		// 			});
+        // }
+ 	} catch (err) {
+	 	console.log("Error: ", err);
+ 	}
+}
+
+module.exports = {create: create, all: all, getQuoteDetail: getQuoteDetail};

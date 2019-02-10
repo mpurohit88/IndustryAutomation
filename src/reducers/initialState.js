@@ -9,7 +9,8 @@ export default {
     list: []
   },
   quote: {
-    list: []
+    list: [],
+    details: {}
   },
   user: {
     list: []

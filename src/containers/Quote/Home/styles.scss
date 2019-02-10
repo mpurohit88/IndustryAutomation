@@ -1,4 +1,11 @@
 :local(.styles) {
     margin-top: 80px;
+    background-color: white;
+    padding: 14px;
 }
 
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

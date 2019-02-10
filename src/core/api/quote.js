@@ -26,3 +26,17 @@ export function itemsFetchData() {
 			.catch(() => dispatch(quoteAction.quoteListHaveError(true)));
 	};
 }
+
+export function itemsFetchQuoteDetails(quoteId) {
+	return (dispatch) => {
+		dispatch(quoteAction.quoteDetailsAreLoading(true));
+
+		get('api/quote/getQuoteDetail', {quoteId})
+			.then((data) => {
+				dispatch(quoteAction.quoteDetailsAreLoading(false));
+				return data;
+			})
+			.then((data) => dispatch(quoteAction.quoteDetailsFetchDataSuccess(data)))
+			.catch(() => dispatch(quoteAction.quoteDetailsFetchDataSuccess(true)));
+	};
+}
