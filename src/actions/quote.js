@@ -41,3 +41,24 @@ export function quoteDetailsFetchDataSuccess(details) {
         details
     };
 }
+
+export function quoteStartHaveError(bool) {
+    return {
+        type: types.QUOTE_START_HAVE_ERROR,
+        hasError: bool
+    };
+}
+
+export function quoteStartIsLoading(bool) {
+    return {
+        type: types.QUOTE_START_ARE_LOADING,
+        isLoading: bool
+    };
+}
+
+export function quoteStartFetchDataSuccess(details) {
+    return {
+        type: types.QUOTE_START_FETCH_DATA_SUCCESS,
+        details
+    };
+}

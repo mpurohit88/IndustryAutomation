@@ -4,8 +4,119 @@
     padding: 14px;
 }
 
+strong {
+    font-weight: 600;
+}
+
 .flex-center {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.head {
+  padding: 15px;
+  background-color: #3c9aae;
+  color: white;
+}
+
+.step {
+    padding: 10px;
+    background-color: #ddf0f4;
+    margin-top: 25px;
+    border-radius: 12px;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    -khtml-border-radius: 12px;
+}
+
+.text {
+  letter-spacing: .9px;
+  font-size: 17px;
+}
+
+div.checkmark .circle, .disabled-circle {
+    font-size: 16px; // this determines the size of the list text and therefore checkmark size
+    list-style-type: none; // remove default list style
+    // margin-bottom: 1em; // lists need to be able to breathe
+    // padding: 0.25em 0 0 2.5em; // make room for the circle
+    position: relative; // because we want to position the circle in an absolute fashion
+    padding-left: 4em;
+    padding-top: .6em;
+  }
+
+  .active-step {
+		border: 4px solid #007bff;
+	}
+
+  div.checkmark .circle:before {
+    content: " "; // the circle itself is empty
+    display: block;
+    border: solid 0.8em green; // create a colored area...
+    border-radius: .8em; // ... and turn it into a circle
+    height: 0;
+    width: 0;
+    position: absolute; // the circle is then put into place
+    left: 0.5em;
+    top: 40%; 
+    margin-top: -0.5em;
+  }
+  
+  div.checkmark .circle:before {
+    content: " "; // the circle itself is empty
+    display: block;
+    border: solid 0.8em green; // create a colored area...
+    border-radius: .8em; // ... and turn it into a circle
+    height: 0;
+    width: 0;
+    position: absolute; // the circle is then put into place
+    left: 0.5em;
+    top: 40%; 
+    margin-top: -0.5em;
+  }
+
+  div.checkmark .circle:after {
+	content: " ";
+	display: block;
+	width: 0.4em;
+	height: 0.8em;
+	border: solid white;
+	border-width: 0 0.2em 0.2em 0;
+	position: absolute;
+	left: 1.1em;
+	top: 40%;
+  margin-top: -0.2em;
+  -webkit-transform: rotate(45deg); // tilts the shape
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+
+///// Disabled circle /////
+
+div.checkmark .disabled-circle:before {
+  content: " "; // the circle itself is empty
+  display: block;
+  border: solid 0.8em gray; // create a colored area...
+  border-radius: .8em; // ... and turn it into a circle
+  height: 0;
+  width: 0;
+  position: absolute; // the circle is then put into place
+  left: 0.5em;
+  top: 40%; 
+  margin-top: -0.5em;
+}
+
+div.checkmark .disabled-circle:before {
+  content: " "; // the circle itself is empty
+  display: block;
+  border: solid 0.8em gray; // create a colored area...
+  border-radius: .8em; // ... and turn it into a circle
+  height: 0;
+  width: 0;
+  position: absolute; // the circle is then put into place
+  left: 0.5em;
+  top: 40%; 
+  margin-top: -0.5em;
 }

@@ -6,7 +6,7 @@ import { Table, OverlayTrigger, Popover, Button, Badge } from 'react-bootstrap'
 import { itemsFetchData } from '../../../core/api/quote'
 import { getByQuoteId } from '../../../core/api/quoteProduct'
 
-import { getStatus } from '../helper'
+import { getStatus, getVariant } from '../helper'
 import { getISODateTime } from '../../helper'
 
 /* component styles */
@@ -91,7 +91,7 @@ class List extends Component {
 									</OverlayTrigger>
 										{/* <a href="#" onClick={() => this.getProductList(quote.id)}>View</a> */}
 									</td>
-									<td><Badge pill variant="primary">{getStatus(quote.status)}</Badge></td>
+									<td><Badge pill variant={getVariant(quote.status)}>{getStatus(quote.status)}</Badge></td>
 									<td>{getISODateTime(quote.dateTimeCreated)}</td>
 									<td>{quote.name}</td>
 								</tr>

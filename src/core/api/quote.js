@@ -37,6 +37,20 @@ export function itemsFetchQuoteDetails(quoteId) {
 				return data;
 			})
 			.then((data) => dispatch(quoteAction.quoteDetailsFetchDataSuccess(data)))
-			.catch(() => dispatch(quoteAction.quoteDetailsFetchDataSuccess(true)));
+			.catch(() => dispatch(quoteAction.quoteDetailsHaveError(true)));
+	};
+}
+
+export function quoteStart(taskHistId, quoteId) {
+	return (dispatch) => {
+		dispatch(quoteAction.quoteStartIsLoading(true));
+
+		post('api/quote/start', {taskHistId, quoteId})
+			.then((data) => {
+				dispatch(quoteAction.quoteStartIsLoading(false));
+				return data;
+			})
+			.then((data) => dispatch(quoteAction.quoteStartFetchDataSuccess(data)))
+			.catch(() => dispatch(quoteAction.quoteStartHaveError(true)));
 	};
 }

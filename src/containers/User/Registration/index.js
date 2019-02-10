@@ -82,7 +82,7 @@ class Registration extends Component {
 		});
 
     return (
-			<Modal handleSubmit={this.handleSubmit} heading='User Registration' show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={(flag) => this.handleModelClick(flag)}>
+			<Modal btnText='Save' handleSubmit={this.handleSubmit} heading='User Registration' show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={(flag) => this.handleModelClick(flag)}>
 				<Form>
 						<Row className="show-grid">
 							{

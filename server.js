@@ -19,6 +19,7 @@ app.use(require('morgan')('short'));
   const quoteRouter = require('./server/routes/quote');
   const customerRouter = require('./server/routes/customer');
   const quoteProductRouter = require('./server/routes/quoteProduct');
+  const emailRouter = require('./server/routes/email');
   const authRouter = require('./server/routes/auth');
 
   app.use(bodyParser.json());
@@ -48,6 +49,7 @@ app.use(require('morgan')('short'));
   app.use('/api/customer', customerRouter); 
   app.use('/api/quoteProduct', quoteProductRouter);
   app.use('/api/auth', authRouter);
+  app.use('/api/email', emailRouter);
   console.log("****************")
 })()
 

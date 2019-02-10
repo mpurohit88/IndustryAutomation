@@ -1,4 +1,4 @@
-import React                   from 'react'
+import React, { Fragment }               from 'react'
 import PropTypes               from 'prop-types'
 import { Button as STButton } from 'react-bootstrap'
 
@@ -8,11 +8,11 @@ import { styles } from './styles.scss'
 const Button = (props) => {
   const { color, children } = props
   return (
-    <div className={styles}>
-      <STButton variant={props.variant} color={color} onClick={props.onClick}>
+    <Fragment>
+      <STButton className='margin' variant={props.variant} color={color} onClick={props.onClick} disabled={props.isDisabled || false}>
         {children}
       </STButton>
-    </div>
+    </Fragment>
   )
 }
 

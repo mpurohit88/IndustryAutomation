@@ -26,19 +26,19 @@ Quote.prototype.create = function(){
 
         if(error) reject(error);
 
-        let quote_id = rows.insertId;
+        let quoteId = rows.insertId;
 
         let productValues = [
         ];
 
         that.products.map((product) => {
-            productValues.push([quote_id, product.product_id, product.qty, product.gst, that.isActive, that.createdBy])
+            productValues.push([quoteId, product.product_id, product.qty, product.gst, product.rate, that.isActive, that.createdBy])
         });
 
-        connection.query('INSERT INTO quote_product(quote_id,product_id,quantity,gstn,isActive,createdBy) VALUES ?', [productValues], function(error,productRows,fields){
+        connection.query('INSERT INTO quote_product(quote_id,product_id,quantity,gstn,rate,isActive,createdBy) VALUES ?', [productValues], function(error,productRows,fields){
       
             if(!error){ 
-                resolve({'quote_id': quote_id});
+                resolve({'quote_id': quoteId});
             } else {
             console.log("Error...", error);
                 reject(error)
@@ -129,6 +129,31 @@ Quote.prototype.getQuoteDetail = function(userId, quoteId) {
 					connection.release();
 					console.log('Process Complete %d',connection.threadId);
 				});
+    });
+  });
+}
+
+Quote.prototype.update = function(quoteId, status) {
+  return new Promise(function(resolve, reject) {
+    connection.getConnection(function(error, connection){
+    console.log('Process Started %d All',connection.threadId);
+
+      if (error) {
+        throw error;
+      }
+
+      connection.query('UPDATE quote SET status=? WHERE id = ?', [status, quoteId], function(error,rows,fields){
+        
+          if(!error){ 
+            resolve(rows);
+          } else {
+            console.log("Error...", error);
+            reject(error);
+          }
+
+          connection.release();
+          console.log('Process Complete %d',connection.threadId);
+        });
     });
   });
 }

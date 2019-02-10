@@ -71,7 +71,7 @@ class Add extends Component {
 
   render() {
     return (
-			<Modal heading='Add Product' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
+			<Modal btnText='Save' heading='Add Product' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
 				<Form>
 					{ this.state.showSucess ? <Success>Product Added Successfully!</Success> : null }
 					<Row className="show-grid">

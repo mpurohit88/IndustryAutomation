@@ -182,7 +182,7 @@ class Create extends Component {
 		
     return (
 		<Fragment>
-			<StandardModal heading='Create Quote' isLoading={this.state.isLoading} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
+			<StandardModal btnText='Save' heading='Create Quote' isLoading={this.state.isLoading} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
 				<Form>
 					{ this.state.showSucess ? <Success>Quote Created Successfully!</Success> : null }
 						<Row className="show-grid">

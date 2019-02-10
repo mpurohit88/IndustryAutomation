@@ -89,7 +89,7 @@ class Registration extends Component {
 
   render() {
     return (
-			<Modal heading='Company Registration' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
+			<Modal btnText='Save' heading='Company Registration' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
 				<Form>
 						{ this.state.showSucess ? <Success>Company Registered Successfully!</Success> : null }
 						<Row className="show-grid">

@@ -59,7 +59,7 @@ class StandardModal extends Component {
               <Button variant="primary" type="button"
                 onClick={(e) => this.props.handleSubmit(e)}
                 >
-                Save
+                {this.props.btnText}
               </Button>
               <Button variant="secondary" type="button" 
                 style={{
