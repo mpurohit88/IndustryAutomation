@@ -257,7 +257,7 @@ class Create extends Component {
 									{product}
 							</tbody>
 						</Table>
-					<Checkbox type="checkbox" label="Check me out" />
+					{/* <Checkbox type="checkbox" label="Check me out" /> */}
 				</Form>  
 			</StandardModal>
 		</Fragment>

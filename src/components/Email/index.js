@@ -60,7 +60,7 @@ const ContactMeTemplate = function({quoteDetails, products}) {
 									</tr>
 									<tr>
 										<td colSpan='2' className='child'>
-											<table>
+											<table width='100%'>
 												<tr>
 													<th>Sr. No.</th>
 													<th>Particular</th>

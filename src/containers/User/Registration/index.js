@@ -125,9 +125,9 @@ class Registration extends Component {
               <Col xs={4} md={6}>
 								<Input label='Email:' type='email' onChange={this.handleInput} value={this.state.newUser.email} name='email' id='email'placeholder='Enter Email'/>
 							</Col>
-							<Col xs={4} md={6}>
+							{/* <Col xs={4} md={6}>
 								<Checkbox type="checkbox" label="Yes" />
-							</Col>
+							</Col> */}
 						</Row>
 				</Form>  
 			</Modal>
