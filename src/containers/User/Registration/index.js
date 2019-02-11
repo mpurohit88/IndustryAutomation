@@ -4,11 +4,11 @@ import { Form, Row, Col } from 'react-bootstrap'
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
-import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
 import { Success } from '../../../components/Alerts'
 
 import { registerUser, clearCredentials } from '../../../core/api/user'
+import { itemsFetchData } from '../../../core/api/company'
 
 // User Registration Component
 class Registration extends Component {
@@ -33,6 +33,10 @@ class Registration extends Component {
 		this.handleReset = this.handleReset.bind(this);
 		this.handleInput = this.handleInput.bind(this);
 		this.handleModelClick = this.handleModelClick.bind(this);
+	}
+
+	componentDidMount() {
+		this.props.getCustomerList();
 	}
 
 	handleReset() {
@@ -145,6 +149,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		register: (newUser) => dispatch(registerUser(newUser)),
+		getCustomerList: () => dispatch(itemsFetchData()),
 		clear: () => dispatch(clearCredentials())
 	};
 };

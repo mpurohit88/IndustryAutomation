@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { Badge } from 'react-bootstrap'
 
+import { Badge } from '../../../components/Badge'
 import { getStatus, getVariant } from '../helper'
 import { appConfig }          from 'configs/config-main'
 import AppBar from 'components/AppBar'
@@ -83,11 +83,11 @@ class Home extends Component {
 				<div className={styles}>
 					<div className='flex-center head'>
 						<div>
-							<strong>Quote No.: </strong>{quoteDetails.id} | <strong>Customer Name:</strong> {quoteDetails.companyName} | <strong>Created By:</strong> {quoteDetails.userName} | <strong>Created Date:</strong> {getISODateTime(quoteDetails.dateTimeCreated)} 
+							<strong>Quote No.: </strong>{quoteDetails.id} | <strong>Firm Name:</strong> {quoteDetails.companyName} | <strong>Created By:</strong> {quoteDetails.userName} | <strong>Created Date:</strong> {getISODateTime(quoteDetails.dateTimeCreated)} 
 						</div>
 
 						<div>
-							<Badge pill variant={getVariant(quoteDetails.status)}>{getStatus(quoteDetails.status)}</Badge>
+							<Badge variant={getVariant(quoteDetails.status)}>{getStatus(quoteDetails.status)}</Badge>
 							
 							<Button variant="primary" type="button" isDisabled={quoteDetails.status === 1 ? false : true}
 											onClick={(e) => this.props.quoteStartAction(tasks[0].id, quoteDetails.id)}
@@ -129,13 +129,18 @@ class Home extends Component {
 										}
 
 										{
-											task.taskId === 3 && <Fragment>
+											task.taskId === 3 && <div>
 																	<Button variant="primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 																		onClick={(e) => {}}
 																	>
 																		If Yes, Upload
 																	</Button>
-																</Fragment>
+																	<Button variant="primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+																		onClick={(e) => {}}
+																	>
+																		No
+																	</Button>
+																</div>
 										}
 
 {

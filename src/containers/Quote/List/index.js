@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from "react-router-dom";
-import { Table, OverlayTrigger, Popover, Button, Badge } from 'react-bootstrap'
+import { Table, OverlayTrigger, Popover, Button } from 'react-bootstrap'
 
+import { Badge } from '../../../components/Badge'
 import { itemsFetchData } from '../../../core/api/quote'
 import { getByQuoteId } from '../../../core/api/quoteProduct'
 

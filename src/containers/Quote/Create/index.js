@@ -4,12 +4,8 @@ import { Form, Row, Col, Table } from 'react-bootstrap'
 
 import { StandardModal } from '../../../components/Modals'
 import Input from '../../../components/Input'
-import Checkbox from '../../../components/Checkbox'
 import Dropdown from '../../../components/Dropdown'
 import { Success } from '../../../components/Alerts'
-
-import { all as getAllProductList } from '../../../core/api/product'
-import { all as getAllPartyList } from '../../../core/api/customer'
 
 import { createQuote } from '../../../core/api/quote'
 
@@ -190,10 +186,10 @@ class Create extends Component {
 								<Dropdown
 									id='party_name'
 									name='party_name'
-									label='Party Name:'
+									label='Firm Name:'
 									value={this.state.newQuote.party_name} 
 									onChange={this.handleInput}
-									placeholder='--Select Party Name--'
+									placeholder='--Select Firm Name--'
 									options={partyDrpDwn}
 								/>
 							</Col>

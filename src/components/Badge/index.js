@@ -1,10 +1,12 @@
-import React, { Component } from React;
-import { Badge } from 'react-bootstrap'
+import React from 'React'
+import { Badge as BadgeRB } from 'react-bootstrap'
 
-export default class Badge extends Comment {
-    render() {
-        return (
-            <Badge pill variant={getVariant(quoteDetails.status)}>{getStatus(quoteDetails.status)}</Badge>
-        )
-    }
+/* component styles */
+import { styles } from './styles.scss'
+
+
+export const Badge = ({variant, children}) => {
+    return (
+        <BadgeRB pill variant={variant} className='st-badge'>{children}</BadgeRB>
+    )
 }
