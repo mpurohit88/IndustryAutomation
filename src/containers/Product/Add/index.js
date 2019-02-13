@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Row, Col } from 'react-bootstrap';
+import Axios from "axios";
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
@@ -32,6 +33,7 @@ class Add extends Component {
 	}
 
 	handleInput(e) {
+		console.log("***********",e.target);
 		let value = e.target.value;
 		let name = e.target.name;
 
@@ -47,7 +49,22 @@ class Add extends Component {
 
 	handleSubmit(event){
 		event.preventDefault();
-		this.props.register({data: this.state.newProduct, cb: this.handleReset});
+		const that = this;
+
+		const config = {
+			onUploadProgress: function(progressEvent) {
+				var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total )
+			 that.setState({progress:
+					Math.round( (progressEvent.loaded * 100) / progressEvent.total )})
+				console.log(percentCompleted)
+			}
+		}
+
+		const formData = new FormData();
+		formData.append('data',JSON.stringify(this.state.newProduct));
+		formData.append('avatar',document.getElementById('img').files[0])
+
+		this.props.register({formData: formData, cb: this.handleReset, config: config});
 	}
 
 	handleReset() {

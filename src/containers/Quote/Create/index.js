@@ -8,6 +8,7 @@ import Dropdown from '../../../components/Dropdown'
 import { Success } from '../../../components/Alerts'
 
 import { createQuote } from '../../../core/api/quote'
+import { fetchFirmContactList } from '../../../core/api/customer'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -27,7 +28,8 @@ class Create extends Component {
 				mobileNo: ''
 			},
 			listOfProduct: [],
-			products: []
+			products: [],
+			contactList: []
 		}
 
 		this.handleAddEvent = this.handleAddEvent.bind(this);
@@ -38,6 +40,13 @@ class Create extends Component {
 		this.handleInput = this.handleInput.bind(this);
 		this.handleProductChange = this.handleProductChange.bind(this);
 		this.resetSuccess = this.resetSuccess.bind(this);
+	}
+
+	handleFirmChange(e) {
+		console.log("**********id ", e.target);
+		// fetchFirmContactList(e.currentTarget.id).then((contactList) => {
+		// 	this.setState({contactList})
+		// });
 	}
 
 	handleProductChange(e) {
@@ -108,6 +117,12 @@ class Create extends Component {
 		let value = e.target.value;
 		let name = e.target.name;
 
+		if(e.target.name === 'party_name') {
+			fetchFirmContactList(e.target.value).then((contactList) => {
+				this.setState({contactList})
+			});
+		}
+
 		this.setState( prevState => {
 			 return { 
 					newQuote : {
@@ -122,10 +137,19 @@ class Create extends Component {
 		event.preventDefault();
 		this.setState({isLoading: true});
 		
+		const config = {
+			onUploadProgress: function(progressEvent) {
+				var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total )
+			 that.setState({progress:
+					Math.round( (progressEvent.loaded * 100) / progressEvent.total )})
+				console.log(percentCompleted)
+			}
+		}
+
 		this.props.create({data: {
 			quote: this.state.newQuote,
 			productList: this.state.products
-		}, cb: this.handleReset});
+		}, cb: this.handleReset, config});
 	}
 
 	handleReset() {
@@ -151,7 +175,7 @@ class Create extends Component {
 
   render() {
 		const that = this;
-		const { partyList, productList} = that.props;
+		const { partyList, productList } = that.props;
 
 		let partyDrpDwn = partyList.map((party) => {
 			return {text: party.name, value: party.id};
@@ -159,6 +183,10 @@ class Create extends Component {
 
 		let productDrpDwn = productList.map((party) => {
 			return {text: party.name, value: party.id};
+		});
+
+		let contactDrpDwn = this.state.contactList.map((contact) => {
+			return {text: contact.name, value: contact.id};
 		});
 
 		let product = this.state.products.map(function(product, index) {
@@ -198,6 +226,18 @@ class Create extends Component {
 							</Col>
 							<Col xs={4} md={6}>
 								<Input label='Phone no.:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newQuote.phoneNo} name='phoneNo' id='phoneNo' placeholder='Enter Phone No'/>
+							</Col>
+							<Col xs={6} md={6}></Col>
+							<Col xs={8} md={6}>
+								<Dropdown
+									id='contact_person'
+									name='contact_person'
+									label='Contact Person:'
+									// value={this.contactDrpDwn} 
+									onChange={this.handleFirmChange}
+									placeholder='--Select Contact Person--'
+									options={contactDrpDwn}
+								/>
 							</Col>
 							<Col xs={4} md={6}>
 								<Input label='Mobile no.:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newQuote.mobileNo} name='mobileNo' id='mobileNo' placeholder='Enter Mobile No'/>
@@ -265,7 +305,7 @@ const mapStateToProps = (state) => {
 	return {
 			quoteList: state.quote.list,
 			partyList: state.customer.list,
-			productList: state.product.list
+			productList: state.product.list,
 	};
 };
 

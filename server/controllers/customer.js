@@ -48,4 +48,15 @@ const all = function(req, res, next){
  }
 }
 
-module.exports = {add: add, all: all};
+const contactList = function(req, res, next){
+	try {
+		new CustomerContact({}).getByCustomerId(req.query.firmId).then(function(customerList) {
+			res.send(customerList);
+		});
+		
+ } catch (err) {
+	 console.log("Error: ", err);
+ }
+}
+
+module.exports = {add: add, all: all, contactList: contactList};

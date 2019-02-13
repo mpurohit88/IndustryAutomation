@@ -4,7 +4,7 @@ import * as productAction from '../../actions/product'
 
 export function addProduct(newProduct) {
 	return (dispatch) => {
-		post('api/product/add', newProduct.data)
+		post('api/product/add', newProduct.formData, newProduct.config)
 			.then((data) => { 
 				newProduct.cb(); 
 				dispatch(productAction.productListFetchDataSuccess(data))

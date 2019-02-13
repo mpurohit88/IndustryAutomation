@@ -62,11 +62,11 @@ export default class AppBar extends React.Component {
         <nav className="nav-collapse">
           <ul>
             {/* active */}
-            { isAdmin && <li className="menu-item"><a href="#" onClick={() => this.setState({ lgShow: true })}>Create Quote</a></li> }
+            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.setState({ lgShow: true })}>Create Quote</a></li> }
             { isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCompanyRegClick(true)}>Company Registration</a></li> }
             { isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleUserRegClick(true)}>User Registration</a></li> }
-            { isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleProductClick(true)}>Add Product</a></li> }
-            { isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCustomerClick(true)}>Add Customer</a></li> }
+            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleProductClick(true)}>Add Product</a></li> }
+            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCustomerClick(true)}>Add Customer</a></li> }
             <li className="menu-item user">
               <a>
                 <span>Welcome: {name.toUpperCase()}</span>

@@ -27,3 +27,19 @@ export function itemsFetchData() {
 			.catch(() => dispatch(customerAction.customerListHaveError(true)));
 	};
 }
+
+export function fetchFirmContactList(firmId) {
+	return new Promise(function (resolve, reject) {
+			get(`api/customer/contactList`, {firmId})
+			.then(list => {
+        		if (list) {
+					resolve(list);
+				}
+				
+				reject('Error');
+    }).catch(err => {
+				console.log(err);
+				err.response ? reject(err.response.data.error) : reject(err.message);
+			});
+    });
+}

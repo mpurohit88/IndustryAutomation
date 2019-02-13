@@ -33,6 +33,7 @@ class List extends Component {
 							<td>Name</td>
 							<td>Unit</td>
 							<td>HSN Code</td>
+							<td>Image</td>
 							<td>Created Time</td>
 							<td>Created By</td>
 						</tr>
@@ -45,6 +46,7 @@ class List extends Component {
 									<td>{product.name}</td>
 									<td>{product.unit}</td>
 									<td>{product.hsnCode}</td>
+									<td>{product.imgName && <img height="80px" width="80px" src={`/dist/img/product/${product.imgName}`} />}</td>
 									<td>{getISODateTime(product.dateTimeCreated)}</td>
 									<td>{product.createdBy}</td>
 								</tr>

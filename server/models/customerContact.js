@@ -30,4 +30,26 @@ CustomerContact.prototype.add = function(customer, contactList){
 	});
 };
 
+CustomerContact.prototype.getByCustomerId = function(customerId){
+	return new Promise(function(resolve, reject) {
+	connection.getConnection(function(error, connection){
+		if (error) {
+			throw error;
+		}
+
+		connection.query("SELECT `id`, `name`, `designation`, `department`, `email`, `mobileNo` FROM `customer_contact` WHERE `customerId` = ?", [customerId], function(error,rows,fields){
+				if(!error){ 
+					resolve(rows);
+				} else {
+					console.log("Error...", error);
+					reject(error);
+				}
+
+				connection.release();
+				console.log('Process Complete %d',connection.threadId);
+			});
+		});
+	});
+};
+
 module.exports = CustomerContact;
