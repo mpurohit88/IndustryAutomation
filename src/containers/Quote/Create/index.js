@@ -56,8 +56,11 @@ class Create extends Component {
 			if(product.id === parseInt(e.target.value)) {
 				that.refs.hsnCode.value = product.hsnCode;
 				that.refs.rate.value = product.unit;
+				that.refs.imgName.src = `dist/img/product/${product.imgName}`;
 			}
 		});
+
+		this.refs.qty.focus();
 	}
 
 	handleRowDel(product) {
@@ -74,7 +77,6 @@ class Create extends Component {
   };
 
 	handleAddEvent() {
-		const fileArray = this.refs.file.value.split('\\');
 		let id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
 		let isExists = false;
 
@@ -94,6 +96,7 @@ class Create extends Component {
 			return false;
 		}
 
+		console.log("this.refs*************", this.refs)
 		var product = {
 			id: id,
 			product_id: this.refs.name.value,
@@ -101,7 +104,7 @@ class Create extends Component {
 			qty: this.refs.qty.value,
 			rate: this.refs.rate.value,
 			gst: this.refs.gst.value,
-			file: fileArray[fileArray.length - 1]
+			imgName: this.refs.imgName.src
 		}
 		this.state.products.push(product);
 		this.setState(this.state.products);
@@ -111,6 +114,7 @@ class Create extends Component {
 		this.refs.qty.value = '';
 		this.refs.rate.value = '';
 		this.refs.gst.value = '';
+		this.refs.imgName.src = '';
 	}
 		
 	handleInput(e) {
@@ -191,7 +195,7 @@ class Create extends Component {
 
 		let product = this.state.products.map(function(product, index) {
       return (
-			<tr key={product.id} className='productList'>
+			<tr key={product.id}>
 									<td>{index + 1}</td>
 									<td>{product.product_id}
 									</td>
@@ -199,7 +203,7 @@ class Create extends Component {
 									<td>{product.qty}</td>
 									<td>{product.rate}</td>
 									<td>{product.gst}</td>
-									<td>{product.file}</td>
+									<td>{product.imgName && <img height="80px" name="imgName" id="imgName" width="80px" src={product.imgName} />}</td>
 									<td className='link'><a id='remove_quote' href='#' onClick={() => that.handleRowDel(product).bind(this)}>Remove</a></td>
 								</tr>)
 		});
@@ -243,7 +247,7 @@ class Create extends Component {
 								<Input label='Mobile no.:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newQuote.mobileNo} name='mobileNo' id='mobileNo' placeholder='Enter Mobile No'/>
 							</Col>
 						</Row>
-						<Table responsive>
+						<Table responsive id='productList'>
 							<thead>
 								<tr>
 									<th>#</th>
@@ -254,7 +258,7 @@ class Create extends Component {
 									<th>Quantity</th>
 									<th>Rate With unit</th>
 									<th>GST(%)</th>
-									<th>Browse image</th>
+									<th>Image</th>
 									<th></th>
 								</tr>
 							</thead>
@@ -262,7 +266,7 @@ class Create extends Component {
 									<tr>
 										<td></td>
 										<td>
-											<select className='product' ref="name" onChange={this.handleProductChange} defaultValue='0'>
+											<select className='form-control' ref="name" onChange={this.handleProductChange} defaultValue='0'>
 												<option value='0' disabled>--Select Product--</option>
 												{
 													productDrpDwn.map((product) => {
@@ -272,20 +276,18 @@ class Create extends Component {
 											</select>
 										</td>
 										<td>
-											<input type='input' className='hsnCode' ref="hsnCode"/>
+											<input type='input' className='form-control' ref="hsnCode"/>
 										</td>
 										<td>
-											<input type='input' className='quantity' ref="qty"/>
+											<input type='input' className='form-control' ref="qty"/>
 										</td>
 										<td>
-											<input type='input' className='rate' ref="rate"/>
+											<input type='input' className='form-control' ref="rate"/>
 										</td>
 										<td>
-											<input type='input' className='gst' ref="gst"/>
+											<input type='input' className='form-control' ref="gst" value='18'/>
 										</td>
-										<td>
-											<input type='file' className='file' ref="file"/>
-										</td>
+										<td><img height="80px" name="imgName" ref="imgName" id="imgName" width="80px" /></td>
 										<td>
 											<input type='button' value='Add' onClick={this.handleAddEvent}/>
 										</td>

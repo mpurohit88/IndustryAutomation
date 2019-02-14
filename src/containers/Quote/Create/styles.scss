@@ -18,18 +18,30 @@
 	width: 106px;
 }
 
-.product {
-	width: 150px;
+#productList > tbody > tr:nth-child(1) {
+	background-color: #bfccd91a;
 }
+
 
 table thead tr th {
 	font-size: 12px;
 }
 
-.productList {
-	font-size: 12px;
-}
-
 .link {
 	font-size: 14px;
+}
+
+figure {
+  width: 100px;
+  background-repeat: no-repeat;
+}
+
+figure:hover img {
+  opacity: 0;
+}
+
+img {
+  display: block;
+  width: 100%;
+  pointer-events: none;
 }
