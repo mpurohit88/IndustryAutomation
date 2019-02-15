@@ -9,6 +9,7 @@ import { Success } from '../../../components/Alerts'
 
 import { createQuote } from '../../../core/api/quote'
 import { fetchFirmContactList } from '../../../core/api/customer'
+import Zoom from './Zoom'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -29,7 +30,8 @@ class Create extends Component {
 			},
 			listOfProduct: [],
 			products: [],
-			contactList: []
+			contactList: [],
+			imgSrc: undefined
 		}
 
 		this.handleAddEvent = this.handleAddEvent.bind(this);
@@ -51,14 +53,18 @@ class Create extends Component {
 
 	handleProductChange(e) {
 		const that = this;
+		that.setState({imgSrc: ``});
 
 		that.props.productList.map((product) => {
 			if(product.id === parseInt(e.target.value)) {
 				that.refs.hsnCode.value = product.hsnCode;
 				that.refs.rate.value = product.unit;
 				that.refs.imgName.src = `dist/img/product/${product.imgName}`;
+				that.setState({imgSrc: `dist/img/product/${product.imgName}`});
 			}
 		});
+
+		this.forceUpdate();
 
 		this.refs.qty.focus();
 	}
@@ -96,15 +102,17 @@ class Create extends Component {
 			return false;
 		}
 
-		console.log("this.refs*************", this.refs)
+		this.refs.name[this.refs.name.selectedIndex].text
+
 		var product = {
 			id: id,
+			name : this.refs.name[this.refs.name.selectedIndex].text,
 			product_id: this.refs.name.value,
 			hsn: this.refs.hsnCode.value,
 			qty: this.refs.qty.value,
 			rate: this.refs.rate.value,
 			gst: this.refs.gst.value,
-			imgName: this.refs.imgName.src
+			imgName: this.state.imgSrc
 		}
 		this.state.products.push(product);
 		this.setState(this.state.products);
@@ -197,13 +205,14 @@ class Create extends Component {
       return (
 			<tr key={product.id}>
 									<td>{index + 1}</td>
-									<td>{product.product_id}
+									<td>{product.name}
 									</td>
 									<td>{product.hsn}</td>
 									<td>{product.qty}</td>
 									<td>{product.rate}</td>
 									<td>{product.gst}</td>
-									<td>{product.imgName && <img height="80px" name="imgName" id="imgName" width="80px" src={product.imgName} />}</td>
+									<td>{										that.state.imgSrc && <Zoom src = {that.state.imgSrc} />
+}</td>
 									<td className='link'><a id='remove_quote' href='#' onClick={() => that.handleRowDel(product).bind(this)}>Remove</a></td>
 								</tr>)
 		});
@@ -287,7 +296,13 @@ class Create extends Component {
 										<td>
 											<input type='input' className='form-control' ref="gst" value='18'/>
 										</td>
-										<td><img height="80px" name="imgName" ref="imgName" id="imgName" width="80px" /></td>
+										<td> 
+											{/* {this.state.imgSrc && <Zoom src = {this.state.imgSrc} />} */}
+											<img height="80px" name="imgName" ref="imgName" id="imgName" width="80px" />
+										{/* <figure onMouseMove={this.handleMouseMove} style={this.state}>
+											<img ref="imgName" />
+										</figure> */}
+										</td>
 										<td>
 											<input type='button' value='Add' onClick={this.handleAddEvent}/>
 										</td>

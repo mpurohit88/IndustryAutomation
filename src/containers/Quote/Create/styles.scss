@@ -33,7 +33,9 @@ table thead tr th {
 
 figure {
   width: 100px;
-  background-repeat: no-repeat;
+	background-repeat: no-repeat;
+	margin: 0 !important;
+
 }
 
 figure:hover img {
@@ -41,7 +43,8 @@ figure:hover img {
 }
 
 img {
-  display: block;
-  width: 100%;
+	display: block;
+	height: 80px;
+	width: 100px;
   pointer-events: none;
 }
