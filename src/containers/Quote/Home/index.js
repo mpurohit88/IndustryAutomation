@@ -170,7 +170,7 @@ class Home extends Component {
 
 				{this.state.showEditor ? 
 							<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.state.isLoading} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId)} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
-								{/* <EmailEditor /> */}
+								{/* <EmailEditor text={ GetContactEmail(products, quoteDetails)}/> */}
 								<div dangerouslySetInnerHTML={{__html: GetContactEmail(products, quoteDetails) }} />
 							</StandardModal> : null}
 			</Fragment>

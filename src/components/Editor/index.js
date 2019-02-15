@@ -11,7 +11,7 @@ export default class EmailEditor extends Component {
     constructor(props) {
         super(props);
         
-				const html = '<p class="rdw-center-aligned-block"><strong>QUOTATION</strong></p>';
+				const html = '<p class="rdw-center-aligned-block"><strong><span style="text-decoration: underline" id="quote"><table><tr><td>mukesh</td></tr></table>QUOTATION</span></strong></p>';
 				const contentBlock = htmlToDraft(html);
 				if (contentBlock) {
 					const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
