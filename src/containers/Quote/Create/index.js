@@ -73,7 +73,7 @@ class Create extends Component {
 		var index = -1;	
 		var clength = this.state.products.length;
 		for( var i = 0; i < clength; i++ ) {
-			if( this.state.products[i].id === product.value ) {
+			if( this.state.products[i].id === product.id ) {
 				index = i;
 				break;
 			}

@@ -22,7 +22,7 @@ strong {
 
 .step {
     padding: 10px;
-    background-color: #ddf0f4;
+    background-color: #f4f4f487;
     margin-top: 25px;
     border-radius: 12px;
     -moz-border-radius: 12px;
@@ -35,7 +35,7 @@ strong {
   font-size: 17px;
 }
 
-div.checkmark .circle, .disabled-circle {
+div.checkmark .circle, .circle1, .disabled-circle {
     font-size: 16px; // this determines the size of the list text and therefore checkmark size
     list-style-type: none; // remove default list style
     // margin-bottom: 1em; // lists need to be able to breathe
@@ -46,23 +46,10 @@ div.checkmark .circle, .disabled-circle {
   }
 
   .active-step {
-		border: 2px solid #007bff;
+		border: 1px solid #007bff;
 	}
 
-  div.checkmark .circle:before {
-    content: " "; // the circle itself is empty
-    display: block;
-    border: solid 0.8em green; // create a colored area...
-    border-radius: .8em; // ... and turn it into a circle
-    height: 0;
-    width: 0;
-    position: absolute; // the circle is then put into place
-    left: 0.5em;
-    top: 40%; 
-    margin-top: -0.5em;
-  }
-  
-  div.checkmark .circle:before {
+  div.checkmark .circle:before, .circle1:before {
     content: " "; // the circle itself is empty
     display: block;
     border: solid 0.8em green; // create a colored area...

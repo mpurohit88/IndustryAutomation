@@ -1,17 +1,13 @@
 import { post } from '../api/httpClient';
+import * as quoteAction from '../../actions/quote'
 
-export function sendEmail(body) {
-	return new Promise(function (resolve, reject) {
-			post(`api/email/send`, { 'body': body})
-			.then(response => {
-        if (response) {
-					resolve(response);
-				}
-				
-				reject('Error');
-    }).catch(err => {
-				console.log(err);
-				err.response ? reject(err.response.data.error) : reject(err.message);
-			});
-    });
+export function sendEmail(body, taskId, nextTaskId, userActivityId, cb) {
+	return (dispatch) => {
+		post('api/email/send', { 'body': body, taskId: taskId, nextTaskId: nextTaskId, userActivityId: userActivityId})
+		.then((data) =>  {
+			dispatch(quoteAction.quoteStartUpdateDataSuccess(data));
+			cb();
+		})
+		.catch(() => dispatch(quoteAction.quoteDetailsHaveError(true)));
+	};
 }

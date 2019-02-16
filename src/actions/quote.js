@@ -62,3 +62,10 @@ export function quoteStartFetchDataSuccess(details) {
         details
     };
 }
+
+export function quoteStartUpdateDataSuccess(tasks) {
+    return {
+        type: types.QUOTE_START_UPDATE_DATA_SUCCESS,
+        tasks
+    };
+}

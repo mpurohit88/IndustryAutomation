@@ -15,7 +15,7 @@ const css = `
 
 //3. Create your react component using react-html-email components
 const ContactMeTemplate = function({quoteDetails, products}) {
-  return <Email title="Quotation" headCSS={css} className={styles} class="quotation">
+  return <Email title="Quotation" headCSS={css} className={styles} className="quotation">
             <Box width="100%" style={{lineHeight: 2}}>
               <Item width="100%" style={{textAlign: 'center'}}>
                 <Span style={{textDecoration: 'underline', fontWeight: 'bold', fontSize: 20 + 'px'}}>QUOTATION</Span>

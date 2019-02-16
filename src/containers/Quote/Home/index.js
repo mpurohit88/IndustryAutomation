@@ -11,6 +11,7 @@ import Button from '../../../components/Button'
 import EmailEditor from '../../../components/Editor'
 import { GetContactEmail } from '../../../components/Email'
 import { StandardModal } from '../../../components/Modals'
+import Scheduler from '../Scheduler'
 
 import { itemsFetchQuoteDetails, quoteStart } from '../../../core/api/quote'
 import { sendEmail } from '../../../core/api/email'
@@ -24,30 +25,38 @@ class Home extends Component {
 		super(props);
 		this.state = {
 			isLoading: false,
-			showEditor: false
+			showEditor: false,
+			showScheduler: false
 		}
 		
 		this.showEmail = this.showEmail.bind(this);
 		this.lgClose = this.lgClose.bind(this);
 		this.sendEmailToCustomer = this.sendEmailToCustomer.bind(this);
+		this.handleSchedulerClick = this.handleSchedulerClick.bind(this);
 	}
 	componentDidMount() {
 		const { quoteId } = this.props.match.params;
 
 		this.props.fetchQuoteDetails(quoteId);
 	}
-
+	
 	lgClose() {
 		this.setState({showEditor: false})
 	}
 
-	showEmail(id) {
-		this.setState({showEditor: true, acivityTaskId: id})
+	handleSchedulerClick(flag) {
+		this.setState({showScheduler: flag})
 	}
 
-	sendEmailToCustomer(id) {
-		sendEmail(id, GetContactEmail(this.props.details.products, this.props.details.quoteDetails)).then((response) => {
-			console.log("***********", response);
+	showEmail(id, nextId, userActivityId) {
+		this.setState({showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId})
+	}
+
+	sendEmailToCustomer(id, nextId, userActivityId) {
+		const self = this;
+
+		this.props.sendEmailAction(GetContactEmail(this.props.details.products, this.props.details.quoteDetails), id, nextId, userActivityId, () => {
+			self.lgClose();
 		});
 
 		console.log(GetContactEmail(this.props.details.products, this.props.details.quoteDetails));
@@ -67,6 +76,18 @@ class Home extends Component {
 		}
 
 		return false;
+	}
+
+	showStepCircle(startDate, endDate) {
+		if(startDate === null && endDate === null) {
+			return 'disabled-circle';
+		} else if(startDate !== null && endDate === null) {
+			return 'circle1'
+		} else if(startDate !== null && endDate !== null) {
+			return 'circle'
+		}
+
+		return '';
 	}
 
   render() {
@@ -89,25 +110,25 @@ class Home extends Component {
 						<div>
 							<Badge variant={getVariant(quoteDetails.status)}>{getStatus(quoteDetails.status)}</Badge>
 							
-							<Button variant="primary" type="button" isDisabled={quoteDetails.status === 1 ? false : true}
+							{ quoteDetails.status === 1 ? <Button variant="primary" type="button" isDisabled={quoteDetails.status === 1 ? false : true}
 											onClick={(e) => this.props.quoteStartAction(tasks[0].id, quoteDetails.id)}
 										>
 								Start Quote
-							</Button>
+							</Button> : null }
 						</div>
 					</div>
 
 					<div style={{marginTop: 15 + 'px'}}>
 						{
-							tasks.map((task) => {
+							tasks.map((task, index) => {
 								return <div className={`flex-center step checkmark${this.isStepActive(quoteDetails.status, task.startDate, task.endDate) ? ' active-step' : ''}`}>
-										<div class={`${this.isStepActive(quoteDetails.status, task.startDate, task.endDate) ? 'circle': 'disabled-circle'}`}>
+										<div className={`${this.showStepCircle(task.startDate, task.endDate)}`}>
 											<label className='text'>{task.text}</label>
 										</div>
 										
 										{
-											task.taskId === 1 && <Button variant="primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-																	onClick={(e) => this.showEmail(task.id)}
+											task.taskId === 1 && <Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+																	onClick={(e) => this.showEmail(task.id, tasks[index + 1].id, task.userActivityId)}
 																>
 																	Send Email
 																</Button>
@@ -115,12 +136,12 @@ class Home extends Component {
 
 										{
 											task.taskId === 2 && <div>
-																	<Button variant="primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-																		onClick={(e) => {}}
+																	<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+																		onClick={(e) => {this.handleSchedulerClick(true)}}
 																	>
 																		Set Reminder
 																	</Button> 
-																	<Button variant="primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+																	<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 																		onClick={(e) => {}}
 																	>
 																		Done
@@ -130,12 +151,12 @@ class Home extends Component {
 
 										{
 											task.taskId === 3 && <div>
-																	<Button variant="primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+																	<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 																		onClick={(e) => {}}
 																	>
 																		If Yes, Upload
 																	</Button>
-																	<Button variant="primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+																	<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 																		onClick={(e) => {}}
 																	>
 																		No
@@ -145,7 +166,7 @@ class Home extends Component {
 
 {
 											task.taskId === 4 && <Fragment>
-																	<Button variant="primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+																	<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 																		onClick={(e) => {}}
 																	>
 																		Upload
@@ -169,10 +190,14 @@ class Home extends Component {
 				</div>
 
 				{this.state.showEditor ? 
-							<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.state.isLoading} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId)} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
+							<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.state.isLoading} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
 								{/* <EmailEditor text={ GetContactEmail(products, quoteDetails)}/> */}
 								<div dangerouslySetInnerHTML={{__html: GetContactEmail(products, quoteDetails) }} />
 							</StandardModal> : null}
+				{
+					this.state.showScheduler ? 
+						<Scheduler lgClose={this.handleSchedulerClick} showScheduler={this.state.showScheduler}/> : null
+				}
 			</Fragment>
 		)
   }
@@ -187,7 +212,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		fetchQuoteDetails: (quoteId) => dispatch(itemsFetchQuoteDetails(quoteId)),
-		quoteStartAction: (taskHistId, quoteId) => dispatch(quoteStart(taskHistId, quoteId))
+		quoteStartAction: (taskHistId, quoteId) => dispatch(quoteStart(taskHistId, quoteId)),
+		sendEmailAction: (body, taskHistId, nextTaskHistId, userActivityId, cb) => dispatch(sendEmail(body, taskHistId, nextTaskHistId, userActivityId, cb))
 	};
 };
 
