@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 
-import { getAdmin }                from 'configs/user'
+import { getAdmin } from '../../configs/user'
+
 
 import List from '../Quote/List'
 import { ProductList } from '../Product'
@@ -22,7 +23,7 @@ class Home extends Component {
   }
 
   render() {
-    const { isAdmin } = getAdmin();
+    const isAdmin = getAdmin();
 
     return (
       <div className={styles}>
@@ -41,14 +42,14 @@ class Home extends Component {
             <CustomerList />
           </Tab>
           {
-          isAdmin && <Tab eventKey="company" title="Company">
-                      <CompanyList />
-                    </Tab>
+            isAdmin && <Tab eventKey="company" title="Company">
+              <CompanyList />
+            </Tab>
           }
           {
-          isAdmin && <Tab eventKey="user" title="User">
-                      <UserList />
-                    </Tab>
+            isAdmin && <Tab eventKey="user" title="User">
+              <UserList />
+            </Tab>
           }
         </Tabs>
       </div>
