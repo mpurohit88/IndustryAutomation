@@ -12,18 +12,17 @@ import { styles } from './styles.scss'
 // List Of Quote Component
 class List extends Component {
 	componentDidMount() {
-    this.props.fetchProductList();
-  }
+		this.props.fetchProductList();
+	}
 
-  render() {
-		const { productList, hasError, isLoading} = this.props;
+	render() {
+		const { productList, hasError, isLoading } = this.props;
 
-		if(isLoading) 
-		{
+		if (isLoading) {
 			return <div>...Loading</div>
 		}
 
-    return (
+		return (
 			<Fragment>
 				<hr />
 				<Table responsive striped bordered hover className={styles}>
@@ -46,7 +45,7 @@ class List extends Component {
 									<td>{product.name}</td>
 									<td>{product.unit}</td>
 									<td>{product.hsnCode}</td>
-									<td>{product.imgName && <img height="80px" width="80px" src={`dist/img/product/${product.imgName}`} />}</td>
+									<td>{product.imgName && <img height="80px" width="80px" src={`/img/product/${product.imgName}`} />}</td>
 									<td>{getISODateTime(product.dateTimeCreated)}</td>
 									<td>{product.createdBy}</td>
 								</tr>
@@ -56,14 +55,14 @@ class List extends Component {
 				</Table>
 			</Fragment>
 		)
-  }
+	}
 }
 
 const mapStateToProps = (state) => {
 	return {
-			productList: state.product.list,
-			hasError: state.product.hasError,
-			isLoading: state.product.isLoading
+		productList: state.product.list,
+		hasError: state.product.hasError,
+		isLoading: state.product.isLoading
 	};
 };
 

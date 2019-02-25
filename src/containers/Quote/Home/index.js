@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 
 import { Badge } from '../../../components/Badge'
 import { getStatus, getVariant } from '../helper'
-import { appConfig }          from 'configs/config-main'
+import { appConfig } from 'configs/config-main'
 import AppBar from 'components/AppBar'
-import { getAdmin, getUserName, getCompanyName }                from '../../../configs/user'
+import { getAdmin, getUserName, getCompanyName } from '../../../configs/user'
 import { getISODateTime } from '../../helper'
 import Button from '../../../components/Button'
 import EmailEditor from '../../../components/Editor'
@@ -28,28 +28,33 @@ class Home extends Component {
 			showEditor: false,
 			showScheduler: false
 		}
-		
+
 		this.showEmail = this.showEmail.bind(this);
 		this.lgClose = this.lgClose.bind(this);
 		this.sendEmailToCustomer = this.sendEmailToCustomer.bind(this);
 		this.handleSchedulerClick = this.handleSchedulerClick.bind(this);
+		this.schedulerClose = this.schedulerClose.bind(this);
 	}
 	componentDidMount() {
 		const { quoteId } = this.props.match.params;
 
 		this.props.fetchQuoteDetails(quoteId);
 	}
-	
+
 	lgClose() {
-		this.setState({showEditor: false})
+		this.setState({ showEditor: false })
 	}
 
-	handleSchedulerClick(flag) {
-		this.setState({showScheduler: flag})
+	schedulerClose() {
+		this.setState({ showScheduler: false })
+	}
+
+	handleSchedulerClick(id, nextId, userActivityId) {
+		this.setState({ showScheduler: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId })
 	}
 
 	showEmail(id, nextId, userActivityId) {
-		this.setState({showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId})
+		this.setState({ showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId })
 	}
 
 	sendEmailToCustomer(id, nextId, userActivityId) {
@@ -63,15 +68,15 @@ class Home extends Component {
 	}
 
 	isDisabled(status, startDate, endDate) {
-		if(status === 2 && startDate !== null && endDate === null) {
+		if (status === 2 && startDate !== null && endDate === null) {
 			return false;
 		}
 
 		return true;
-	} 
+	}
 
 	isStepActive(status, startDate, endDate) {
-		if(status === 2 && startDate !== null && endDate === null) {
+		if (status === 2 && startDate !== null && endDate === null) {
 			return true;
 		}
 
@@ -79,133 +84,142 @@ class Home extends Component {
 	}
 
 	showStepCircle(startDate, endDate) {
-		if(startDate === null && endDate === null) {
+		if (startDate === null && endDate === null) {
 			return 'disabled-circle';
-		} else if(startDate !== null && endDate === null) {
+		} else if (startDate !== null && endDate === null) {
 			return 'circle1'
-		} else if(startDate !== null && endDate !== null) {
+		} else if (startDate !== null && endDate !== null) {
 			return 'circle'
 		}
 
 		return '';
 	}
 
-  render() {
+	render() {
 		const isAdmin = getAdmin(), userName = getUserName(), cname = getCompanyName();
 		const { quoteDetails, tasks, products } = this.props.details;
-		
-		if(!quoteDetails) {
+
+		if (!quoteDetails) {
 			return (<div>data is loading...</div>)
 		}
 
-    return (
+		return (
 			<Fragment>
 				<AppBar isAdmin={isAdmin} name={userName} cname={cname}>{appConfig.name}</AppBar>
 				<div className={styles}>
 					<div className='flex-center head'>
 						<div>
-							<strong>Quote No.: </strong>{quoteDetails.id} | <strong>Firm Name:</strong> {quoteDetails.companyName} | <strong>Created By:</strong> {quoteDetails.userName} | <strong>Created Date:</strong> {getISODateTime(quoteDetails.dateTimeCreated)} 
+							<strong>Quote No.: </strong>{quoteDetails.id} | <strong>Firm Name:</strong> {quoteDetails.companyName} | <strong>Created By:</strong> {quoteDetails.userName} | <strong>Created Date:</strong> {getISODateTime(quoteDetails.dateTimeCreated)}
 						</div>
 
 						<div>
 							<Badge variant={getVariant(quoteDetails.status)}>{getStatus(quoteDetails.status)}</Badge>
-							
-							{ quoteDetails.status === 1 ? <Button variant="primary" type="button" isDisabled={quoteDetails.status === 1 ? false : true}
-											onClick={(e) => this.props.quoteStartAction(tasks[0].id, quoteDetails.id)}
-										>
+
+							{quoteDetails.status === 1 ? <Button variant="primary" type="button" isDisabled={quoteDetails.status === 1 ? false : true}
+								onClick={(e) => this.props.quoteStartAction(tasks[0].id, quoteDetails.id)}
+							>
 								Start Quote
-							</Button> : null }
+							</Button> : null}
 						</div>
 					</div>
 
-					<div style={{marginTop: 15 + 'px'}}>
+					<div style={{ marginTop: 15 + 'px' }}>
 						{
 							tasks.map((task, index) => {
 								return <div className={`flex-center step checkmark${this.isStepActive(quoteDetails.status, task.startDate, task.endDate) ? ' active-step' : ''}`}>
-										<div className={`${this.showStepCircle(task.startDate, task.endDate)}`}>
-											<label className='text'>{task.text}</label>
-										</div>
-										
-										{
-											task.taskId === 1 && <Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-																	onClick={(e) => this.showEmail(task.id, tasks[index + 1].id, task.userActivityId)}
-																>
-																	Send Email
-																</Button>
-										}
-
-										{
-											task.taskId === 2 && <div>
-																	<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-																		onClick={(e) => {this.handleSchedulerClick(true)}}
-																	>
-																		Set Reminder
-																	</Button> 
-																	<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-																		onClick={(e) => {}}
-																	>
-																		Done
-																	</Button>
-																</div>
-										}
-
-										{
-											task.taskId === 3 && <div>
-																	<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-																		onClick={(e) => {}}
-																	>
-																		If Yes, Upload
-																	</Button>
-																	<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-																		onClick={(e) => {}}
-																	>
-																		No
-																	</Button>
-																</div>
-										}
-
-{
-											task.taskId === 4 && <Fragment>
-																	<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-																		onClick={(e) => {}}
-																	>
-																		Upload
-																	</Button>
-																</Fragment>
-										}
-										
+									<div className={`${this.showStepCircle(task.startDate, task.endDate)}`}>
+										<label className='text'>{task.text}</label>
 									</div>
+
+									{
+										task.taskId === 1 && <Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+											onClick={(e) => this.showEmail(task.id, tasks[index + 1].id, task.userActivityId)}
+										>
+											Send Email
+																</Button>
+									}
+
+									{
+										task.taskId === 2 && <div>
+											{
+												task.scheduleId ?
+													<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+														onClick={(e) => { this.handleSchedulerClick(task.id, tasks[index + 1].id, task.userActivityId) }}
+													>
+														View Reminder
+												</Button>
+													:
+													<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+														onClick={(e) => { this.handleSchedulerClick(task.id, tasks[index + 1].id, task.userActivityId) }}
+													>
+														Set Reminder
+												</Button>
+											}
+											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+												onClick={(e) => { }}
+											>
+												Done
+																	</Button>
+										</div>
+									}
+
+									{
+										task.taskId === 3 && <div>
+											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+												onClick={(e) => { }}
+											>
+												If Yes, Upload
+																	</Button>
+											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+												onClick={(e) => { }}
+											>
+												No
+																	</Button>
+										</div>
+									}
+
+									{
+										task.taskId === 4 && <Fragment>
+											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+												onClick={(e) => { }}
+											>
+												Upload
+																	</Button>
+										</Fragment>
+									}
+
+								</div>
 							})
 						}
 					</div>
 					<div>
 						<br />
 						<Button variant="primary" type="button"
-										onClick={(e) => this.showEmail(e)}
-									>
+							onClick={(e) => this.showEmail(e)}
+						>
 							Close
 						</Button>
 					</div>
-					
+
 				</div>
 
-				{this.state.showEditor ? 
-							<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.state.isLoading} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
-								{/* <EmailEditor text={ GetContactEmail(products, quoteDetails)}/> */}
-								<div dangerouslySetInnerHTML={{__html: GetContactEmail(products, quoteDetails) }} />
-							</StandardModal> : null}
+				{this.state.showEditor ?
+					<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.state.isLoading} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
+						{/* <EmailEditor text={ GetContactEmail(products, quoteDetails)}/> */}
+						<div dangerouslySetInnerHTML={{ __html: GetContactEmail(products, quoteDetails) }} />
+					</StandardModal> : null}
 				{
-					this.state.showScheduler ? 
-						<Scheduler lgClose={this.handleSchedulerClick} showScheduler={this.state.showScheduler}/> : null
+					this.state.showScheduler ?
+						<Scheduler lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showScheduler} quoteDetails={quoteDetails} /> : null
 				}
 			</Fragment>
 		)
-  }
+	}
 }
 
 const mapStateToProps = (state) => {
 	return {
-			details: state.quote.details
+		details: state.quote.details
 	};
 };
 

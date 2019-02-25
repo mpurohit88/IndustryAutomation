@@ -1,6 +1,6 @@
 const http = require('http')
 const express = require('express')
-const bodyParser=require('body-parser');
+const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const cors = require('cors');
 
@@ -20,12 +20,13 @@ app.use(require('morgan')('short'));
   const customerRouter = require('./server/routes/customer');
   const quoteProductRouter = require('./server/routes/quoteProduct');
   const emailRouter = require('./server/routes/email');
+  const schedulerRouter = require('./server/routes/scheduler');
   const authRouter = require('./server/routes/auth');
 
   app.use(bodyParser.json());
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
-  
+
   app.use(helmet());
 
   app.use(cors());
@@ -49,10 +50,11 @@ app.use(require('morgan')('short'));
   app.use('/api/product', productRouter);
   app.use('/api/company', companyRouter);
   app.use('/api/quote', quoteRouter);
-  app.use('/api/customer', customerRouter); 
+  app.use('/api/customer', customerRouter);
   app.use('/api/quoteProduct', quoteProductRouter);
   app.use('/api/auth', authRouter);
   app.use('/api/email', emailRouter);
+  app.use('/api/scheduler', schedulerRouter);
   console.log("****************")
 })()
 
