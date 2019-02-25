@@ -13,7 +13,6 @@ const validation = (WrappedComponent) => {
     }
 
     handleBlur(e) {
-        console.log("****************8", this.props);
         const { validationType, min, max, isRequired, value } = this.props;
         let result = {error: null}; 
         
@@ -39,10 +38,10 @@ const validation = (WrappedComponent) => {
 
         if(result.error) {
             this.setState({error:result.error.details[0].message});
-            this.props.handleError({id: e.target.id, isError: true});
+            this.props.handleError && this.props.handleError({id: e.target.id, isError: true});
         } else {
             this.setState({error:''});
-            this.props.handleError({id: e.target.id, isError: false});
+            this.props.handleError && this.props.handleError({id: e.target.id, isError: false});
         }
         
         this.props.onBlur && this.props.onBlur();

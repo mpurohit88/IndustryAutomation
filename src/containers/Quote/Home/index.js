@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
+import { Row, Col } from 'react-bootstrap'
 
 import { Badge } from '../../../components/Badge'
 import { getStatus, getVariant } from '../helper'
@@ -12,9 +13,11 @@ import EmailEditor from '../../../components/Editor'
 import { GetContactEmail } from '../../../components/Email'
 import { StandardModal } from '../../../components/Modals'
 import Scheduler from '../Scheduler'
+import Input from '../../../components/Input'
 
 import { itemsFetchQuoteDetails, quoteStart } from '../../../core/api/quote'
 import { sendEmail } from '../../../core/api/email'
+import { getById } from '../../../core/api/company'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -23,10 +26,14 @@ import { styles } from './styles.scss'
 class Home extends Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			isLoading: false,
 			showEditor: false,
-			showScheduler: false
+			showScheduler: false,
+			companyEmailId: '',
+			to: props.details.quoteDetails && props.details.quoteDetails.email,
+			subject: 'Provide Subject'
 		}
 
 		this.showEmail = this.showEmail.bind(this);
@@ -34,11 +41,25 @@ class Home extends Component {
 		this.sendEmailToCustomer = this.sendEmailToCustomer.bind(this);
 		this.handleSchedulerClick = this.handleSchedulerClick.bind(this);
 		this.schedulerClose = this.schedulerClose.bind(this);
+		this.handleInput = this.handleInput.bind(this);
 	}
-	componentDidMount() {
-		const { quoteId } = this.props.match.params;
 
-		this.props.fetchQuoteDetails(quoteId);
+	componentDidMount() {
+		const self = this;
+		const { quoteId } = self.props.match.params;
+
+		self.props.fetchQuoteDetails(quoteId);
+
+		getById().then((data) => {
+			self.setState({ companyEmailId: data });
+		});
+	}
+
+	handleInput(e) {
+		let value = e.target.value;
+		let name = e.target.name;
+
+		this.setState({ [name]: value })
 	}
 
 	lgClose() {
@@ -60,7 +81,7 @@ class Home extends Component {
 	sendEmailToCustomer(id, nextId, userActivityId) {
 		const self = this;
 
-		this.props.sendEmailAction(GetContactEmail(this.props.details.products, this.props.details.quoteDetails), id, nextId, userActivityId, () => {
+		this.props.sendEmailAction(GetContactEmail(this.props.details.products, this.props.details.quoteDetails), this.state.companyEmailId, this.state.to || this.props.details.quoteDetails.email, this.state.subject, id, nextId, userActivityId, () => {
 			self.lgClose();
 		});
 
@@ -159,7 +180,7 @@ class Home extends Component {
 												onClick={(e) => { }}
 											>
 												Done
-																	</Button>
+											</Button>
 										</div>
 									}
 
@@ -184,7 +205,7 @@ class Home extends Component {
 												onClick={(e) => { }}
 											>
 												Upload
-																	</Button>
+											</Button>
 										</Fragment>
 									}
 
@@ -205,6 +226,18 @@ class Home extends Component {
 
 				{this.state.showEditor ?
 					<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.state.isLoading} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
+						<Row className="show-grid">
+							<Col xs={4} md={6}>
+								<Input label='From:' onChange={this.handleInput} value={this.state.companyEmailId} name='from' id='from' type='input' />
+							</Col>
+							<Col xs={4} md={6}>
+								<Input label='To:' onChange={this.handleInput} value={quoteDetails.email} name='to' id='to' type='input' />
+							</Col>
+							<Col xs={12} md={12}>
+								<Input label='Suject:' onChange={this.handleInput} value={quoteDetails.subject} name='subject' id='subject' type='input' />
+							</Col>
+						</Row>
+						<hr />
 						{/* <EmailEditor text={ GetContactEmail(products, quoteDetails)}/> */}
 						<div dangerouslySetInnerHTML={{ __html: GetContactEmail(products, quoteDetails) }} />
 					</StandardModal> : null}

@@ -15,7 +15,7 @@ import { styles } from './styles.scss'
 
 // List Of Quote Component
 class List extends Component {
-	constructor(props){
+	constructor(props) {
 		super(props);
 
 		this.state = {
@@ -27,40 +27,39 @@ class List extends Component {
 
 	componentDidMount() {
 		this.props.fetchQuoteList();
-  }
+	}
 
-  getProductList(quoteId) {
+	getProductList(quoteId) {
 		getByQuoteId(quoteId).then((quoteProductList) => {
-			this.setState({quoteProductList})
+			this.setState({ quoteProductList })
 		});
-  }
+	}
 
-  render() {
-		const { quoteList, hasError, isLoading} = this.props;
+	render() {
+		const { quoteList, hasError, isLoading } = this.props;
 
-		if(isLoading) 
-		{
+		if (isLoading) {
 			return <div>...Loading</div>
 		}
 
-	const popover = (
-		<Popover id="popover-basic" title="Product List">
-			<table>
-				<thead><tr><th>Name</th><th>Quantity</th><th>GSTN</th></tr></thead>
-				<tbody>
-					{this.state.quoteProductList.map((list) => {
-						return <tr>
+		const popover = (
+			<Popover id="popover-basic" title="Product List">
+				<table>
+					<thead><tr><th>Name</th><th>Quantity</th><th>GSTN</th></tr></thead>
+					<tbody>
+						{this.state.quoteProductList.map((list) => {
+							return <tr>
 								<td>{list.name}</td>
 								<td>{list.quantity}</td>
 								<td>{list.gstn}</td>
 							</tr>
-					})}
-				</tbody>
-			</table>
-		</Popover>
-	  );
-	  
-    return (
+						})}
+					</tbody>
+				</table>
+			</Popover>
+		);
+
+		return (
 			<Fragment>
 				<hr />
 				<Table responsive striped bordered hover className={styles}>
@@ -81,15 +80,15 @@ class List extends Component {
 						{
 							quoteList && quoteList.map((quote, index) => {
 								return <tr key={index}>
-									<td><Link to={`/quote/${quote.id}`}>{quote.id}</Link></td>
+									<td><Link to={`/quote/${quote.id}`}>{`Quote ${quote.id}`}</Link></td>
 									<td>{quote.companyName}</td>
 									<td>{quote.address}</td>
 									<td>{quote.phoneNo}</td>
 									<td>{quote.mobileNo}</td>
 									<td>
-									<OverlayTrigger trigger="click" placement="right" overlay={popover}>
-										<Button variant="success" onClick={() => this.getProductList(quote.id)}>View</Button>
-									</OverlayTrigger>
+										<OverlayTrigger trigger="click" placement="right" overlay={popover}>
+											<Button variant="success" onClick={() => this.getProductList(quote.id)}>View</Button>
+										</OverlayTrigger>
 										{/* <a href="#" onClick={() => this.getProductList(quote.id)}>View</a> */}
 									</td>
 									<td><Badge pill variant={getVariant(quote.status)}>{getStatus(quote.status)}</Badge></td>
@@ -102,14 +101,14 @@ class List extends Component {
 				</Table>
 			</Fragment>
 		)
-  }
+	}
 }
 
 const mapStateToProps = (state) => {
 	return {
-			quoteList: state.quote.list,
-			hasError: state.quote.hasError,
-			isLoading: state.quote.isLoading
+		quoteList: state.quote.list,
+		hasError: state.quote.hasError,
+		isLoading: state.quote.isLoading
 	};
 };
 
