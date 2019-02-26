@@ -45,7 +45,7 @@ class List extends Component {
 									<td>{product.name}</td>
 									<td>{product.unit}</td>
 									<td>{product.hsnCode}</td>
-									<td>{product.imgName && <img height="80px" width="80px" src={`/dist/img/product/${product.imgName}`} />}</td>
+									<td>{product.imgName && <img height="80px" width="80px" src={`/img/product/${product.imgName}`} />}</td>
 									<td>{getISODateTime(product.dateTimeCreated)}</td>
 									<td>{product.createdBy}</td>
 								</tr>
