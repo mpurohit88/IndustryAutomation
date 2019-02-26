@@ -65,7 +65,6 @@ const all = function (req, res, next) {
 }
 
 const getQuoteDetail = function (req, res, next) {
-	console.log("req.decode.**********", req.decoded.role)
 	try {
 		if (req.decoded.role === 'admin') {
 			new Quote({}).getQuoteDetail(req.decoded.id, req.query.quoteId).then(function (quoteList) {

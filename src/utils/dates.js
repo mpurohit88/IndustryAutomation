@@ -5,3 +5,9 @@ export function getFormattedDateTime(date = new Date()) {
 export function padLeadingZero(value) {
   return value > 9 ? value : `0${value}`;
 }
+
+export const getTodaysDate = function (dateTime) {
+  const date = new Date()
+
+  return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+}
