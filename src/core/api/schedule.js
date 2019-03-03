@@ -1,4 +1,4 @@
-import { post } from '../api/httpClient';
+import { get, post } from '../api/httpClient';
 import * as quoteAction from '../../actions/quote'
 
 export function setReminder(nextSchedule, taskId, nextTaskId, userActivityId, cb) {
@@ -10,4 +10,16 @@ export function setReminder(nextSchedule, taskId, nextTaskId, userActivityId, cb
             })
             .catch(() => dispatch(quoteAction.quoteDetailsHaveError(true)));
     };
+}
+
+export const getScheduleDetails = function (scheduleId) {
+    return new Promise(function (resolve, reject) {
+        get('api/scheduler/getScheduleDetails', { scheduleId })
+            .then(result => {
+                resolve(result);
+            }).catch(err => {
+                console.log(err);
+                reject(err);
+            });
+    });
 }

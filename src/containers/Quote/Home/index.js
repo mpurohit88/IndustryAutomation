@@ -9,8 +9,8 @@ import AppBar from 'components/AppBar'
 import { getAdmin, getUserName, getCompanyName } from '../../../configs/user'
 import { getISODateTime } from '../../helper'
 import Button from '../../../components/Button'
-import EmailEditor from '../../../components/Editor'
-import { GetContactEmail } from '../../../components/Email'
+import Main from '../../../components/Editor'
+import getTemplate from '../../../components/Email'
 import { StandardModal } from '../../../components/Modals'
 import Scheduler from '../Scheduler'
 import Input from '../../../components/Input'
@@ -32,8 +32,9 @@ class Home extends Component {
 			showEditor: false,
 			showScheduler: false,
 			companyEmailId: '',
-			to: props.details.quoteDetails && props.details.quoteDetails.email,
-			subject: 'Provide Subject'
+			to: '',
+			subject: 'Provide Subject',
+			scheduleId: ''
 		}
 
 		this.showEmail = this.showEmail.bind(this);
@@ -48,10 +49,10 @@ class Home extends Component {
 		const self = this;
 		const { quoteId } = self.props.match.params;
 
-		self.props.fetchQuoteDetails(quoteId);
-
-		getById().then((data) => {
-			self.setState({ companyEmailId: data });
+		self.props.fetchQuoteDetails(quoteId, (data) => {
+			getById().then((data) => {
+				self.setState({ companyEmailId: data, to: data });
+			});
 		});
 	}
 
@@ -70,8 +71,8 @@ class Home extends Component {
 		this.setState({ showScheduler: false })
 	}
 
-	handleSchedulerClick(id, nextId, userActivityId) {
-		this.setState({ showScheduler: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId })
+	handleSchedulerClick(id, nextId, userActivityId, scheduleId) {
+		this.setState({ showScheduler: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId, scheduleId: scheduleId })
 	}
 
 	showEmail(id, nextId, userActivityId) {
@@ -81,11 +82,11 @@ class Home extends Component {
 	sendEmailToCustomer(id, nextId, userActivityId) {
 		const self = this;
 
-		this.props.sendEmailAction(GetContactEmail(this.props.details.products, this.props.details.quoteDetails), this.state.companyEmailId, this.state.to || this.props.details.quoteDetails.email, this.state.subject, id, nextId, userActivityId, () => {
+		this.props.sendEmailAction(getTemplate(this.props.details.products, this.props.details.quoteDetails), this.state.companyEmailId, this.state.to || this.props.details.quoteDetails.email, this.state.subject, id, nextId, userActivityId, () => {
 			self.lgClose();
 		});
 
-		console.log(GetContactEmail(this.props.details.products, this.props.details.quoteDetails));
+		console.log(getTemplate(this.props.details.products, this.props.details.quoteDetails));
 	}
 
 	isDisabled(status, startDate, endDate) {
@@ -165,13 +166,13 @@ class Home extends Component {
 											{
 												task.scheduleId ?
 													<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-														onClick={(e) => { this.handleSchedulerClick(task.id, tasks[index + 1].id, task.userActivityId) }}
+														onClick={(e) => { this.handleSchedulerClick(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId) }}
 													>
 														View Reminder
 												</Button>
 													:
 													<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-														onClick={(e) => { this.handleSchedulerClick(task.id, tasks[index + 1].id, task.userActivityId) }}
+														onClick={(e) => { this.handleSchedulerClick(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId) }}
 													>
 														Set Reminder
 												</Button>
@@ -225,25 +226,12 @@ class Home extends Component {
 				</div>
 
 				{this.state.showEditor ?
-					<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.state.isLoading} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
-						<Row className="show-grid">
-							<Col xs={4} md={6}>
-								<Input label='From:' onChange={this.handleInput} value={this.state.companyEmailId} name='from' id='from' type='input' />
-							</Col>
-							<Col xs={4} md={6}>
-								<Input label='To:' onChange={this.handleInput} value={quoteDetails.email} name='to' id='to' type='input' />
-							</Col>
-							<Col xs={12} md={12}>
-								<Input label='Suject:' onChange={this.handleInput} value={quoteDetails.subject} name='subject' id='subject' type='input' />
-							</Col>
-						</Row>
-						<hr />
-						{/* <EmailEditor text={ GetContactEmail(products, quoteDetails)}/> */}
-						<div dangerouslySetInnerHTML={{ __html: GetContactEmail(products, quoteDetails) }} />
-					</StandardModal> : null}
+					<Main handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} subject={this.state.subject} to={this.state.to} companyEmailId={this.state.companyEmailId} isLoading={this.state.isLoading} text={getTemplate(1, products, quoteDetails)} quoteDetails={quoteDetails} products={products} />
+					: null
+				}
 				{
 					this.state.showScheduler ?
-						<Scheduler lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showScheduler} quoteDetails={quoteDetails} /> : null
+						<Scheduler scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showScheduler} quoteDetails={quoteDetails} /> : null
 				}
 			</Fragment>
 		)
@@ -258,9 +246,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		fetchQuoteDetails: (quoteId) => dispatch(itemsFetchQuoteDetails(quoteId)),
+		fetchQuoteDetails: (quoteId, cb) => dispatch(itemsFetchQuoteDetails(quoteId, cb)),
 		quoteStartAction: (taskHistId, quoteId) => dispatch(quoteStart(taskHistId, quoteId)),
-		sendEmailAction: (body, taskHistId, nextTaskHistId, userActivityId, cb) => dispatch(sendEmail(body, taskHistId, nextTaskHistId, userActivityId, cb))
+		sendEmailAction: (body, from, to, subject, taskHistId, nextTaskHistId, userActivityId, cb) => dispatch(sendEmail(body, from, to, subject, taskHistId, nextTaskHistId, userActivityId, cb))
 	};
 };
 

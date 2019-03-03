@@ -7,7 +7,7 @@ import { StandardModal } from '../../../components/Modals'
 import Dropdown from '../../../components/Dropdown'
 import Input from '../../../components/Input'
 import { getById } from '../../../core/api/company'
-import { setReminder } from '../../../core/api/schedule'
+import { setReminder, getScheduleDetails } from '../../../core/api/schedule'
 
 class Scheduler extends Component {
     constructor(props) {
@@ -15,6 +15,7 @@ class Scheduler extends Component {
 
         this.state = {
             newSchedule: {
+                scheduleId: props.scheduleId,
                 to: props.quoteDetails.email,
                 schedule_day: '',
                 schedule_time: '',
@@ -39,7 +40,19 @@ class Scheduler extends Component {
                     }
                 }
             });
-        })
+        });
+
+        if (this.props.scheduleId) {
+            getScheduleDetails(this.props.scheduleId).then((data) => {
+                self.setState(prevState => {
+                    return {
+                        newSchedule: {
+                            ...prevState.newSchedule, ['schedule_day']: data.schedule[0].Frequency, ['schedule_time']: data.schedule[0].Time
+                        }
+                    }
+                })
+            })
+        }
     }
 
     handleSubmit() {
@@ -74,7 +87,7 @@ class Scheduler extends Component {
         });
 
         return (
-            <StandardModal btnText='Schedule' heading='Scheduler' isLoading={false} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.lgClose} handleModelClick={this.lgClose}>
+            <StandardModal btnText={this.props.scheduleId ? 'Update Schedule' : 'Save Schedule'} heading='Scheduler' isLoading={false} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.lgClose} handleModelClick={this.lgClose}>
                 <Form>
                     <Row className="show-grid">
                         <Col xs={8} md={6}>
@@ -108,6 +121,7 @@ class Scheduler extends Component {
                                 name='schedule_time'
                                 label='Set Scheduler Time:'
                                 value={this.state.newSchedule.schedule_time}
+                                defaultValue={this.state.newSchedule.schedule_day}
                                 onChange={this.handleInput}
                                 placeholder='--Select Time--'
                                 options={[

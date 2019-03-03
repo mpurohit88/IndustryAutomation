@@ -5,8 +5,8 @@ import * as quoteAction from '../../actions/quote'
 export function createQuote(newQuote) {
 	return (dispatch) => {
 		post('api/quote/create', newQuote.data)
-			.then((data) => { 
-				newQuote.cb(); 
+			.then((data) => {
+				newQuote.cb();
 				dispatch(quoteAction.quoteListFetchDataSuccess(data))
 			})
 			.catch(() => dispatch(quoteAction.quoteListHaveError(true)));
@@ -27,13 +27,14 @@ export function itemsFetchData() {
 	};
 }
 
-export function itemsFetchQuoteDetails(quoteId) {
+export function itemsFetchQuoteDetails(quoteId, cb) {
 	return (dispatch) => {
 		dispatch(quoteAction.quoteDetailsAreLoading(true));
 
-		get('api/quote/getQuoteDetail', {quoteId})
+		get('api/quote/getQuoteDetail', { quoteId })
 			.then((data) => {
 				dispatch(quoteAction.quoteDetailsAreLoading(false));
+				cb(data);
 				return data;
 			})
 			.then((data) => dispatch(quoteAction.quoteDetailsFetchDataSuccess(data)))
@@ -45,7 +46,7 @@ export function quoteStart(taskHistId, quoteId) {
 	return (dispatch) => {
 		dispatch(quoteAction.quoteStartIsLoading(true));
 
-		post('api/quote/start', {taskHistId, quoteId})
+		post('api/quote/start', { taskHistId, quoteId })
 			.then((data) => {
 				dispatch(quoteAction.quoteStartIsLoading(false));
 				return data;

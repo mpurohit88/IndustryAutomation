@@ -46,9 +46,9 @@ class Create extends Component {
 
 	handleFirmChange(e) {
 		console.log("**********id ", e.target);
-		// fetchFirmContactList(e.currentTarget.id).then((contactList) => {
-		// 	this.setState({contactList})
-		// });
+		fetchFirmContactList(e.currentTarget.id).then((contactList) => {
+			this.setState({ contactList })
+		});
 	}
 
 	handleProductChange(e) {
@@ -126,23 +126,45 @@ class Create extends Component {
 	}
 
 	handleInput(e) {
+		const self = this;
+
 		let value = e.target.value;
 		let name = e.target.name;
 
-		if (e.target.name === 'party_name') {
+		if (name === 'party_name') {
 			fetchFirmContactList(e.target.value).then((contactList) => {
 				this.setState({ contactList })
 			});
-		}
 
-		this.setState(prevState => {
-			return {
-				newQuote: {
-					...prevState.newQuote, [name]: value
+			this.props.partyList.map((data) => {
+				if (data.id.toString() === value) {
+					self.setState(prevState => {
+						return {
+							newQuote: { ...prevState.newQuote, ['address']: data.address, ['phoneNo']: data.telephone, [name]: value }
+						}
+					});
 				}
-			}
-		}, () => console.log(this.state.newQuote)
-		)
+			});
+		} else if (name === 'contact_person') {
+			this.state.contactList.map((data) => {
+				if (data.id.toString() === value) {
+					self.setState(prevState => {
+						return {
+							newQuote: { ...prevState.newQuote, ['mobileNo']: data.mobileNo, [name]: value }
+						}
+					});
+				}
+			});
+		} else {
+			this.setState(prevState => {
+				return {
+					newQuote: {
+						...prevState.newQuote, [name]: value
+					}
+				}
+			}, () => console.log(this.state.newQuote)
+			)
+		}
 	}
 
 	handleSubmit(event) {
@@ -250,8 +272,8 @@ class Create extends Component {
 									id='contact_person'
 									name='contact_person'
 									label='Contact Person:'
-									// value={this.contactDrpDwn} 
-									onChange={this.handleFirmChange}
+									value={this.state.newQuote.contact_person}
+									onChange={this.handleInput}
 									placeholder='--Select Contact Person--'
 									options={contactDrpDwn}
 								/>
@@ -302,7 +324,7 @@ class Create extends Component {
 									</td>
 									<td>
 										{/* {this.state.imgSrc && <Zoom src = {this.state.imgSrc} />} */}
-										<img height="80px" name="imgName" ref="imgName" id="imgName" width="80px" />
+										<img height="80px" name="imgName" ref="imgName" id="imgName" width="100px" />
 										{/* <figure onMouseMove={this.handleMouseMove} style={this.state}>
 											<img ref="imgName" />
 										</figure> */}

@@ -8,11 +8,14 @@ const create = function (req, res, next) {
 	let params = {
 		createdBy: req.decoded.id,
 		party_name: req.body.quote.party_name,
+		contact_person: req.body.quote.contact_person,
 		address: req.body.quote.address,
 		phoneNo: req.body.quote.phoneNo,
 		mobileNo: req.body.quote.mobileNo,
 		products: req.body.productList
 	};
+
+	console.log("****************", req.body)
 
 	const newQuote = new Quote(params);
 
