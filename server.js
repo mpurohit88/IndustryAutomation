@@ -21,6 +21,7 @@ app.use(require('morgan')('short'));
   const quoteProductRouter = require('./server/routes/quoteProduct');
   const emailRouter = require('./server/routes/email');
   const schedulerRouter = require('./server/routes/scheduler');
+  const customerContactRouter = require('./server/routes/customerContact');
   const authRouter = require('./server/routes/auth');
 
   app.use(bodyParser.json());
@@ -55,6 +56,8 @@ app.use(require('morgan')('short'));
   app.use('/api/auth', authRouter);
   app.use('/api/email', emailRouter);
   app.use('/api/scheduler', schedulerRouter);
+  app.use('/api/customerContact', customerContactRouter);
+
   console.log("****************")
 })()
 

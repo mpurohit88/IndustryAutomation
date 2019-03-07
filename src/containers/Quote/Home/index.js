@@ -9,8 +9,8 @@ import AppBar from 'components/AppBar'
 import { getAdmin, getUserName, getCompanyName } from '../../../configs/user'
 import { getISODateTime } from '../../helper'
 import Button from '../../../components/Button'
-import Main from '../../../components/Editor'
 import getTemplate from '../../../components/Email'
+import Main from '../../../components/Editor/EmailTemplate'
 import { StandardModal } from '../../../components/Modals'
 import Scheduler from '../Scheduler'
 import Input from '../../../components/Input'
@@ -18,6 +18,7 @@ import Input from '../../../components/Input'
 import { itemsFetchQuoteDetails, quoteStart } from '../../../core/api/quote'
 import { sendEmail } from '../../../core/api/email'
 import { getById } from '../../../core/api/company'
+import { quoteContactDetail } from '../../../core/api/customerContact'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -50,8 +51,8 @@ class Home extends Component {
 		const { quoteId } = self.props.match.params;
 
 		self.props.fetchQuoteDetails(quoteId, (data) => {
-			getById().then((data) => {
-				self.setState({ companyEmailId: data, to: data });
+			getById().then((emailId) => {
+				self.setState({ companyEmailId: emailId, to: data.quoteDetails.email });
 			});
 		});
 	}
@@ -76,17 +77,41 @@ class Home extends Component {
 	}
 
 	showEmail(id, nextId, userActivityId) {
-		this.setState({ showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId })
+
+		quoteContactDetail(this.props.details.quoteDetails.contact_person_id).then((result) => {
+			this.setState({ constactPerson: result, showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId })
+		})
 	}
 
-	sendEmailToCustomer(id, nextId, userActivityId) {
+	sendEmailToCustomer(id, nextId, userActivityId, body_old) {
 		const self = this;
+		let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson);
 
-		this.props.sendEmailAction(getTemplate(this.props.details.products, this.props.details.quoteDetails), this.state.companyEmailId, this.state.to || this.props.details.quoteDetails.email, this.state.subject, id, nextId, userActivityId, () => {
-			self.lgClose();
+		body = body.replace('<input type="text" id="refId" name="refId"/>', document.getElementById('refId').value)
+		body = body.replace('<input type="text" size="100" id="refSubject" name="refSubject" value="Ref. Your Email Enquiry Dated 27.12.2018 for OTR Tyre Accessories."/>', document.getElementById('refSubject').value)
+		body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="OTR Tubes %26 Flaps and &quot;O&quot; Rings available in all size"/>', document.getElementById('about-product').value)
+
+		this.props.details.products.map((e, index) => {
+			let canvas = document.createElement('canvas')
+			let ctx = canvas.getContext('2d')
+			let img = document.getElementById('img-' + index);
+
+			canvas.width = img.width
+			canvas.height = img.height
+			ctx.drawImage(img, 0, 0)
+
+			// If the image is not png, the format
+			// must be specified here
+			// return canvas.toDataURL()
+
+			body = body.replace('src="/img/product/' + e.imgName + '"', 'src="' + canvas.toDataURL() + '"');
 		});
 
-		console.log(getTemplate(this.props.details.products, this.props.details.quoteDetails));
+		self.setState({ isLoading: true });
+		this.props.sendEmailAction(body, this.state.companyEmailId, this.state.to || this.props.details.quoteDetails.email, this.state.subject, id, nextId, userActivityId, () => {
+			self.lgClose();
+			self.setState({ isLoading: false });
+		});
 	}
 
 	isDisabled(status, startDate, endDate) {
@@ -226,7 +251,23 @@ class Home extends Component {
 				</div>
 
 				{this.state.showEditor ?
-					<Main handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} subject={this.state.subject} to={this.state.to} companyEmailId={this.state.companyEmailId} isLoading={this.state.isLoading} text={getTemplate(1, products, quoteDetails)} quoteDetails={quoteDetails} products={products} />
+					<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.state.isLoading} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
+						<Row className="show-grid">
+							<Col xs={4} md={6}>
+								<Input label='From:' onChange={this.handleInput} value={this.state.companyEmailId} name='from' id='from' type='input' />
+							</Col>
+							<Col xs={4} md={6}>
+								<Input label='To:' onChange={this.handleInput} value={this.state.to} name='to' id='to' type='input' />
+							</Col>
+							<Col xs={12} md={12}>
+								<Input label='Suject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
+							</Col>
+						</Row>
+						<hr />
+
+						{/* <Main lgClose={this.lgClose} show={this.state.showEditor} handleSubmit={(body) => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId, body)} subject={this.state.subject} to={this.state.to} companyEmailId={this.state.companyEmailId} isLoading={this.state.isLoading} text={getTemplate(1, products, quoteDetails)} quoteDetails={quoteDetails} products={products} /> */}
+						<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson) }} />
+					</StandardModal>
 					: null
 				}
 				{

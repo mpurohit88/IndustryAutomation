@@ -1,15 +1,17 @@
-import React, { Component } from 'React';
+import React, { Component } from 'react';
+import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-bootstrap'
-
 import { EditorState, convertToRaw, ContentState, convertFromHTML, DefaultDraftBlockRenderMap } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import { styles } from './styles.scss'
+import { Editor } from 'react-draft-wysiwyg';
 import Immutable from 'immutable';
+
 import { getTodaysDate } from '../../utils/dates'
+
 import { StandardModal } from '../../components/Modals'
 import Input from '../../components/Input'
+
+import { styles } from './styles.scss'
 
 const Hello = (props, { blockProps, products }) => {
 	return <div data-offset-key={props["offsetKey"]}>
@@ -35,7 +37,8 @@ const Hello = (props, { blockProps, products }) => {
 												{index + 1}
 											</td>
 											<td>{product.name}</td>
-											<td><img height="80px" src={`/dist/img/product/${product.imgName}`} alt={product.imgName} /></td>
+											<td>
+												<img height="80px" src={`/img/product/${product.imgName}`} alt={product.imgName} /></td>
 											<td>{product.hsnCode}</td>
 											<td>{product.quantity}</td>
 											<td>{product.rate}</td>
@@ -52,11 +55,11 @@ const Hello = (props, { blockProps, products }) => {
 						<br />
 					</td>
 				</tr>
-				<tr>
+				{/* <tr>
 					<td colSpan='2' style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 + 'px' }}>
 						OTR Tubes & Flaps and "O" Rings available in all size &nbsp;
 										</td>
-				</tr>
+				</tr> */}
 			</tbody>
 		</table>
 	</div>
@@ -75,14 +78,14 @@ class CodeBlock extends React.Component {
 		);
 	}
 }
+
 // keep support for other draft default block types and add our myCustomBlock type
 // const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(blockRenderMap);
-
-export default class EmailEditor extends Component {
+class Main extends Component {
 	constructor(props) {
 		super(props);
 
-		const html = '<p><blockquote><strong><u>QUOTATION</u></strong></blockquote></p>' +
+		const html = '<p><blockquote><cetner><strong><u>QUOTATION</u></strong><cetner></blockquote></p>' +
 			'<p>Our Ref: xxx/xxx/x/xxx/xx-xx/xxx &nbsp;&nbsp;&nbsp;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Date: ' + getTodaysDate() + '</p>' +
 			// '<table><tbody>' +
 			'<p><h5>Kindly Atten: Mr. Daya Pvt. Ltd. <br />Ultratech Cement Limited <br />Nathdwara (Rajasthan) </h5>' +
@@ -93,22 +96,36 @@ export default class EmailEditor extends Component {
 			'<p>We thank you very much for your above enquiry and pleased to quote our lowest offer as under:-</p>' +
 			'<p>&nbsp;</p></br>' +
 			'<p><h6>Our Ref: XXXXXXXXXXX </h6></p> </br>' +
-			'<h5>&nbsp;</h5></br></br>' +
+			'<blockquote><strong>OTR Tubes & Flaps and "O" Rings available in all size</strong></blockquote></br></br>' +
 			'<p>Thanks & Regards,</p>';
+
 		const contentBlock = convertFromHTML(html);
+
 		if (contentBlock) {
 			const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
 			const editorState = EditorState.createWithContent(contentState);
+
 			this.state = {
 				editorState,
 				companyEmailId: this.props.companyEmailId,
 				to: this.props.to,
-				subject: this.props.subject,
-			};
+				subject: 'Provide Subject'
+			}
 		}
 
 		this.myBlockRenderer = this.myBlockRenderer.bind(this);
 		this.handleInput = this.handleInput.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	handleSubmit() {
+
+		const body = draftToHtml(
+			convertToRaw(
+				this.state.editorState.getCurrentContent()
+			)
+		)
+		this.props.handleSubmit(body);
 	}
 
 	handleInput(e) {
@@ -116,6 +133,29 @@ export default class EmailEditor extends Component {
 		let name = e.target.name;
 
 		this.setState({ [name]: value })
+	}
+
+	myBlockStyleFn = (contentBlock) => {
+		const type = contentBlock.getType();
+		if (type === 'blockquote') {
+			return 'rdw-center-aligned-block';
+		} else if (type === 'section') {
+			return 'rdw-option-wrapper';
+		}
+	}
+
+	onEditorStateChange = (editorState) => {
+		const { onChange, value } = this.props;
+
+		const newValue = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+
+		// if (value !== newValue) {
+		// 	onChange(newValue);
+		// }
+
+		this.setState({
+			editorState,
+		});
 	}
 
 	myBlockRenderer(contentBlock) {
@@ -132,21 +172,6 @@ export default class EmailEditor extends Component {
 			};
 		}
 	}
-
-	myBlockStyleFn = (contentBlock) => {
-		const type = contentBlock.getType();
-		if (type === 'blockquote') {
-			return 'rdw-center-aligned-block';
-		} else if (type === 'section') {
-			return 'rdw-option-wrapper';
-		}
-	}
-
-	onEditorStateChange = (editorState) => {
-		this.setState({
-			editorState,
-		});
-	};
 
 	render() {
 		const { editorState } = this.state;
@@ -166,7 +191,7 @@ export default class EmailEditor extends Component {
 
 		return (
 			<div className={styles}>
-				<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.props.isLoading} handleSubmit={this.props.handleSubmit} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
+				<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.props.isLoading} handleSubmit={() => this.handleSubmit()} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.lgClose}>
 					<Row className="show-grid">
 						<Col xs={4} md={6}>
 							<Input label='From:' onChange={this.handleInput} value={this.state.companyEmailId} name='from' id='from' type='input' />
@@ -178,7 +203,6 @@ export default class EmailEditor extends Component {
 							<Input label='Suject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
 						</Col>
 					</Row>
-
 					<Editor
 						editorState={editorState}
 						toolbarClassName="toolbarClassName"
@@ -191,6 +215,13 @@ export default class EmailEditor extends Component {
 					/>
 				</StandardModal>
 			</div>
-		)
+		);
 	}
-} 
+}
+
+// Decorate the form component
+Main = reduxForm({
+	form: 'emailEditor' // a unique name for this form
+})(Main);
+
+export default Main;
