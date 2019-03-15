@@ -11,12 +11,12 @@ import { addProduct } from '../../../core/api/product'
 
 // Add Product Component
 class Add extends Component {
-	constructor(props){
+	constructor(props) {
 		super(props);
 
 		this.nameInput = React.createRef();
-	
-		this.state={
+
+		this.state = {
 			newProduct: {
 				name: '',
 				description: '',
@@ -33,38 +33,39 @@ class Add extends Component {
 	}
 
 	handleInput(e) {
-		console.log("***********",e.target);
 		let value = e.target.value;
 		let name = e.target.name;
 
-		this.setState( prevState => {
-			 return { 
-					newProduct : {
-									 ...prevState.newProduct, [name]: value
-									}
-			 }
+		this.setState(prevState => {
+			return {
+				newProduct: {
+					...prevState.newProduct, [name]: value
+				}
+			}
 		}, () => console.log(this.state.newProduct)
 		)
 	}
 
-	handleSubmit(event){
+	handleSubmit(event) {
 		event.preventDefault();
 		const that = this;
 
 		const config = {
-			onUploadProgress: function(progressEvent) {
-				var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total )
-			 that.setState({progress:
-					Math.round( (progressEvent.loaded * 100) / progressEvent.total )})
+			onUploadProgress: function (progressEvent) {
+				var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+				that.setState({
+					progress:
+						Math.round((progressEvent.loaded * 100) / progressEvent.total)
+				})
 				console.log(percentCompleted)
 			}
 		}
 
 		const formData = new FormData();
-		formData.append('data',JSON.stringify(this.state.newProduct));
-		formData.append('avatar',document.getElementById('img').files[0])
+		formData.append('data', JSON.stringify(this.state.newProduct));
+		formData.append('avatar', document.getElementById('img').files[0])
 
-		this.props.register({formData: formData, cb: this.handleReset, config: config});
+		this.props.register({ formData: formData, cb: this.handleReset, config: config });
 	}
 
 	handleReset() {
@@ -83,35 +84,35 @@ class Add extends Component {
 	}
 
 	resetSuccess() {
-		this.setState({showSucess: false});
+		this.setState({ showSucess: false });
 	}
 
-  render() {
-    return (
+	render() {
+		return (
 			<Modal btnText='Save' heading='Add Product' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
 				<Form>
-					{ this.state.showSucess ? <Success>Product Added Successfully!</Success> : null }
+					{this.state.showSucess ? <Success>Product Added Successfully!</Success> : null}
 					<Row className="show-grid">
 						<Col xs={4} md={6}>
-							<Input label='Name Of Product:' validationType='string' min={2} max={50} isRequired={true} inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newProduct.name} name='name' id='name' type='input' placeholder='Enter Name Of Product'/>
+							<Input label='Name Of Product:' validationType='string' min={2} max={50} isRequired={true} inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newProduct.name} name='name' id='name' type='input' placeholder='Enter Name Of Product' />
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Description:' validationType='string' min={2} max={150} type='input' onChange={this.handleInput} value={this.state.newProduct.description} name='description' id='description' placeholder='Enter Description'/>
+							<Input label='Description:' validationType='string' min={2} max={150} type='input' onChange={this.handleInput} value={this.state.newProduct.description} name='description' id='description' placeholder='Enter Description' />
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Name Of Unit:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newProduct.unit} name='unit' id='unit' placeholder='Enter Unit'/>
+							<Input label='Name Of Unit:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newProduct.unit} name='unit' id='unit' placeholder='Enter Unit' />
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Browse Image:' type='file' onChange={this.handleInput} value={this.state.newProduct.img} name='img' id='img' placeholder='Enter State'/>
+							<Input label='Browse Image:' type='file' onChange={this.handleInput} value={this.state.newProduct.img} name='img' id='img' placeholder='Enter State' />
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='HSN Code:' isRequired={true} onChange={this.handleInput} value={this.state.newProduct.hsnCode} name='hsnCode' id='hsnCode' type='input' placeholder='Enter HSN Code'/>
+							<Input label='HSN Code:' isRequired={true} onChange={this.handleInput} value={this.state.newProduct.hsnCode} name='hsnCode' id='hsnCode' type='input' placeholder='Enter HSN Code' />
 						</Col>
 					</Row>
-				</Form>  
-        </Modal>
-    )
-  }
+				</Form>
+			</Modal>
+		)
+	}
 }
 
 const mapDispatchToProps = (dispatch) => {

@@ -45,7 +45,6 @@ class Create extends Component {
 	}
 
 	handleFirmChange(e) {
-		console.log("**********id ", e.target);
 		fetchFirmContactList(e.currentTarget.id).then((contactList) => {
 			this.setState({ contactList })
 		});

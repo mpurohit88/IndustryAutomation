@@ -7,7 +7,7 @@ const add = function (req, res, next) {
         scheduleId: req.body.nextSchedule.scheduleId,
         task_id: req.body.taskId,
         company_id: req.decoded.companyId,
-        subject: 'req.body.subject',
+        subject: req.body.nextSchedule.subject,
         message_body: '',
         next_reminder_date: req.body.next_reminder_date,
         from_address: req.body.nextSchedule.companyEmailId,
@@ -18,7 +18,6 @@ const add = function (req, res, next) {
 
     const newSchedule = new Schedule(params);
 
-    console.log("**************** scheduleId", req.body);
     try {
         if (params.scheduleId) {
             newSchedule.update().then(function (result) {

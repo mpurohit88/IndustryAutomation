@@ -57,8 +57,6 @@ app.use(require('morgan')('short'));
   app.use('/api/email', emailRouter);
   app.use('/api/scheduler', schedulerRouter);
   app.use('/api/customerContact', customerContactRouter);
-
-  console.log("****************")
 })()
 
 app.get('/*', function root(req, res) {
