@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Row, Col } from 'react-bootstrap';
-import Axios from "axios";
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
@@ -103,7 +102,7 @@ class Add extends Component {
 							<Input label='Name Of Unit:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newProduct.unit} name='unit' id='unit' placeholder='Enter Unit' />
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Browse Image:' type='file' onChange={this.handleInput} value={this.state.newProduct.img} name='img' id='img' placeholder='Enter State' />
+							<Input type='file' label='Browse Image:' accept="image/*" onChange={this.handleInput} value={this.state.newProduct.img} name='img' id='img' />
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='HSN Code:' isRequired={true} onChange={this.handleInput} value={this.state.newProduct.hsnCode} name='hsnCode' id='hsnCode' type='input' placeholder='Enter HSN Code' />

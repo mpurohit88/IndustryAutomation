@@ -89,34 +89,27 @@ class Home extends Component {
 		})
 	}
 
-	sendEmailToCustomer(id, nextId, userActivityId, body_old) {
-		const self = this;
-		let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson);
+	sendEmailToCustomer(id, nextId, userActivityId) {
+		if (this.state.subject.trim() !== "") {
+			const self = this;
+			let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson);
 
-		body = body.replace('<input type="text" id="refId" name="refId"/>', document.getElementById('refId').value)
-		body = body.replace('<input type="text" size="100" id="refSubject" name="refSubject" value="Ref. Your Email Enquiry Dated 27.12.2018 for OTR Tyre Accessories."/>', document.getElementById('refSubject').value)
-		body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="OTR Tubes %26 Flaps and &quot;O&quot; Rings available in all size"/>', document.getElementById('about-product').value)
+			body = body.replace('<input type="text" id="refId" name="refId"/>', document.getElementById('refId').value)
+			body = body.replace('<input type="text" size="100" id="refSubject" name="refSubject" value="Ref. Your Email Enquiry Dated 27.12.2018 for OTR Tyre Accessories."/>', document.getElementById('refSubject').value)
+			body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="OTR Tubes %26 Flaps and &quot;O&quot; Rings available in all size"/>', document.getElementById('about-product').value)
 
-		this.props.details.products.map((e, index) => {
-			// let canvas = document.createElement('canvas')
-			// let ctx = canvas.getContext('2d')
-			// let img = document.getElementById('img-' + index);
+			this.props.details.products.map((e, index) => {
+				body = body.replace('src="/img/product/' + e.imgName + '"', 'src="cid:EmbeddedContent_' + index + '"');
+			});
 
-			// canvas.width = img.width
-			// canvas.height = img.height
-			// ctx.drawImage(img, 0, 0)
-
-			// If the image is not png, the format
-			// must be specified here
-			// return canvas.toDataURL()
-			body = body.replace('src="/img/product/' + e.imgName + '"', 'src="cid:EmbeddedContent_' + index + '"');
-		});
-
-		self.setState({ isLoading: true });
-		this.props.sendEmailAction(body, this.state.companyEmailId, this.state.to || this.props.details.quoteDetails.email, this.state.subject, id, nextId, userActivityId, () => {
-			self.lgClose();
-			self.setState({ isLoading: false });
-		}, this.props.details.quoteDetails.id);
+			self.setState({ isLoading: true });
+			this.props.sendEmailAction(body, this.state.companyEmailId, this.state.to || this.props.details.quoteDetails.email, this.state.subject, id, nextId, userActivityId, () => {
+				self.lgClose();
+				self.setState({ isLoading: false });
+			}, this.props.details.quoteDetails.id);
+		} else {
+			alert('Subject is required');
+		}
 	}
 
 	isDisabled(status, startDate, endDate) {
@@ -179,6 +172,9 @@ class Home extends Component {
 						{
 							tasks.map((task, index) => {
 								return <div className={`flex-center step checkmark${this.isStepActive(quoteDetails.status, task.startDate, task.endDate) ? ' active-step' : ''}`}>
+
+									{index + 1 < tasks.length && <div class="vertical-line"></div>}
+
 									<div className={`${this.showStepCircle(task.startDate, task.endDate)}`}>
 										<label className='text'>{task.text}</label>
 									</div>

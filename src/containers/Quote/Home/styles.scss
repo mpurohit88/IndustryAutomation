@@ -107,3 +107,12 @@ div.checkmark .disabled-circle:before {
   top: 40%; 
   margin-top: -0.5em;
 }
+
+.vertical-line {
+  width: 2px;
+  height: 87px;
+  background: #3c9aae;
+  margin: 32px auto 0 20px;
+  position: absolute;
+  left: 24px;
+}

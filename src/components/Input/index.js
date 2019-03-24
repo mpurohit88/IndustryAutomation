@@ -5,7 +5,7 @@ import validation from './validation'
 
 import { styles } from './styles.scss'
 
-const Input = ({ type, name, value, placeholder, onChange, id, onBlur, label, hint, inputRef, error }) => {
+const Input = ({ type, name, value, placeholder, onChange, id, onBlur, label, hint, inputRef, error, accept }) => {
 
 	const [a, ...b] = error && error.split(' ');
 
@@ -13,7 +13,7 @@ const Input = ({ type, name, value, placeholder, onChange, id, onBlur, label, hi
 		<Fragment>
 			<Form.Group controlId={id}>
 				<Form.Label>{label}</Form.Label>
-				<Form.Control className={b.length > 0 && "red-border"} ref={inputRef} type={type} placeholder={placeholder} onChange={onChange} value={value} name={name} onBlur={onBlur} />
+				<Form.Control accept={accept} className={b.length > 0 && "red-border"} ref={inputRef} type={type} placeholder={placeholder} onChange={onChange} value={value} name={name} onBlur={onBlur} />
 				<Form.Text className="text-muted" >
 					{hint}
 				</Form.Text>

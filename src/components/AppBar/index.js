@@ -45,68 +45,72 @@ export default class AppBar extends React.Component {
     const { isAdmin, name, cname } = this.props;
 
     return (
-    <div className='test'
-      style={{
-        background: `rebeccapurple`,
-        marginBottom: `1.45rem`,
-      }}
-    >
-      
-      <header>
-        <Link
-          to="/"
-          className="logo"
-        >
-          {this.props.children} {cname && `| ${cname}`}
-        </Link>
-        <nav className="nav-collapse">
-          <ul>
-            {/* active */}
-            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.setState({ lgShow: true })}>Create Quote</a></li> }
-            { isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCompanyRegClick(true)}>Company Registration</a></li> }
-            { isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleUserRegClick(true)}>User Registration</a></li> }
-            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleProductClick(true)}>Add Product</a></li> }
-            { !isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCustomerClick(true)}>Add Customer</a></li> }
-            <li className="menu-item user">
-              <a>
-                <span>Welcome: {name.toUpperCase()}</span>
-              </a>
-            </li>
-            <li className="menu-item"><Link style={{
+      <div className='test'
+        style={{
+          background: `rebeccapurple`,
+          marginBottom: `1.45rem`,
+        }}
+      >
+        <header style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '15px' }}>
+            <img src="/dist/img/product/bill_1553438523261.png" height="40" />
+            <Link
+              to="/"
+              className="logo"
+            >
+              {this.props.children} {cname && `| ${cname}`}
+            </Link>
+          </div>
+
+          <nav className="nav-collapse">
+            <ul>
+              {/* active */}
+              {!isAdmin && <li className="menu-item"><a href="#" onClick={() => this.setState({ lgShow: true })}>Create Quote</a></li>}
+              {isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCompanyRegClick(true)}>Company Registration</a></li>}
+              {isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleUserRegClick(true)}>User Registration</a></li>}
+              {!isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleProductClick(true)}>Add Product</a></li>}
+              {!isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCustomerClick(true)}>Add Customer</a></li>}
+              <li className="menu-item user">
+                <a>
+                  <span>Welcome: {name.toUpperCase()}</span>
+                </a>
+              </li>
+              <li className="menu-item"><Link style={{
                 color: `white`,
                 textDecoration: `none`,
               }}
-              to="/login">Logout</Link></li>
-          </ul>
+                to="/login">Logout</Link></li>
+            </ul>
           </nav>
-        
-      </header>
-        
+
+        </header>
+
         {
-          this.state.comRegShow && <ConpanyRegistration heading='Company Registration' show={this.state.comRegShow} lgClose={() => this.handleCompanyRegClick(false)} handleModelClick={this.handleCompanyRegClick}/>
+          this.state.comRegShow && <ConpanyRegistration heading='Company Registration' show={this.state.comRegShow} lgClose={() => this.handleCompanyRegClick(false)} handleModelClick={this.handleCompanyRegClick} />
         }
 
         {
-          this.state.userRegShow && <UserRegistration heading='User Registration' show={this.state.userRegShow} lgClose={() => this.handleUserRegClick(false)} handleModelClick={this.handleUserRegClick}/>
+          this.state.userRegShow && <UserRegistration heading='User Registration' show={this.state.userRegShow} lgClose={() => this.handleUserRegClick(false)} handleModelClick={this.handleUserRegClick} />
         }
 
         {
-          this.state.lgShow && <Create heading='Create Quote' show={this.state.lgShow} lgClose={this.lgClose} handleModelClick={this.handleModelClick} handleSuccess={this.handleSuccessModal}/>
+          this.state.lgShow && <Create heading='Create Quote' show={this.state.lgShow} lgClose={this.lgClose} handleModelClick={this.handleModelClick} handleSuccess={this.handleSuccessModal} />
         }
 
         {
-          this.state.productShow && <AddProduct heading='Add Product' show={this.state.productShow} lgClose={this.handleProductClick} handleModelClick={this.handleProductClick}/>
+          this.state.productShow && <AddProduct heading='Add Product' show={this.state.productShow} lgClose={this.handleProductClick} handleModelClick={this.handleProductClick} />
         }
-        
+
         {
-          this.state.customerShow && <AddCustomer heading='Add Customer' show={this.state.customerShow} lgClose={this.handleCustomerClick} handleModelClick={this.handleCustomerClick}/>
+          this.state.customerShow && <AddCustomer heading='Add Customer' show={this.state.customerShow} lgClose={this.handleCustomerClick} handleModelClick={this.handleCustomerClick} />
         }
 
         <Modal heading='Success' show={this.state.successShow} lgClose={() => this.handleSuccessModal(false)} handleModelClick={this.handleSuccessModal}>
           Quote <a href={`/quote/${this.state.msg && this.state.msg.quote_id}`}>#{this.state.msg && this.state.msg.quote_id}</a> is created successfully.
         </Modal>
-    </div>
-  )}
+      </div>
+    )
+  }
 }
 
 AppBar.propTypes = {

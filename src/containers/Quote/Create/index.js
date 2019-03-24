@@ -82,46 +82,52 @@ class Create extends Component {
 	};
 
 	handleAddEvent() {
-		let id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
-		let isExists = false;
+		if (this.refs.qty.value && parseInt(this.refs.qty.value) > 0) {
 
-		if (this.refs.name.value === '0') {
-			alert('Please select product.');
-			return false;
-		}
+			let id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
+			let isExists = false;
 
-		this.state.products.map((product) => {
-			if (product.product_id === this.refs.name.value) {
-				isExists = true;
+			if (this.refs.name.value === '0') {
+				alert('Please select product.');
+				return false;
 			}
-		});
 
-		if (isExists) {
-			alert('Product already added.');
-			return false;
+			this.state.products.map((product) => {
+				if (product.product_id === this.refs.name.value) {
+					isExists = true;
+				}
+			});
+
+			if (isExists) {
+				alert('Product already added.');
+				return false;
+			}
+
+			this.refs.name[this.refs.name.selectedIndex].text
+
+			var product = {
+				id: id,
+				name: this.refs.name[this.refs.name.selectedIndex].text,
+				product_id: this.refs.name.value,
+				hsn: this.refs.hsnCode.value,
+				qty: this.refs.qty.value,
+				rate: this.refs.rate.value,
+				gst: this.refs.gst.value,
+				imgName: this.state.imgSrc
+			}
+			this.state.products.push(product);
+			this.setState(this.state.products);
+
+			this.refs.name.value = '0';
+			this.refs.hsnCode.value = '';
+			this.refs.qty.value = '';
+			this.refs.rate.value = '';
+			this.refs.gst.value = '';
+			this.refs.imgName.src = '';
+		} else {
+			alert("Product quantity should be greater then Zero");
+			this.refs.qty.focus();
 		}
-
-		this.refs.name[this.refs.name.selectedIndex].text
-
-		var product = {
-			id: id,
-			name: this.refs.name[this.refs.name.selectedIndex].text,
-			product_id: this.refs.name.value,
-			hsn: this.refs.hsnCode.value,
-			qty: this.refs.qty.value,
-			rate: this.refs.rate.value,
-			gst: this.refs.gst.value,
-			imgName: this.state.imgSrc
-		}
-		this.state.products.push(product);
-		this.setState(this.state.products);
-
-		this.refs.name.value = '0';
-		this.refs.hsnCode.value = '';
-		this.refs.qty.value = '';
-		this.refs.rate.value = '';
-		this.refs.gst.value = '';
-		this.refs.imgName.src = '';
 	}
 
 	handleInput(e) {
@@ -167,26 +173,45 @@ class Create extends Component {
 	}
 
 	handleSubmit(event) {
-		event.preventDefault();
-		this.setState({ isLoading: true });
+		let isSave = true;
 
-		const config = {
-			onUploadProgress: function (progressEvent) {
-				var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-				that.setState({
-					progress:
-						Math.round((progressEvent.loaded * 100) / progressEvent.total)
-				})
-				console.log(percentCompleted)
-			}
+		if (document.getElementById('party_name').value <= 0) {
+			isSave = false;
+			alert('Please select firm first')
 		}
 
-		this.props.create({
-			data: {
-				quote: this.state.newQuote,
-				productList: this.state.products
-			}, cb: this.handleReset, config
-		});
+		if (isSave && document.getElementById('contact_person').value <= 0) {
+			isSave = false;
+			alert('Please select contact person')
+		}
+
+		if (isSave && this.state.products.length <= 0) {
+			isSave = false;
+			alert('Please select product')
+		}
+
+		if (isSave) {
+			event.preventDefault();
+			this.setState({ isLoading: true });
+
+			const config = {
+				onUploadProgress: function (progressEvent) {
+					var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+					that.setState({
+						progress:
+							Math.round((progressEvent.loaded * 100) / progressEvent.total)
+					})
+					console.log(percentCompleted)
+				}
+			}
+
+			this.props.create({
+				data: {
+					quote: this.state.newQuote,
+					productList: this.state.products
+				}, cb: this.handleReset, config
+			});
+		}
 	}
 
 	handleReset() {
@@ -300,7 +325,7 @@ class Create extends Component {
 								<tr>
 									<td></td>
 									<td>
-										<select className='form-control' ref="name" onChange={this.handleProductChange} defaultValue='0'>
+										<select className='form-control' id='product' ref="name" onChange={this.handleProductChange} defaultValue='0'>
 											<option value='0' disabled>--Select Product--</option>
 											{
 												productDrpDwn.map((product) => {
