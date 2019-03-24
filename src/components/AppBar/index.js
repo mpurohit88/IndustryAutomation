@@ -42,7 +42,7 @@ export default class AppBar extends React.Component {
   handleSuccessModal = (flag, response) => this.setState({ successShow: flag, msg: response });
 
   render() {
-    const { isAdmin, name, cname } = this.props;
+    const { isAdmin, name, cname, clogo } = this.props;
 
     return (
       <div className='test'
@@ -53,7 +53,7 @@ export default class AppBar extends React.Component {
       >
         <header style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '15px' }}>
-            <img src="/dist/img/product/bill_1553438523261.png" height="40" />
+            <img src={"/img/company/" + clogo} height="40" />
             <Link
               to="/"
               className="logo"

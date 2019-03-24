@@ -6,11 +6,10 @@ import { Badge } from '../../../components/Badge'
 import { getStatus, getVariant } from '../helper'
 import { appConfig } from 'configs/config-main'
 import AppBar from 'components/AppBar'
-import { getAdmin, getUserName, getCompanyName } from '../../../configs/user'
+import { getAdmin, getUserName, getCompanyName, getCompanyLogo } from '../../../configs/user'
 import { getISODateTime } from '../../helper'
 import Button from '../../../components/Button'
 import getTemplate from '../../../components/Email'
-import Main from '../../../components/Editor/EmailTemplate'
 import { StandardModal } from '../../../components/Modals'
 import Scheduler from '../Scheduler'
 import Input from '../../../components/Input'
@@ -141,7 +140,7 @@ class Home extends Component {
 	}
 
 	render() {
-		const isAdmin = getAdmin(), userName = getUserName(), cname = getCompanyName();
+		const isAdmin = getAdmin(), userName = getUserName(), cname = getCompanyName(), clogo = getCompanyLogo();
 		const { quoteDetails, tasks, products } = this.props.details;
 
 		if (!quoteDetails) {
@@ -150,7 +149,7 @@ class Home extends Component {
 
 		return (
 			<Fragment>
-				<AppBar isAdmin={isAdmin} name={userName} cname={cname}>{appConfig.name}</AppBar>
+				<AppBar isAdmin={isAdmin} name={userName} cname={cname} clogo={clogo}>{appConfig.name}</AppBar>
 				<div className={styles}>
 					<div className='flex-center head'>
 						<div>
@@ -173,7 +172,7 @@ class Home extends Component {
 							tasks.map((task, index) => {
 								return <div className={`flex-center step checkmark${this.isStepActive(quoteDetails.status, task.startDate, task.endDate) ? ' active-step' : ''}`}>
 
-									{index + 1 < tasks.length && <div class="vertical-line"></div>}
+									{index + 1 < tasks.length && <div className="vertical-line"></div>}
 
 									<div className={`${this.showStepCircle(task.startDate, task.endDate)}`}>
 										<label className='text'>{task.text}</label>

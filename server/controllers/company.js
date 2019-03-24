@@ -17,7 +17,7 @@ const register = function (req, res, next) {
 		email: data.email,
 		website: data.website,
 		gstn: data.gstn,
-		logo: data.logo,
+		logo: req.file.filename,
 		manufacturerOf: data.manufacturerOf,
 	};
 	const newCompany = new Company(params);

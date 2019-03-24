@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
   filename: function (req, file, callback) {
 
     if (file.mimetype === "image/png" || file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
-      callback(null, file.originalname.split('.')[0] + "_" + Date.now() + '.' + file.originalname.split('.')[1]);
+      callback(null, file.originalname);
     }
   }
 });
