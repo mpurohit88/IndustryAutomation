@@ -55,3 +55,20 @@ export function quoteStart(taskHistId, quoteId) {
 			.catch(() => dispatch(quoteAction.quoteStartHaveError(true)));
 	};
 }
+
+export function updateStatus(quoteId, status, cb) {
+	return (dispatch) => {
+		dispatch(quoteAction.quoteStartIsLoading(true));
+
+		post('api/quote/updateStatus', { quoteId, status })
+			.then((data) => {
+				dispatch(quoteAction.quoteStartIsLoading(false));
+				return data;
+			})
+			.then((data) => {
+				dispatch(quoteAction.quoteStartFetchDataSuccess(data));
+				cb(data);
+			})
+			.catch(() => dispatch(quoteAction.quoteStartHaveError(true)));
+	};
+}

@@ -13,7 +13,7 @@ const Input = ({ type, name, value, placeholder, onChange, id, onBlur, label, hi
 		<Fragment>
 			<Form.Group controlId={id}>
 				<Form.Label>{label}</Form.Label>
-				<Form.Control accept={accept} className={b.length > 0 && "red-border"} ref={inputRef} type={type} placeholder={placeholder} onChange={onChange} value={value} name={name} onBlur={onBlur} />
+				<Form.Control as={type} accept={accept} className={b.length > 0 && " red-border"} ref={inputRef} type={type} placeholder={placeholder} onChange={onChange} value={value} name={name} onBlur={onBlur} />
 				<Form.Text className="text-muted" >
 					{hint}
 				</Form.Text>

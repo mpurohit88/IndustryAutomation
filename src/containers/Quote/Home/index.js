@@ -12,6 +12,7 @@ import Button from '../../../components/Button'
 import getTemplate from '../../../components/Email'
 import { StandardModal } from '../../../components/Modals'
 import Scheduler from '../Scheduler'
+import CloseQuote from './closeQuote'
 import Input from '../../../components/Input'
 
 import { itemsFetchQuoteDetails, quoteStart } from '../../../core/api/quote'
@@ -35,7 +36,8 @@ class Home extends Component {
 			companyEmailId: '',
 			to: '',
 			subject: 'Provide Subject',
-			scheduleId: ''
+			scheduleId: '',
+			showCloseCase: false
 		}
 
 		this.showEmail = this.showEmail.bind(this);
@@ -58,8 +60,8 @@ class Home extends Component {
 		});
 	}
 
-	doneTask(taskId, nextTaskid, userActivityId, scheduleId) {
-		this.props.taskDone(taskId, nextTaskid, userActivityId, scheduleId);
+	doneTask(taskId, nextTaskid, userActivityId, scheduleId, quoteId, status) {
+		this.props.taskDone(taskId, nextTaskid, userActivityId, scheduleId, quoteId, status);
 	}
 
 	handleInput(e) {
@@ -70,11 +72,11 @@ class Home extends Component {
 	}
 
 	lgClose() {
-		this.setState({ showEditor: false })
+		this.setState({ showEditor: false, showCloseCase: false })
 	}
 
 	schedulerClose() {
-		this.setState({ showScheduler: false })
+		this.setState({ showScheduler: false, showCloseCase: false })
 	}
 
 	handleSchedulerClick(id, nextId, userActivityId, scheduleId) {
@@ -86,6 +88,10 @@ class Home extends Component {
 		quoteContactDetail(this.props.details.quoteDetails.contact_person_id).then((result) => {
 			this.setState({ constactPerson: result, showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId })
 		})
+	}
+
+	closeCase() {
+		this.setState({ showCloseCase: true })
 	}
 
 	sendEmailToCustomer(id, nextId, userActivityId) {
@@ -112,7 +118,7 @@ class Home extends Component {
 	}
 
 	isDisabled(status, startDate, endDate) {
-		if (status === 2 && startDate !== null && endDate === null) {
+		if (startDate !== null && endDate === null) {
 			return false;
 		}
 
@@ -120,7 +126,7 @@ class Home extends Component {
 	}
 
 	isStepActive(status, startDate, endDate) {
-		if (status === 2 && startDate !== null && endDate === null) {
+		if (startDate !== null && endDate === null) {
 			return true;
 		}
 
@@ -203,7 +209,7 @@ class Home extends Component {
 												</Button>
 											}
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-												onClick={(e) => { this.doneTask(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId) }}
+												onClick={(e) => { this.doneTask(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId, quoteDetails.id, 5) }}
 											>
 												Done
 											</Button>
@@ -213,28 +219,32 @@ class Home extends Component {
 									{
 										task.taskId === 3 && <div>
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-												onClick={(e) => { }}
+												onClick={(e) => { this.doneTask(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId, quoteDetails.id, 6) }}
 											>
 												If Yes, Upload
-																	</Button>
+											</Button>
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 												onClick={(e) => { }}
 											>
 												No
-																	</Button>
+											</Button>
 										</div>
 									}
 
 									{
-										task.taskId === 4 && <Fragment>
+										task.taskId === 4 && <div>
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 												onClick={(e) => { }}
 											>
 												Upload
 											</Button>
-										</Fragment>
+											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+												onClick={(e) => { this.doneTask(task.id, undefined, task.userActivityId, task.scheduleId, quoteDetails.id, 8) }}
+											>
+												Sent
+											</Button>
+										</div>
 									}
-
 								</div>
 							})
 						}
@@ -242,9 +252,9 @@ class Home extends Component {
 					<div>
 						<br />
 						<Button variant="primary" type="button"
-							onClick={(e) => this.showEmail(e)}
+							onClick={quoteDetails.status > 99 ? () => { } : (e) => this.closeCase(e)}
 						>
-							Close
+							{quoteDetails.status > 99 ? 'Quote Closed' : 'Close'}
 						</Button>
 					</div>
 
@@ -274,6 +284,10 @@ class Home extends Component {
 					this.state.showScheduler ?
 						<Scheduler scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showScheduler} quoteDetails={quoteDetails} /> : null
 				}
+				{
+					this.state.showCloseCase ? <CloseQuote scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showCloseCase} quoteDetails={quoteDetails} /> : null
+
+				}
 			</Fragment>
 		)
 	}
@@ -287,7 +301,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		taskDone: (taskHistId, nextTaskHistId, userActivityId, scheduleId) => dispatch(taskDone(taskHistId, nextTaskHistId, userActivityId, scheduleId)),
+		taskDone: (taskHistId, nextTaskHistId, userActivityId, scheduleId, quoteId, status) => dispatch(taskDone(taskHistId, nextTaskHistId, userActivityId, scheduleId, quoteId, status)),
 		fetchQuoteDetails: (quoteId, cb) => dispatch(itemsFetchQuoteDetails(quoteId, cb)),
 		quoteStartAction: (taskHistId, quoteId) => dispatch(quoteStart(taskHistId, quoteId)),
 		sendEmailAction: (body, from, to, subject, taskHistId, nextTaskHistId, userActivityId, cb, quoteId) => dispatch(sendEmail(body, from, to, subject, taskHistId, nextTaskHistId, userActivityId, cb, quoteId))
