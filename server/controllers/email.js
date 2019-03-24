@@ -12,7 +12,8 @@ const send = function (req, res, next) {
     createdBy: req.decoded.id,
     task_id: req.body.taskId,
     subject: req.body.message.subject,
-    body: req.body.message.body
+    body: req.body.message.body,
+    quoteId: req.body.quoteId
   };
 
   const params1 = {
@@ -25,6 +26,7 @@ const send = function (req, res, next) {
     next_reminder_date: new Date(),
     from_address: req.body.message.from,
     to_address: req.body.message.to,
+    is_reminder: false,
     frequency: 0,
     time: 0
   };
@@ -36,22 +38,19 @@ const send = function (req, res, next) {
       params.task_id = req.body.nextTaskId;
       new TaskEmail(params).add().then(() => {
         newSchedule.add().then(function (result) {
-          // new ActviityTaskHist().complete(req.body.taskId).then(() => {
-          // if (req.body.nextTaskId) {
-          //   new ActviityTaskHist().update(req.body.nextTaskId).then(() => {
-          //     new ActviityTaskHist({}).getByActivityId([{ id: req.body.userActivityId }]).then(function (tasks) {
-          //       res.status(200).send({ tasks: tasks });
-          //     });
-          //   });
-          // } else {
-          new ActviityTaskHist({}).getByActivityId([{ id: req.body.userActivityId }]).then(function (tasks) {
-            res.status(200).send({ tasks: tasks });
+          new ActviityTaskHist().complete(req.body.taskId).then(() => {
+            if (req.body.nextTaskId) {
+              new ActviityTaskHist().update(req.body.nextTaskId).then(() => {
+                new ActviityTaskHist({}).getByActivityId([{ id: req.body.userActivityId }]).then(function (tasks) {
+                  res.status(200).send({ tasks: tasks });
+                });
+              });
+            } else {
+              new ActviityTaskHist({}).getByActivityId([{ id: req.body.userActivityId }]).then(function (tasks) {
+                res.status(200).send({ tasks: tasks });
+              });
+            }
           });
-          // }
-
-          // Preview only available when sending through an Ethereal account
-          //   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-          // });
         });
       });
     });

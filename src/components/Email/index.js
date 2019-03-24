@@ -4,6 +4,8 @@ export default function getTemplate(companyId, products, quoteDetails, constactP
 	switch (companyId) {
 		case 1: return GetContactEmail(products, quoteDetails, constactPerson);
 		case 2: return GetContactEmail(products, quoteDetails, constactPerson);
-		default: return '';
+		case 3: return GetContactEmail(products, quoteDetails, constactPerson);
+
+		default: return GetContactEmail(products, quoteDetails, constactPerson);;
 	}
 }

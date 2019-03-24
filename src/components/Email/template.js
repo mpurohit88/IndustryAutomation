@@ -31,15 +31,15 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                             Date: {getTodaysDate()}
                         </td>
                     </tr>
-                    <tr><td></td></tr><tr><td><br /></td></tr>
+                    <tr><td style={{ lineHeight: '1' }}><br /></td></tr>
                     <tr>
-                        <td>
+                        <td style={{ lineHeight: '1.4' }}>
                             Kindly Atten: Mr. {constactPerson[0].name} <br />
                             {quoteDetails.address}
                         </td>
-                        <td style={{ textAlign: 'right' }}>
+                        <td style={{ textAlign: 'right', lineHeight: '1.4' }}>
                             Phone No. {quoteDetails.phoneNo}<br />
-                            email: {constactPerson[0].email} <br />
+                            Email: {constactPerson[0].email}<br />
                             {quoteDetails.email}
                         </td>
                     </tr>
@@ -50,12 +50,15 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                         <td colSpan='2'><input size="100" type='text' id='refSubject' name='refSubject' value='Ref. Your Email Enquiry Dated 27.12.2018 for OTR Tyre Accessories.' /></td>
                     </tr>
                     <tr>
-                        <td>Dear Sir,</td>
+                        <td colSpan='2' style={{ lineHeight: '1.6' }}>Dear Sir, <br />
+                            We thank you very much for your above enquiry and pleased to quote our lowest offer as under:-
+                            <br /> <br />
+                        </td>
                     </tr>
                     <tr>
                         <td colSpan='2'>
-                            We thank you very much for your above enquiry and pleased to quote our lowest offer as under:-
-										</td>
+
+                        </td>
                     </tr>
                     <tr>
                         <td colSpan='2' className='child'>
@@ -77,10 +80,10 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                                             </td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.name}</td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>
-                                                <img height="80px" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} /></td>
+                                                <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} /></td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.hsnCode}</td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.quantity}</td>
-                                            <td style={{ border: '1px solid black', padding: '10px' }}>{product.rate}</td>
+                                            <td style={{ border: '1px solid black', padding: '10px' }}>Rs. {product.rate}/-each</td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.gstn}%</td>
                                         </tr>
                                     })

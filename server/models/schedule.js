@@ -13,6 +13,7 @@ const Schedule = function (params) {
         this.frequency = params.frequency,
         this.time = params.time,
         this.createdBy = params.createdBy,
+        this.is_reminder = params.is_reminder,
         this.isActive = 1
 };
 
@@ -25,10 +26,10 @@ Schedule.prototype.add = function () {
             }
 
             let values = [
-                [that.task_id, that.company_id, that.subject, that.next_reminder_date, that.message_body, that.from_address, that.to_address, that.frequency, that.time, that.isActive, that.createdBy]
+                [that.task_id, that.company_id, that.subject, that.next_reminder_date, that.message_body, that.from_address, that.to_address, that.frequency, that.time, that.is_reminder, that.isActive, that.createdBy]
             ]
 
-            connection.query("INSERT INTO schedule(task_id,company_id,subject,next_reminder_date,message_body,from_address,to_address,frequency,time,isActive,createdBy) VALUES ?", [values], function (error, rows, fields) {
+            connection.query("INSERT INTO schedule(task_id,company_id,subject,next_reminder_date,message_body,from_address,to_address,frequency,time,is_reminder,isActive,createdBy) VALUES ?", [values], function (error, rows, fields) {
                 if (!error) {
                     resolve(rows);
                 } else {
@@ -77,6 +78,29 @@ Schedule.prototype.getScheduleDetails = function (scheduleId) {
             }
 
             connection.query("SELECT Frequency, Time From Schedule WHERE id = ?", [scheduleId], function (error, rows, fields) {
+                if (!error) {
+                    resolve(rows);
+                } else {
+                    console.log("Error...", error);
+                    reject(error);
+                }
+
+                connection.release();
+                console.log('Process Complete %d', connection.threadId);
+            });
+        });
+    });
+};
+
+Schedule.prototype.stop = function (scheduleId) {
+    const that = this;
+    return new Promise(function (resolve, reject) {
+        connection.getConnection(function (error, connection) {
+            if (error) {
+                throw error;
+            }
+
+            connection.query("Update schedule set isActive = 0 Where Id = ?", [scheduleId], function (error, rows, fields) {
                 if (!error) {
                     resolve(rows);
                 } else {

@@ -213,7 +213,10 @@ class Add extends Component {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		register: (newCustomer) => dispatch(addCustomer(newCustomer))
+		register: (newCustomer) => {
+			console.log("Resgister Called....")
+			dispatch(addCustomer(newCustomer))
+		}
 	};
 };
 

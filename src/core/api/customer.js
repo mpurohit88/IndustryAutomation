@@ -6,8 +6,8 @@ import * as customerAction from '../../actions/customer'
 export function addCustomer(newCustomer) {
 	return (dispatch) => {
 		post('api/customer/add', newCustomer.data)
-			.then((data) => { 
-				newCustomer.cb(); 
+			.then((data) => {
+				newCustomer.cb();
 				dispatch(customerAction.customerListFetchDataSuccess(data))
 			})
 			.catch(() => dispatch(customerAction.customerListHaveError(true)));
@@ -30,16 +30,16 @@ export function itemsFetchData() {
 
 export function fetchFirmContactList(firmId) {
 	return new Promise(function (resolve, reject) {
-			get(`api/customer/contactList`, {firmId})
+		get(`api/customer/contactList`, { firmId })
 			.then(list => {
-        		if (list) {
+				if (list) {
 					resolve(list);
 				}
-				
+
 				reject('Error');
-    }).catch(err => {
+			}).catch(err => {
 				console.log(err);
 				err.response ? reject(err.response.data.error) : reject(err.message);
 			});
-    });
+	});
 }

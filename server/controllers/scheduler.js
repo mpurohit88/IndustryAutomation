@@ -13,7 +13,8 @@ const add = function (req, res, next) {
         from_address: req.body.nextSchedule.companyEmailId,
         to_address: req.body.nextSchedule.to,
         frequency: req.body.nextSchedule.schedule_day,
-        time: req.body.nextSchedule.schedule_time
+        time: req.body.nextSchedule.schedule_time,
+        is_reminder: true
     };
 
     const newSchedule = new Schedule(params);
@@ -49,4 +50,23 @@ const getScheduleDetails = function (req, res, next) {
     }
 }
 
-module.exports = { add, getScheduleDetails };
+const done = function (req, res, next) {
+    new Schedule({}).stop(req.body.scheduleId).then(function (result) {
+        new ActviityTaskHist().complete(req.body.taskId).then(() => {
+            if (req.body.nextTaskId) {
+                new ActviityTaskHist().update(req.body.nextTaskId).then(() => {
+                    new ActviityTaskHist({}).getByActivityId([{ id: req.body.userActivityId }]).then(function (tasks) {
+                        res.status(200).send({ tasks: tasks });
+                    });
+                });
+            } else {
+                new ActviityTaskHist({}).getByActivityId([{ id: req.body.userActivityId }]).then(function (tasks) {
+                    res.status(200).send({ tasks: tasks });
+                });
+            }
+        });
+
+    });
+};
+
+module.exports = { add, getScheduleDetails, done };

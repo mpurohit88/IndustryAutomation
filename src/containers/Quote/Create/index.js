@@ -323,7 +323,7 @@ class Create extends Component {
 									</td>
 									<td>
 										{/* {this.state.imgSrc && <Zoom src = {this.state.imgSrc} />} */}
-										<img height="80px" name="imgName" ref="imgName" id="imgName" width="100px" />
+										<img height="80" name="imgName" ref="imgName" id="imgName" width="100" />
 										{/* <figure onMouseMove={this.handleMouseMove} style={this.state}>
 											<img ref="imgName" />
 										</figure> */}

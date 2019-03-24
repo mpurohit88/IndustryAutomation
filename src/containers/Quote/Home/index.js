@@ -19,6 +19,7 @@ import { itemsFetchQuoteDetails, quoteStart } from '../../../core/api/quote'
 import { sendEmail } from '../../../core/api/email'
 import { getById } from '../../../core/api/company'
 import { quoteContactDetail } from '../../../core/api/customerContact'
+import { taskDone } from '../../../core/api/schedule'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -44,6 +45,7 @@ class Home extends Component {
 		this.handleSchedulerClick = this.handleSchedulerClick.bind(this);
 		this.schedulerClose = this.schedulerClose.bind(this);
 		this.handleInput = this.handleInput.bind(this);
+		this.doneTask = this.doneTask.bind(this);
 	}
 
 	componentDidMount() {
@@ -55,6 +57,10 @@ class Home extends Component {
 				self.setState({ companyEmailId: emailId, to: data.quoteDetails.email });
 			});
 		});
+	}
+
+	doneTask(taskId, nextTaskid, userActivityId, scheduleId) {
+		this.props.taskDone(taskId, nextTaskid, userActivityId, scheduleId);
 	}
 
 	handleInput(e) {
@@ -92,26 +98,25 @@ class Home extends Component {
 		body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="OTR Tubes %26 Flaps and &quot;O&quot; Rings available in all size"/>', document.getElementById('about-product').value)
 
 		this.props.details.products.map((e, index) => {
-			let canvas = document.createElement('canvas')
-			let ctx = canvas.getContext('2d')
-			let img = document.getElementById('img-' + index);
+			// let canvas = document.createElement('canvas')
+			// let ctx = canvas.getContext('2d')
+			// let img = document.getElementById('img-' + index);
 
-			canvas.width = img.width
-			canvas.height = img.height
-			ctx.drawImage(img, 0, 0)
+			// canvas.width = img.width
+			// canvas.height = img.height
+			// ctx.drawImage(img, 0, 0)
 
 			// If the image is not png, the format
 			// must be specified here
 			// return canvas.toDataURL()
-
-			body = body.replace('src="/img/product/' + e.imgName + '"', 'src="' + canvas.toDataURL() + '"');
+			body = body.replace('src="/img/product/' + e.imgName + '"', 'src="cid:EmbeddedContent_' + index + '"');
 		});
 
 		self.setState({ isLoading: true });
 		this.props.sendEmailAction(body, this.state.companyEmailId, this.state.to || this.props.details.quoteDetails.email, this.state.subject, id, nextId, userActivityId, () => {
 			self.lgClose();
 			self.setState({ isLoading: false });
-		});
+		}, this.props.details.quoteDetails.id);
 	}
 
 	isDisabled(status, startDate, endDate) {
@@ -203,7 +208,7 @@ class Home extends Component {
 												</Button>
 											}
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-												onClick={(e) => { }}
+												onClick={(e) => { this.doneTask(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId) }}
 											>
 												Done
 											</Button>
@@ -287,9 +292,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		taskDone: (taskHistId, nextTaskHistId, userActivityId, scheduleId) => dispatch(taskDone(taskHistId, nextTaskHistId, userActivityId, scheduleId)),
 		fetchQuoteDetails: (quoteId, cb) => dispatch(itemsFetchQuoteDetails(quoteId, cb)),
 		quoteStartAction: (taskHistId, quoteId) => dispatch(quoteStart(taskHistId, quoteId)),
-		sendEmailAction: (body, from, to, subject, taskHistId, nextTaskHistId, userActivityId, cb) => dispatch(sendEmail(body, from, to, subject, taskHistId, nextTaskHistId, userActivityId, cb))
+		sendEmailAction: (body, from, to, subject, taskHistId, nextTaskHistId, userActivityId, cb, quoteId) => dispatch(sendEmail(body, from, to, subject, taskHistId, nextTaskHistId, userActivityId, cb, quoteId))
 	};
 };
 

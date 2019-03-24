@@ -23,3 +23,14 @@ export const getScheduleDetails = function (scheduleId) {
             });
     });
 }
+
+export function taskDone(taskId, nextTaskId, userActivityId, scheduleId) {
+    return (dispatch) => {
+        post('api/scheduler/done', { taskId: taskId, nextTaskId: nextTaskId, userActivityId: userActivityId, scheduleId })
+            .then((data) => {
+                dispatch(quoteAction.quoteStartUpdateDataSuccess(data));
+                cb();
+            })
+            .catch(() => dispatch(quoteAction.quoteDetailsHaveError(true)));
+    };
+}

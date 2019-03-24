@@ -38,7 +38,7 @@ const Hello = (props, { blockProps, products }) => {
 											</td>
 											<td>{product.name}</td>
 											<td>
-												<img height="80px" src={`/img/product/${product.imgName}`} alt={product.imgName} /></td>
+												<img height="80" src={`/img/product/${product.imgName}`} alt={product.imgName} /></td>
 											<td>{product.hsnCode}</td>
 											<td>{product.quantity}</td>
 											<td>{product.rate}</td>
