@@ -16,6 +16,6 @@ export default class Zoom extends Component {
 
   render = () =>
     <figure onMouseMove={this.handleMouseMove} style={this.state}>
-      <img src={this.state.src} />
+      <img src={this.state.src} height='88' width='100' />
     </figure>
 }

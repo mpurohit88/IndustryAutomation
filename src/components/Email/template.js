@@ -101,6 +101,19 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                             <input size='70' type='text' id='about-product' name='about-product' value='OTR Tubes %26 Flaps and "O" Rings available in all size' />
                         </td>
                     </tr>
+                    <tr>
+                        <td colSpan='2' style={{ lineHeight: '1.6' }}>
+                            Terms & Conditions: <br />
+                            <textarea cols="100" rows="5" id='terms' name='terms' />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan='2' style={{ lineHeight: '1.6' }}>
+                            <br />
+                            Thanks & Regards, <br />
+                            <textarea cols="40" rows="3" id='thanks' name='thanks' />
+                        </td>
+                    </tr>
                 </table>
             </Item>
         </Box>

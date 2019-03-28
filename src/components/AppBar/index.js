@@ -53,7 +53,7 @@ export default class AppBar extends React.Component {
       >
         <header style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '15px' }}>
-            <img src={"/img/company/" + clogo} height="40" />
+            <img src={clogo ? "/img/company/" + clogo : "/img/logo.png"} height="40" />
             <Link
               to="/"
               className="logo"
