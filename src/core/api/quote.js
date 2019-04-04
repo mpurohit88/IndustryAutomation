@@ -72,3 +72,20 @@ export function updateStatus(quoteId, status, cb) {
 			.catch(() => dispatch(quoteAction.quoteStartHaveError(true)));
 	};
 }
+
+export function updateDispatchSummary(quoteId, companyId, acivityTaskId, data, cb) {
+	return (dispatch) => {
+		dispatch(quoteAction.quoteStartIsLoading(true));
+
+		post('api/quote/updateDispatchSummary', { quoteId, companyId, acivityTaskId, data, })
+			.then((data) => {
+				dispatch(quoteAction.quoteStartIsLoading(false));
+				return data;
+			})
+			.then((data) => {
+				dispatch(quoteAction.quoteStartFetchDataSuccess(data));
+				cb(data);
+			})
+			.catch(() => dispatch(quoteAction.quoteStartHaveError(true)));
+	};
+}

@@ -6,6 +6,7 @@ import { StandardModal } from '../../../components/Modals'
 
 import Dropdown from '../../../components/Dropdown'
 import Input from '../../../components/Input'
+import Textarea from '../../../components/Textarea'
 import { getById } from '../../../core/api/company'
 import { updateStatus } from '../../../core/api/quote'
 
@@ -70,7 +71,7 @@ class CloseQuote extends Component {
               />
             </Col>
             <Col xs={8} md={12}>
-              <Input label='Comment:' handleError={() => { }} onBlur={() => { }} type='textarea' onChange={this.handleInput} value={this.state.closeQuote.comment} name='comment' id='comment' placeholder='Enter Closing Comment' />
+              <Textarea label='Comment:' handleError={() => { }} onBlur={() => { }} type='textarea' onChange={this.handleInput} value={this.state.closeQuote.comment} name='comment' id='comment' placeholder='Enter Closing Comment' />
             </Col>
           </Row>
         </Form>

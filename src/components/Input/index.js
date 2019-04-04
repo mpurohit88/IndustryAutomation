@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Form } from 'react-bootstrap'
-import validation from './validation'
+import validation from '../validation'
 
 import { styles } from './styles.scss'
 

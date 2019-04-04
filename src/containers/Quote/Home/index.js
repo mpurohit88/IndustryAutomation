@@ -13,6 +13,7 @@ import getTemplate from '../../../components/Email'
 import { StandardModal } from '../../../components/Modals'
 import Scheduler from '../Scheduler'
 import CloseQuote from './closeQuote'
+import DispatchSummary from './dispatchSummary'
 import Input from '../../../components/Input'
 
 import { itemsFetchQuoteDetails, quoteStart } from '../../../core/api/quote'
@@ -37,7 +38,8 @@ class Home extends Component {
 			to: '',
 			subject: 'Provide Subject',
 			scheduleId: '',
-			showCloseCase: false
+			showCloseCase: false,
+			showDispatchSummary: false
 		}
 
 		this.showEmail = this.showEmail.bind(this);
@@ -47,6 +49,7 @@ class Home extends Component {
 		this.schedulerClose = this.schedulerClose.bind(this);
 		this.handleInput = this.handleInput.bind(this);
 		this.doneTask = this.doneTask.bind(this);
+		this.showDispatchSummary = this.showDispatchSummary.bind(this);
 	}
 
 	componentDidMount() {
@@ -72,11 +75,15 @@ class Home extends Component {
 	}
 
 	lgClose() {
-		this.setState({ showEditor: false, showCloseCase: false })
+		this.setState({ showEditor: false, showCloseCase: false, showDispatchSummary: false })
 	}
 
 	schedulerClose() {
-		this.setState({ showScheduler: false, showCloseCase: false })
+		this.setState({ showScheduler: false, showCloseCase: false, showDispatchSummary: false })
+	}
+
+	showDispatchSummary(acivityTaskId) {
+		this.setState({ showDispatchSummary: true, acivityTaskId: acivityTaskId })
 	}
 
 	handleSchedulerClick(id, nextId, userActivityId, scheduleId) {
@@ -133,6 +140,18 @@ class Home extends Component {
 		}
 
 		return false;
+	}
+
+	isActiveCloseBtn(tasks) {
+		let isActive = true;
+
+		tasks.map((task) => {
+			if (task.startDate === null || task.endDate === null) {
+				isActive = false;
+			}
+		});
+
+		return isActive;
 	}
 
 	showStepCircle(startDate, endDate) {
@@ -236,14 +255,14 @@ class Home extends Component {
 									{
 										task.taskId === 4 && <div>
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-												onClick={(e) => { }}
+												onClick={(e) => { this.showDispatchSummary(task.id) }}
 											>
 												Upload
 											</Button>
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 												onClick={(e) => { this.doneTask(task.id, undefined, task.userActivityId, task.scheduleId, quoteDetails.id, 8) }}
 											>
-												Sent
+												Done
 											</Button>
 										</div>
 									}
@@ -253,11 +272,18 @@ class Home extends Component {
 					</div>
 					<div>
 						<br />
-						<Button variant="primary" type="button"
-							onClick={quoteDetails.status > 99 ? () => { } : (e) => this.closeCase(e)}
-						>
-							{quoteDetails.status > 99 ? 'Quote Closed' : 'Close'}
-						</Button>
+						{
+							this.isActiveCloseBtn(tasks) ? <Button variant="primary" type="button"
+								onClick={quoteDetails.status > 99 ? () => { } : (e) => this.closeCase(e)}
+							>
+								{quoteDetails.status > 99 ? 'Quote Closed' : 'Close'}
+							</Button>
+								:
+								<Button variant="secondary" type="button">
+									Close
+								</Button>
+						}
+
 					</div>
 
 				</div>
@@ -288,7 +314,9 @@ class Home extends Component {
 				}
 				{
 					this.state.showCloseCase ? <CloseQuote scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showCloseCase} quoteDetails={quoteDetails} /> : null
-
+				}
+				{
+					this.state.showDispatchSummary ? <DispatchSummary scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showDispatchSummary} quoteDetails={quoteDetails} products={products} /> : null
 				}
 			</Fragment>
 		)

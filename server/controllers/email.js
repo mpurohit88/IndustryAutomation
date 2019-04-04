@@ -35,6 +35,25 @@ const send = function (req, res, next) {
   const newSchedule = new Schedule(params1);
 
   if (process.env.NODE_ENV === 'development') {
+    // const mail = {
+    //   from: 'mpurohit88@gmail.com',
+    //   to: 'mpurohit88@gmail.com',
+    //   subject: 'req.body.message.subject',
+    //   html: req.body.message.body
+    // }
+
+    // serverTrans.use('compile', inlineBase64({ cidPrefix: 'img_' }));
+    // serverTrans.sendMail(mail, (err, info) => {
+    //   if (err) {
+    //     console.log(err);
+    //     res.status(200).send({ msg: "fail" });
+    //   } else {
+    //     new ActviityTaskHist({}).getByActivityId([{ id: req.body.userActivityId }]).then(function (tasks) {
+    //       res.status(200).send({ tasks: tasks });
+    //     });
+    //   }
+    // });
+
     new TaskEmail(params).add().then(() => {
       params.task_id = req.body.nextTaskId;
       new TaskEmail(params).add().then(() => {

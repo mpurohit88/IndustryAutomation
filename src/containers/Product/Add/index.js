@@ -4,6 +4,7 @@ import { Form, Row, Col } from 'react-bootstrap';
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
+import Textarea from '../../../components/Textarea'
 import { Success } from '../../../components/Alerts'
 
 import { addProduct } from '../../../core/api/product'
@@ -96,7 +97,7 @@ class Add extends Component {
 							<Input label='Name Of Product:' validationType='string' min={2} max={50} isRequired={true} inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newProduct.name} name='name' id='name' type='input' placeholder='Enter Name Of Product' />
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Description:' validationType='string' min={2} max={150} type='input' onChange={this.handleInput} value={this.state.newProduct.description} name='description' id='description' placeholder='Enter Description' />
+							<Textarea label='Description:' validationType='string' min={2} max={1000} type='input' onChange={this.handleInput} value={this.state.newProduct.description} name='description' id='description' placeholder='Enter Description' />
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Name Of Unit:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newProduct.unit} name='unit' id='unit' placeholder='Enter Unit' />

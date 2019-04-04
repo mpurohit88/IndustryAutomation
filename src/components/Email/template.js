@@ -102,13 +102,13 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                         </td>
                     </tr>
                     <tr>
-                        <td colSpan='2' style={{ lineHeight: '1.6' }}>
+                        <td colSpan='2' style={{ lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
                             Terms & Conditions: <br />
                             <textarea cols="100" rows="5" id='terms' name='terms' />
                         </td>
                     </tr>
                     <tr>
-                        <td colSpan='2' style={{ lineHeight: '1.6' }}>
+                        <td colSpan='2' style={{ lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
                             <br />
                             Thanks & Regards, <br />
                             <textarea cols="40" rows="3" id='thanks' name='thanks' />
@@ -122,6 +122,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
 
 // 4. Feed your component into react-html-email's renderEmail 
 // function, which converts it into the needed html, tables and all.
+// https://stackoverflow.com/questions/40417527/how-do-i-preserve-line-breaks-when-getting-text-from-a-textarea/40426477
 export const GetContactEmail = function (products, quoteDetails, constactPerson) {
     return renderEmail(<ContactMeTemplate products={products} quoteDetails={quoteDetails} constactPerson={constactPerson} />);
 }
