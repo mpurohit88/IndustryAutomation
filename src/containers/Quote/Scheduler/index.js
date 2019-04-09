@@ -91,7 +91,7 @@ class Scheduler extends Component {
                 <Form>
                     <Row className="show-grid">
                         <Col xs={8} md={6}>
-                            <Input label='From:' handleError={() => { }} isRequired={true} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.newSchedule.companyEmailId} name='companyEmailId' id='companyEmailId' placeholder='Enter Company EmailId' />
+                            <Input label='From:' handleError={() => { }} isRequired={true} onBlur={() => { }} type='input' onChange={this.handleInput} value='reminder@somiconveyor.com' name='companyEmailId' id='companyEmailId' placeholder='Enter Company EmailId' />
                         </Col>
                         <Col xs={8} md={6}>
                             <Input label='To:' handleError={() => { }} isRequired={true} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.newSchedule.to} name='to' id='to' placeholder='Enter To' />
