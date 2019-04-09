@@ -153,7 +153,7 @@ class Add extends Component {
 					{this.state.showSucess ? <Success>Customer Added Successfully!</Success> : null}
 					<Row className="show-grid">
 						<Col xs={4} md={6}>
-							<Input label='Firm Name:' handleError={this.handleError} isRequired={true} inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCustomer.name} name='name' id='name' type='input' placeholder='Enter Name Of Product' />
+							<Input label='Firm Name:' handleError={this.handleError} isRequired={true} inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCustomer.name} name='name' id='name' type='input' placeholder='Enter Firm Name' />
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Address:' handleError={this.handleError} isRequired={true} type='input' onChange={this.handleInput} value={this.state.newCustomer.address} name='address' id='address' placeholder='Enter Addrress' />

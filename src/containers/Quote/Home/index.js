@@ -109,8 +109,19 @@ class Home extends Component {
 			body = body.replace('<input type="text" id="refId" name="refId"/>', document.getElementById('refId').value)
 			body = body.replace('<input type="text" size="100" id="refSubject" name="refSubject" value="Ref. Your Email Enquiry Dated 27.12.2018 for OTR Tyre Accessories."/>', document.getElementById('refSubject').value)
 			body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="OTR Tubes %26 Flaps and &quot;O&quot; Rings available in all size"/>', document.getElementById('about-product').value)
-			body = body.replace('<textarea cols="40" rows="3" id="thanks" name="thanks"></textarea>', document.getElementById('thanks').value);
-			body = body.replace('<textarea cols="100" rows="5" id="terms" name="terms"></textarea>', document.getElementById('terms').value);
+			// body = body.replace('<textarea cols="40" rows="3" id="thanks" name="thanks"></textarea>', document.getElementById('thanks').value);
+
+			const post = document.createElement('p');
+			post.style.cssText = 'line-height: 1; color:black;';
+			const postText = document.getElementById('terms').value;
+			post.textContent = postText;
+			post.innerHTML = post.innerHTML.replace(/\n/g, '<br style="line-height:">\n');  // <-- THIS FIXES THE LINE BREAKS
+			const card = document.createElement('div');
+			card.appendChild(post);
+			const cardStack = document.getElementById('term-data');
+			cardStack.insertBefore(card, cardStack.firstChild);
+
+			body = body.replace('<textarea cols="100" rows="7" id="terms" name="terms"></textarea>', card.innerHTML);
 
 			this.props.details.products.map((e, index) => {
 				body = body.replace('src="/img/product/' + e.imgName + '"', 'src="cid:EmbeddedContent_' + index + '"');

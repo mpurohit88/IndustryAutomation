@@ -57,7 +57,8 @@ class Create extends Component {
 		that.props.productList.map((product) => {
 			if (product.id === parseInt(e.target.value)) {
 				that.refs.hsnCode.value = product.hsnCode;
-				that.refs.rate.value = product.unit;
+				// that.refs.rate.value = product.unit;
+				document.getElementById('unit').innerText = product.unit;
 				that.refs.imgName.src = `img/product/${product.imgName}`;
 				that.setState({ imgSrc: `img/product/${product.imgName}` });
 			}
@@ -113,6 +114,7 @@ class Create extends Component {
 				qty: this.refs.qty.value,
 				rate: this.refs.rate.value,
 				gst: this.refs.gst.value,
+				unit: document.getElementById('unit').innerText,
 				imgName: this.state.imgSrc
 			}
 			this.state.products.push(product);
@@ -124,6 +126,7 @@ class Create extends Component {
 			this.refs.rate.value = '';
 			this.refs.gst.value = '';
 			this.refs.imgName.src = '';
+			document.getElementById('unit').innerText = '';
 		} else {
 			alert("Product quantity should be greater then Zero");
 			this.refs.qty.focus();
@@ -259,7 +262,7 @@ class Create extends Component {
 					</td>
 					<td>{product.hsn}</td>
 					<td>{product.qty}</td>
-					<td>{product.rate}</td>
+					<td>{product.rate}/- per {product.unit}</td>
 					<td>{product.gst}</td>
 					<td>{that.state.imgSrc && <Zoom src={that.state.imgSrc} />
 					}</td>
@@ -341,7 +344,7 @@ class Create extends Component {
 										<input type='input' className='form-control' ref="qty" />
 									</td>
 									<td>
-										<input type='input' className='form-control' ref="rate" />
+										<input type='input' className='form-control' ref="rate" /> <span id='unit'></span>
 									</td>
 									<td>
 										<input type='input' className='form-control' ref="gst" value='18' />

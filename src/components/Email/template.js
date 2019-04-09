@@ -7,7 +7,7 @@ import { styles } from './styles.scss'
 
 // 2. Create some CSS to be injected in the head as a prop of
 // the <Email> component. See step #3 below.
-const css = `
+const css = `br { line-height: 1} 
 @media only screen and (max-device-width: 480px) {
   font-size: 20px !important;
 }`.trim();
@@ -15,6 +15,16 @@ const css = `
 
 //3. Create your react component using react-html-email components
 const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) {
+    let showImageColumn = false;
+
+    if (products) {
+        products.map((product) => {
+            if (product.imgName && product.imgName !== '') {
+                showImageColumn = true;
+            }
+        })
+    }
+
     return <Email title="Quotation" headCSS={css} className={styles} className="quotation">
         <Box width="100%" style={{ lineHeight: 2 }}>
             <Item width="100%" style={{ textAlign: 'center' }}>
@@ -34,13 +44,13 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                     <tr><td style={{ lineHeight: '1' }}><br /></td></tr>
                     <tr>
                         <td style={{ lineHeight: '1.4', maxWidth: '200px' }}>
-                            Kindly Atten: Mr. {constactPerson[0].name} <br />
+                            Kind Atten: {constactPerson[0].name} <br />
                             {quoteDetails.address}
                         </td>
                         <td style={{ textAlign: 'right', lineHeight: '1.4' }}>
                             Phone No. {quoteDetails.phoneNo}<br />
                             Email: {constactPerson[0].email}<br />
-                            {quoteDetails.email}
+                            {constactPerson[0].email === quoteDetails.email ? '' : quoteDetails.email}
                         </td>
                     </tr>
                     <tr>
@@ -66,7 +76,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                                 <tr>
                                     <th style={{ border: '1px solid black', padding: '10px' }}>Sr. No.</th>
                                     <th style={{ border: '1px solid black', padding: '10px' }}>Particular</th>
-                                    <th style={{ border: '1px solid black', padding: '10px' }}>Image</th>
+                                    {showImageColumn && <th style={{ border: '1px solid black', padding: '10px' }}>Image</th>}
                                     <th style={{ border: '1px solid black', padding: '10px' }}>HSN code</th>
                                     <th style={{ border: '1px solid black', padding: '10px' }}>Qty.</th>
                                     <th style={{ border: '1px solid black', padding: '10px' }}>Rate</th>
@@ -79,11 +89,12 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                                                 {index + 1}
                                             </td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.name}</td>
-                                            <td style={{ border: '1px solid black', padding: '10px' }}>
-                                                <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} /></td>
+                                            {showImageColumn && <td style={{ border: '1px solid black', padding: '10px' }}>
+                                                <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} />
+                                            </td>}
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.hsnCode}</td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.quantity}</td>
-                                            <td style={{ border: '1px solid black', padding: '10px' }}>Rs. {product.rate}/-each</td>
+                                            <td style={{ border: '1px solid black', padding: '10px' }}>Rs. {product.rate}/- Per {product.unit}</td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.gstn}%</td>
                                         </tr>
                                     })
@@ -104,16 +115,17 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                     <tr>
                         <td colSpan='2' style={{ lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
                             Terms & Conditions: <br />
-                            <textarea cols="100" rows="5" id='terms' name='terms' />
+                            <textarea cols="100" rows="7" id='terms' name='terms' />
+                            <p id="term-data" style={{ lineHeight: '1.6' }}></p>
                         </td>
                     </tr>
-                    <tr>
+                    {/* <tr>
                         <td colSpan='2' style={{ lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
                             <br />
                             Thanks & Regards, <br />
                             <textarea cols="40" rows="3" id='thanks' name='thanks' />
                         </td>
-                    </tr>
+                    </tr> */}
                 </table>
             </Item>
         </Box>
