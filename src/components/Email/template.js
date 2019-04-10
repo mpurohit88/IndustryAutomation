@@ -88,7 +88,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                                             <td style={{ border: '1px solid black', padding: '10px' }}>
                                                 {index + 1}
                                             </td>
-                                            <td style={{ border: '1px solid black', padding: '10px' }}>{product.name}</td>
+                                            <td style={{ border: '1px solid black', padding: '10px', lineHeight: '1.3' }}>{product.name} <br /> {product.description}</td>
                                             {showImageColumn && <td style={{ border: '1px solid black', padding: '10px' }}>
                                                 <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} />
                                             </td>}

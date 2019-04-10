@@ -30,6 +30,7 @@ class List extends Component {
 						<tr>
 							<td>Id</td>
 							<td>Name</td>
+							<td>Description</td>
 							<td>Unit</td>
 							<td>HSN Code</td>
 							<td>Image</td>
@@ -43,6 +44,7 @@ class List extends Component {
 								return <tr key={index}>
 									<td>{product.id}</td>
 									<td>{product.name}</td>
+									<td>{product.description}</td>
 									<td>{product.unit}</td>
 									<td>{product.hsnCode}</td>
 									<td> {product.imgName && <img height="80" width="80" src={`/img/product/${product.imgName}`} />}</td>
