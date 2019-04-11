@@ -17,6 +17,8 @@ class Scheduler extends Component {
             newSchedule: {
                 scheduleId: props.scheduleId,
                 to: props.quoteDetails.email,
+                cc: '',
+                bcc: '',
                 schedule_day: '',
                 schedule_time: '',
                 companyEmailId: ''
@@ -47,7 +49,8 @@ class Scheduler extends Component {
                 self.setState(prevState => {
                     return {
                         newSchedule: {
-                            ...prevState.newSchedule, ['schedule_day']: data.schedule[0].Frequency, ['schedule_time']: data.schedule[0].Time
+                            ...prevState.newSchedule, ['schedule_day']: data.schedule[0].Frequency, ['schedule_time']: data.schedule[0].Time,
+                            ['cc']: data.schedule[0].cc_address, ['bcc']: data.schedule[0].bcc_address
                         }
                     }
                 })
@@ -91,10 +94,16 @@ class Scheduler extends Component {
                 <Form>
                     <Row className="show-grid">
                         <Col xs={8} md={6}>
-                            <Input label='From:' handleError={() => { }} isRequired={true} onBlur={() => { }} type='input' onChange={this.handleInput} value='reminder@somiconveyor.com' name='companyEmailId' id='companyEmailId' placeholder='Enter Company EmailId' />
+                            <Input label='From:' handleError={() => { }} isRequired={true} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.newSchedule.companyEmailId} name='companyEmailId' id='companyEmailId' placeholder='Enter Company EmailId' />
                         </Col>
                         <Col xs={8} md={6}>
                             <Input label='To:' handleError={() => { }} isRequired={true} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.newSchedule.to} name='to' id='to' placeholder='Enter To' />
+                        </Col>
+                        <Col xs={8} md={6}>
+                            <Input label='CC:' handleError={() => { }} isRequired={true} onBlur={() => { }} onChange={this.handleInput} value={this.state.newSchedule.cc} name='cc' id='cc' type='input' />
+                        </Col>
+                        <Col xs={8} md={6}>
+                            <Input label='BCC:' handleError={() => { }} isRequired={true} onBlur={() => { }} onChange={this.handleInput} value={this.state.newSchedule.bcc} name='bcc' id='bcc' type='input' />
                         </Col>
                         <Col xs={8} md={4}>
                             <Dropdown

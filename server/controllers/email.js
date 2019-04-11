@@ -27,6 +27,8 @@ const send = function (req, res, next) {
     next_reminder_date: new Date(),
     from_address: req.body.message.from,
     to_address: req.body.message.to,
+    cc_address: req.body.message.cc || '',
+    bcc_address: req.body.message.bcc || '',
     is_reminder: false,
     frequency: 0,
     time: 0

@@ -6,10 +6,12 @@ const Schedule = function (params) {
         this.scheduleId = params.scheduleId,
         this.company_id = params.company_id,
         this.subject = params.subject,
-        this.message_body = this.message_body,
+        this.message_body = params.message_body,
         this.next_reminder_date = new Date(),
         this.from_address = params.from_address,
         this.to_address = params.to_address,
+        this.cc_address = params.cc_address,
+        this.bcc_address = params.bcc_address,
         this.frequency = params.frequency,
         this.time = params.time,
         this.createdBy = params.createdBy,
@@ -26,10 +28,10 @@ Schedule.prototype.add = function () {
             }
 
             let values = [
-                [that.task_id, that.company_id, that.subject, that.next_reminder_date, that.message_body, that.from_address, that.to_address, that.frequency, that.time, that.is_reminder, that.isActive, that.createdBy]
+                [that.task_id, that.company_id, that.subject, that.next_reminder_date, that.message_body, that.from_address, that.to_address, that.cc_address, that.bcc_address, that.frequency, that.time, that.is_reminder, that.isActive, that.createdBy]
             ]
 
-            connection.query("INSERT INTO schedule(task_id,company_id,subject,next_reminder_date,message_body,from_address,to_address,frequency,time,is_reminder,isActive,createdBy) VALUES ?", [values], function (error, rows, fields) {
+            connection.query("INSERT INTO schedule(task_id,company_id,subject,next_reminder_date,message_body,from_address,to_address,cc_address,bcc_address,frequency,time,is_reminder,isActive,createdBy) VALUES ?", [values], function (error, rows, fields) {
                 if (!error) {
                     resolve(rows);
                 } else {
@@ -52,9 +54,9 @@ Schedule.prototype.update = function () {
                 throw error;
             }
 
-            let values = [that.from_address, that.to_address, that.frequency, that.time, that.scheduleId];
+            let values = [that.from_address, that.to_address, that.cc_address, that.bcc_address, that.frequency, that.time, that.scheduleId];
 
-            connection.query("Update schedule set from_address = ?,to_address = ?,frequency = ?,time = ? Where Id = ?", values, function (error, rows, fields) {
+            connection.query("Update schedule set from_address = ?,to_address = ?, cc_address = ?, bcc_address = ?, frequency = ?,time = ? Where Id = ?", values, function (error, rows, fields) {
                 if (!error) {
                     resolve(rows);
                 } else {
@@ -77,7 +79,7 @@ Schedule.prototype.getScheduleDetails = function (scheduleId) {
                 throw error;
             }
 
-            connection.query("SELECT Frequency, Time From Schedule WHERE id = ?", [scheduleId], function (error, rows, fields) {
+            connection.query("SELECT Frequency, Time, cc_address, bcc_address From Schedule WHERE id = ?", [scheduleId], function (error, rows, fields) {
                 if (!error) {
                     resolve(rows);
                 } else {

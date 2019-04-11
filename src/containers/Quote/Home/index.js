@@ -36,6 +36,8 @@ class Home extends Component {
 			showScheduler: false,
 			companyEmailId: '',
 			to: '',
+			cc: '',
+			bcc: '',
 			subject: 'Provide Subject',
 			scheduleId: '',
 			showCloseCase: false,
@@ -128,7 +130,7 @@ class Home extends Component {
 			});
 
 			self.setState({ isLoading: true });
-			this.props.sendEmailAction(body, this.state.companyEmailId, this.state.to || this.props.details.quoteDetails.email, this.state.subject, id, nextId, userActivityId, () => {
+			this.props.sendEmailAction(body, this.state.companyEmailId, this.state.to || this.props.details.quoteDetails.email, this.state.cc || '', this.state.bcc || '', this.state.subject, id, nextId, userActivityId, () => {
 				self.lgClose();
 				self.setState({ isLoading: false });
 			}, this.props.details.quoteDetails.id);
@@ -308,6 +310,12 @@ class Home extends Component {
 							<Col xs={4} md={6}>
 								<Input label='To:' onChange={this.handleInput} value={this.state.to} name='to' id='to' type='input' />
 							</Col>
+							<Col xs={4} md={6}>
+								<Input label='CC:' onChange={this.handleInput} value={this.state.cc} name='cc' id='cc' type='input' />
+							</Col>
+							<Col xs={4} md={6}>
+								<Input label='BCC:' onChange={this.handleInput} value={this.state.bcc} name='bcc' id='bcc' type='input' />
+							</Col>
 							<Col xs={12} md={12}>
 								<Input label='Suject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
 							</Col>
@@ -345,7 +353,7 @@ const mapDispatchToProps = (dispatch) => {
 		taskDone: (taskHistId, nextTaskHistId, userActivityId, scheduleId, quoteId, status) => dispatch(taskDone(taskHistId, nextTaskHistId, userActivityId, scheduleId, quoteId, status)),
 		fetchQuoteDetails: (quoteId, cb) => dispatch(itemsFetchQuoteDetails(quoteId, cb)),
 		quoteStartAction: (taskHistId, quoteId) => dispatch(quoteStart(taskHistId, quoteId)),
-		sendEmailAction: (body, from, to, subject, taskHistId, nextTaskHistId, userActivityId, cb, quoteId) => dispatch(sendEmail(body, from, to, subject, taskHistId, nextTaskHistId, userActivityId, cb, quoteId))
+		sendEmailAction: (body, from, to, cc, bcc, subject, taskHistId, nextTaskHistId, userActivityId, cb, quoteId) => dispatch(sendEmail(body, from, to, cc, bcc, subject, taskHistId, nextTaskHistId, userActivityId, cb, quoteId))
 	};
 };
 
