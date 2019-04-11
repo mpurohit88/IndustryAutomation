@@ -49,7 +49,7 @@ class Registration extends Component {
 					...prevState.newCompany, [name]: value
 				}
 			}
-		}, () => console.log(this.state.newCompany)
+		}, () => { }
 		)
 	}
 

@@ -170,7 +170,7 @@ class Create extends Component {
 						...prevState.newQuote, [name]: value
 					}
 				}
-			}, () => console.log(this.state.newQuote)
+			}, () => { }
 			)
 		}
 	}

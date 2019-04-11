@@ -48,7 +48,7 @@ class CloseQuote extends Component {
           ...prevState.closeQuote, [name]: value
         }
       }
-    }, () => console.log(this.state.closeQuote)
+    }, () => { }
     )
   }
 

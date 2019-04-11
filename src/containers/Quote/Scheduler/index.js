@@ -80,7 +80,7 @@ class Scheduler extends Component {
                     ...prevState.newSchedule, [name]: value
                 }
             }
-        }, () => console.log(this.state.newSchedule)
+        }, () => {}
         )
     }
 

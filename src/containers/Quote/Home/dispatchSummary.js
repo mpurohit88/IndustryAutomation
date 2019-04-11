@@ -50,12 +50,21 @@ class DispatchSummary extends Component {
           ...prevState.dispatchSummary, [name]: value
         }
       }
-    }, () => console.log(this.state.dispatchSummary)
+    }, () => { }
     )
   }
 
   render() {
-    console.log("quoteDetails..................", this.props.quoteDetails);
+    let showImageColumn = false;
+
+    if (this.props.products) {
+      this.props.products.map((product) => {
+        if (product.imgName && product.imgName !== '') {
+          showImageColumn = true;
+        }
+      })
+    }
+
     return (
       <StandardModal btnText='Update Summary' heading='Dispatch Summary' isLoading={false} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.lgClose} handleModelClick={this.lgClose}>
         <Form>
@@ -101,7 +110,7 @@ class DispatchSummary extends Component {
                 <tr>
                   <th style={{ border: '1px solid black', padding: '10px' }}>Sr. No.</th>
                   <th style={{ border: '1px solid black', padding: '10px' }}>Particular</th>
-                  <th style={{ border: '1px solid black', padding: '10px' }}>Image</th>
+                  {showImageColumn && <th style={{ border: '1px solid black', padding: '10px' }}>Image</th>}
                   <th style={{ border: '1px solid black', padding: '10px' }}>HSN code</th>
                   <th style={{ border: '1px solid black', padding: '10px' }}>Qty.</th>
                   <th style={{ border: '1px solid black', padding: '10px' }}>Rate</th>
@@ -114,8 +123,9 @@ class DispatchSummary extends Component {
                         {index + 1}
                       </td>
                       <td style={{ border: '1px solid black', padding: '10px' }}>{product.name}</td>
-                      <td style={{ border: '1px solid black', padding: '10px' }}>
-                        <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} /></td>
+                      {showImageColumn && <td style={{ border: '1px solid black', padding: '10px' }}>
+                        <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} />
+                      </td>}
                       <td style={{ border: '1px solid black', padding: '10px' }}>{product.hsnCode}</td>
                       <td style={{ border: '1px solid black', padding: '10px' }}>{product.quantity}</td>
                       <td style={{ border: '1px solid black', padding: '10px' }}>Rs. {product.rate}/-each</td>
