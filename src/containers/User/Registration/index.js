@@ -14,17 +14,17 @@ import { itemsFetchData } from '../../../core/api/company'
 class Registration extends Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			newUser: {
-				company_name: '',
+				companyId: '',
 				name: '',
 				designation: '',
 				area: '',
 				address: '',
-				mobNo: '',
+				mobileNo: '',
 				email: '',
-				isActive: true
+				isActive: true,
+				isEdit: false
 			},
 			businessArea: [{ text: 'Project', value: 'Project' }, { text: 'Operational', value: 'Operational' },
 			{ text: 'Govt. Tender', value: 'Govt. Tender' }, { text: 'Export', value: 'Export' }]
@@ -40,19 +40,29 @@ class Registration extends Component {
 		this.props.getCustomerList();
 	}
 
+	componentWillMount() {
+		if (this.props.newUser) {
+			this.setState({ newUser: this.props.newUser, isEdit: true });
+		}
+	}
+
 	handleReset() {
-		this.setState({
-			newUser: {
-				company_name: '',
-				name: '',
-				designation: '',
-				area: '',
-				address: '',
-				mobNo: '',
-				email: '',
-				isActive: true
-			}
-		})
+		if (!this.state.isEdit) {
+			this.setState({
+				newUser: {
+					companyId: '',
+					name: '',
+					designation: '',
+					area: '',
+					address: '',
+					mobileNo: '',
+					email: '',
+					userId: '',
+					password: '',
+					isActive: true
+				}
+			});
+		}
 	}
 
 	handleInput(e) {
@@ -65,7 +75,7 @@ class Registration extends Component {
 					...prevState.newUser, [name]: value
 				}
 			}
-		}, () => console.log(this.state.newUser)
+		}, () => { }
 		)
 	}
 
@@ -91,18 +101,27 @@ class Registration extends Component {
 				<Form>
 					<Row className="show-grid">
 						{
-							credentials && <Col xs={12} md={12}><Success id='userSuccess'>Credentials For '{credentials.userName}' => UserId: {credentials.userId} | Password: {credentials.password}</Success></Col>
+							credentials && this.state.isEdit ?
+								<Col xs={12} md={12}><Success id='userSuccess'>User Data Updated Successfully</Success></Col>
+								:
+								credentials && <Col xs={12} md={12}><Success id='userSuccess'>Credentials For '{credentials.userName}' => UserId: {credentials.userId} | Password: {credentials.password}</Success></Col>
 						}
 						<Col xs={12} md={12}>
 							<Dropdown
-								id='company_name'
-								name='company_name'
+								id='companyId'
+								name='companyId'
 								label='Select Company:'
 								onChange={this.handleInput}
-								value={this.state.newUser.company_name}
+								value={this.state.newUser.companyId}
 								options={companyDropdownList}
 								placeholder='--Select Company--'
 							/>
+						</Col>
+						<Col xs={4} md={6}>
+							<Input label='User Id:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newUser.userId} name='userId' id='userId' placeholder='Enter User Login Id' />
+						</Col>
+						<Col xs={4} md={6}>
+							<Input label='Password:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newUser.password} name='password' id='password' placeholder='Enter User Password' />
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Name of User:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newUser.name} name='name' id='name' placeholder='Enter Name of User' />
@@ -125,7 +144,7 @@ class Registration extends Component {
 							<Input label='Address:' type='input' onChange={this.handleInput} value={this.state.newUser.address} name='address' id='address' placeholder='Enter Address' />
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Mobile No.:' type='input' onChange={this.handleInput} value={this.state.newUser.mobNo} name='mobNo' id='mobNo' placeholder='Enter Mobile Number' />
+							<Input label='Mobile No.:' type='input' onChange={this.handleInput} value={this.state.newUser.mobileNo} name='mobileNo' id='mobileNo' placeholder='Enter Mobile Number' />
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Email:' type='email' onChange={this.handleInput} value={this.state.newUser.email} name='email' id='email' placeholder='Enter Email' />

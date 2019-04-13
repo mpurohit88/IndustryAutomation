@@ -5,31 +5,42 @@ import { Table } from 'react-bootstrap'
 import { itemsFetchData } from '../../../core/api/user'
 
 import { getISODateTime } from '../../helper'
+import { Registration as UserEdit } from '../index';
 
 /* component styles */
 import { styles } from './styles.scss'
 
 // List Of User Component
 class List extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			userRegShow: false,
+			user: {}
+		};
+	}
+
 	componentDidMount() {
 		this.props.fetchUserList();
-  }
+	}
 
-  render() {
-		const { userList, hasError, isLoading} = this.props;
+	handleUserRegClick = (flag, user) => this.setState({ userRegShow: flag, user: user });
 
-		if(isLoading) 
-		{
+	render() {
+		const { userList, hasError, isLoading } = this.props;
+
+		if (isLoading) {
 			return <div>...Loading</div>
 		}
 
-    return (
+		return (
 			<Fragment>
 				<hr />
 				<Table responsive striped bordered hover className={styles}>
 					<thead>
 						<tr>
-							<td>Id</td>
+							{/* <td>Id</td> */}
 							<td>Name</td>
 							<td>Company Name</td>
 							<td>User Id</td>
@@ -45,8 +56,11 @@ class List extends Component {
 						{
 							userList && userList.map((user, index) => {
 								return <tr key={index}>
-									<td>{user.id}</td>
-									<td>{user.name}</td>
+									{/* <td>{user.id}</td> */}
+									<td className='imgEdit'>
+										<img height='17' src='/dist/img/userEdit.png' />
+										<a href='#' onClick={() => this.handleUserRegClick(true, user)}>{user.name}</a>
+									</td>
 									<td>{user.companyName}</td>
 									<td>{user.userId}</td>
 									<td>{user.designation}</td>
@@ -60,16 +74,21 @@ class List extends Component {
 						}
 					</tbody>
 				</Table>
+				{
+					this.state.userRegShow ? <UserEdit heading='User Edit' show={this.state.userRegShow} newUser={this.state.user} lgClose={() => this.handleUserRegClick(false)} handleModelClick={this.handleUserRegClick} />
+						:
+						null
+				}
 			</Fragment>
 		)
-  }
+	}
 }
 
 const mapStateToProps = (state) => {
 	return {
-			userList: state.user.list,
-			hasError: state.user.hasError,
-			isLoading: state.user.isLoading
+		userList: state.user.list,
+		hasError: state.user.hasError,
+		isLoading: state.user.isLoading
 	};
 };
 

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap'
 
 import { itemsFetchData } from '../../../core/api/company'
+import { Registration as CompanyEdit } from '../index';
 
 import { getISODateTime } from '../../helper'
 
@@ -11,25 +12,35 @@ import { styles } from './styles.scss'
 
 // List Of Company Component
 class List extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			companyRegShow: false,
+			company: {}
+		};
+	}
+
 	componentDidMount() {
 		this.props.fetchCompanyList();
-  }
+	}
 
-  render() {
-		const { companyList, hasError, isLoading} = this.props;
+	handleCompanyRegClick = (flag, company) => this.setState({ companyRegShow: flag, company: company });
 
-		if(isLoading) 
-		{
+	render() {
+		const { companyList, hasError, isLoading } = this.props;
+
+		if (isLoading) {
 			return <div>...Loading</div>
 		}
 
-    return (
+		return (
 			<Fragment>
 				<hr />
 				<Table responsive striped bordered hover className={styles}>
 					<thead>
 						<tr>
-							<td>Id</td>
+							{/* <td>Id</td> */}
 							<td>Name</td>
 							<td>Address</td>
 							<td>City</td>
@@ -49,8 +60,11 @@ class List extends Component {
 						{
 							companyList && companyList.map((company, index) => {
 								return <tr key={index}>
-									<td>{company.id}</td>
-									<td>{company.name}</td>
+									{/* <td>{company.id}</td> */}
+									<td className='imgEdit'>
+										<img height='17' src='/dist/img/userEdit.png' />
+										<a href='#' onClick={() => this.handleCompanyRegClick(true, company)}>{company.name}</a>
+									</td>
 									<td>{company.address}</td>
 									<td>{company.city}</td>
 									<td>{company.state}</td>
@@ -68,16 +82,22 @@ class List extends Component {
 						}
 					</tbody>
 				</Table>
+
+				{
+					this.state.companyRegShow ? <CompanyEdit heading='Company Edit' show={this.state.companyRegShow} newCompany={this.state.company} lgClose={() => this.handleCompanyRegClick(false)} handleModelClick={this.handleCompanyRegClick} />
+						:
+						null
+				}
 			</Fragment>
 		)
-  }
+	}
 }
 
 const mapStateToProps = (state) => {
 	return {
-			companyList: state.company.list,
-			hasError: state.company.hasError,
-			isLoading: state.company.isLoading
+		companyList: state.company.list,
+		hasError: state.company.hasError,
+		isLoading: state.company.isLoading
 	};
 };
 

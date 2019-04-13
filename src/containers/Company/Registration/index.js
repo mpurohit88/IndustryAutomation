@@ -16,6 +16,7 @@ class Registration extends Component {
 
 		this.state = {
 			showSucess: false,
+			isEdit: false,
 			newCompany: {
 				name: '',
 				address: '',
@@ -39,6 +40,12 @@ class Registration extends Component {
 		this.resetSuccess = this.resetSuccess.bind(this);
 	}
 
+	componentWillMount() {
+		if (this.props.newCompany) {
+			this.setState({ newCompany: this.props.newCompany, isEdit: true });
+		}
+	}
+
 	handleInput(e) {
 		let value = e.target.value;
 		let name = e.target.name;
@@ -54,24 +61,29 @@ class Registration extends Component {
 	}
 
 	handleReset() {
-		this.setState({
-			newCompany: {
-				name: '',
-				address: '',
-				city: '',
-				state: '',
-				country: '',
-				tele: '',
-				fax: '',
-				mobileNo: '',
-				email: '',
-				website: '',
-				gstn: '',
-				logo: '',
-				manufacturerOf: ''
-			},
-			showSucess: true
-		});
+		if (!this.state.isEdit) {
+
+			this.setState({
+				newCompany: {
+					name: '',
+					address: '',
+					city: '',
+					state: '',
+					country: '',
+					tele: '',
+					fax: '',
+					mobileNo: '',
+					email: '',
+					website: '',
+					gstn: '',
+					logo: '',
+					manufacturerOf: ''
+				},
+				showSucess: true
+			});
+		} else {
+			this.setState({ showSucess: true })
+		}
 
 		// Explicitly focus the text input using the raw DOM API
 		// Note: we're accessing "current" to get the DOM node
@@ -96,7 +108,8 @@ class Registration extends Component {
 		return (
 			<Modal btnText='Save' heading='Company Registration' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
 				<Form>
-					{this.state.showSucess ? <Success>Company Registered Successfully!</Success> : null}
+					{this.state.showSucess ? <Success>Company {this.state.isEdit ? 'Updated' : 'Registered'} Successfully!</Success> : null}
+
 					<Row className="show-grid">
 						<Col xs={6} md={6}>
 							<Input label='Name Of Company:' inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCompany.name} name='name' id='name' type='input' placeholder='Enter Name Of Company' />
