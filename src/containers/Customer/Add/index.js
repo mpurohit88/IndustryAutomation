@@ -24,7 +24,7 @@ class Add extends Component {
 				name: '',
 				address: '',
 				contact_person: '',
-				tele: '',
+				telephone: '',
 				gstn: '',
 				email: ''
 			},
@@ -39,6 +39,17 @@ class Add extends Component {
 
 		this.handleAddEvent = this.handleAddEvent.bind(this);
 		this.handleRowDel = this.handleRowDel.bind(this);
+	}
+
+	componentWillMount() {
+		if (this.props.newCustomer) {
+			let newContactArr = [];
+			this.props.newCustomer.customerContact.forEach((contact) => {
+				newContactArr.push(contact);
+			})
+
+			this.setState({ newCustomer: this.props.newCustomer, contactPerson: newContactArr, isEdit: true });
+		}
 	}
 
 	handleAddEvent() {
@@ -66,7 +77,7 @@ class Add extends Component {
 		var index = -1;
 		var clength = this.state.contactPerson.length;
 		for (var i = 0; i < clength; i++) {
-			if (this.state.contactPerson[i].id === customer.value) {
+			if (this.state.contactPerson[i].id === customer.id) {
 				index = i;
 				break;
 			}
@@ -112,17 +123,21 @@ class Add extends Component {
 	}
 
 	handleReset() {
-		this.setState({
-			showSucess: true,
-			newCustomer: {
-				name: '',
-				address: '',
-				contact_person: '',
-				tele: '',
-				gstn: '',
-				email: ''
-			}
-		});
+		if (!this.state.isEdit) {
+			this.setState({
+				showSucess: true,
+				newCustomer: {
+					name: '',
+					address: '',
+					contact_person: '',
+					telephone: '',
+					gstn: '',
+					email: ''
+				}
+			});
+		} else {
+			this.setState({ showSucess: true })
+		}
 
 		this.nameInput.current.focus();
 	}
@@ -150,7 +165,7 @@ class Add extends Component {
 		return (
 			<Modal btnText='Save' heading='Add Customer' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
 				<Form>
-					{this.state.showSucess ? <Success>Customer Added Successfully!</Success> : null}
+					{this.state.showSucess ? <Success>Customer {this.state.isEdit ? 'Updated' : 'Added'} Successfully!</Success> : null}
 					<Row className="show-grid">
 						<Col xs={4} md={6}>
 							<Input label='Firm Name:' handleError={this.handleError} isRequired={true} inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCustomer.name} name='name' id='name' type='input' placeholder='Enter Firm Name' />
@@ -159,7 +174,7 @@ class Add extends Component {
 							<Input label='Address:' handleError={this.handleError} isRequired={true} type='input' onChange={this.handleInput} value={this.state.newCustomer.address} name='address' id='address' placeholder='Enter Addrress' />
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Telephone Number:' handleError={this.handleError} isRequired={true} type='input' onChange={this.handleInput} value={this.state.newCustomer.tele} name='tele' id='tele' placeholder='Enter Telephone Number' />
+							<Input label='Telephone Number:' handleError={this.handleError} isRequired={true} type='input' onChange={this.handleInput} value={this.state.newCustomer.telephone} name='telephone' id='telephone' placeholder='Enter Telephone Number' />
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='GSTN:' handleError={this.handleError} isRequired={true} onChange={this.handleInput} value={this.state.newCustomer.gstn} name='gstn' id='gstn' type='input' placeholder='Enter GSTN' />

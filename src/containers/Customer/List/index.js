@@ -5,31 +5,42 @@ import { Table } from 'react-bootstrap'
 import { itemsFetchData } from '../../../core/api/customer'
 
 import { getISODateTime } from '../../helper'
+import { Add as CustomerEdit } from '../index';
 
 /* component styles */
 import { styles } from './styles.scss'
 
 // List Of customer Component
 class List extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			customerRegShow: false,
+			customer: {}
+		};
+	}
+
 	componentDidMount() {
 		this.props.fetchCustomerList();
-  }
+	}
 
-  render() {
-		const { customerList, hasError, isLoading} = this.props;
+	handleCustomerRegClick = (flag, customer) => this.setState({ customerRegShow: flag, customer: customer });
 
-		if(isLoading) 
-		{
+	render() {
+		const { customerList, hasError, isLoading } = this.props;
+
+		if (isLoading) {
 			return <div>...Loading</div>
 		}
 
-    return (
+		return (
 			<Fragment>
 				<hr />
 				<Table responsive striped bordered hover className={styles}>
 					<thead>
 						<tr>
-							<td>Id</td>
+							{/* <td>Id</td> */}
 							<td>Name</td>
 							<td>Address</td>
 							<td>Contact Person</td>
@@ -43,10 +54,13 @@ class List extends Component {
 						{
 							customerList && customerList.map((customer, index) => {
 								return <tr key={index}>
-									<td>{customer.id}</td>
-									<td>{customer.name}</td>
+									{/* <td>{customer.id}</td> */}
+									<td className='imgEdit'>
+										<img height='17' src='/img/userEdit.png' />
+										<a href='#' onClick={() => this.handleCustomerRegClick(true, customer)}>{customer.name}</a>
+									</td>
 									<td>{customer.address}</td>
-									<td>{customer.contactPerson}</td>
+									<td>{customer.customerContact.length > 0 ? <a href='#' onClick={() => this.handleCustomerRegClick(true, customer)}>View</a> : ''}</td>
 									<td>{customer.telephone}</td>
 									<td>{customer.gstn}</td>
 									<td>{customer.email}</td>
@@ -56,16 +70,21 @@ class List extends Component {
 						}
 					</tbody>
 				</Table>
+				{
+					this.state.customerRegShow ? <CustomerEdit heading='Customer Edit' show={this.state.customerRegShow} newCustomer={this.state.customer} lgClose={() => this.handleCustomerRegClick(false)} handleModelClick={this.handleCustomerRegClick} />
+						:
+						null
+				}
 			</Fragment>
 		)
-  }
+	}
 }
 
 const mapStateToProps = (state) => {
 	return {
-			customerList: state.customer.list,
-			hasError: state.customer.hasError,
-			isLoading: state.customer.isLoading
+		customerList: state.customer.list,
+		hasError: state.customer.hasError,
+		isLoading: state.customer.isLoading
 	};
 };
 

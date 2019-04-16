@@ -62,7 +62,7 @@ class List extends Component {
 								return <tr key={index}>
 									{/* <td>{company.id}</td> */}
 									<td className='imgEdit'>
-										<img height='17' src='/dist/img/userEdit.png' />
+										<img height='17' src='/img/userEdit.png' />
 										<a href='#' onClick={() => this.handleCompanyRegClick(true, company)}>{company.name}</a>
 									</td>
 									<td>{company.address}</td>
