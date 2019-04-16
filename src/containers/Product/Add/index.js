@@ -17,6 +17,7 @@ class Add extends Component {
 		this.nameInput = React.createRef();
 
 		this.state = {
+			isEdit: false,
 			newProduct: {
 				name: '',
 				description: '',
@@ -30,6 +31,12 @@ class Add extends Component {
 		this.handleInput = this.handleInput.bind(this);
 		this.resetSuccess = this.resetSuccess.bind(this);
 		this.handleReset = this.handleReset.bind(this);
+	}
+
+	componentWillMount() {
+		if (this.props.newProduct) {
+			this.setState({ newProduct: this.props.newProduct, isEdit: true });
+		}
 	}
 
 	handleInput(e) {
@@ -69,16 +76,20 @@ class Add extends Component {
 	}
 
 	handleReset() {
-		this.setState({
-			showSucess: true,
-			newProduct: {
-				name: '',
-				description: '',
-				unit: '',
-				img: '',
-				hsnCode: ''
-			}
-		});
+		if (!this.state.isEdit) {
+			this.setState({
+				showSucess: true,
+				newProduct: {
+					name: '',
+					description: '',
+					unit: '',
+					img: '',
+					hsnCode: ''
+				}
+			});
+		} else {
+			this.setState({ showSucess: true })
+		}
 
 		this.nameInput.current.focus();
 	}
@@ -91,7 +102,7 @@ class Add extends Component {
 		return (
 			<Modal btnText='Save' heading='Add Product' handleSubmit={this.handleSubmit} show={this.props.show} lgClose={() => this.props.lgClose(false)} handleModelClick={this.props.handleModelClick}>
 				<Form>
-					{this.state.showSucess ? <Success>Product Added Successfully!</Success> : null}
+					{this.state.showSucess ? <Success>Product {this.state.isEdit ? 'Updated' : 'Added'}  Successfully!</Success> : null}
 					<Row className="show-grid">
 						<Col xs={4} md={6}>
 							<Input label='Name Of Product:' validationType='string' min={2} max={50} isRequired={true} inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newProduct.name} name='name' id='name' type='input' placeholder='Enter Name Of Product' />
