@@ -9,6 +9,7 @@ export const getStatus = function (status) {
 		case 8: return 'Order Dispatched'
 		case 100: return 'Quote Closed'
 		case 101: return 'Quote Closed'
+		case 102: return 'Quote Discarded'
 
 		default: return '';
 	}
@@ -19,6 +20,8 @@ export const getVariant = function (status) {
 		case 1: return 'primary'
 		case 2: return 'success'
 		case 101: return 'danger'
+		case 102: return 'danger'
+
 		default: return 'success'
 	}
 }

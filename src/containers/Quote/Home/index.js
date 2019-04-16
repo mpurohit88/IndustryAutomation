@@ -41,7 +41,8 @@ class Home extends Component {
 			subject: 'Provide Subject',
 			scheduleId: '',
 			showCloseCase: false,
-			showDispatchSummary: false
+			showDispatchSummary: false,
+			isDiscard: false
 		}
 
 		this.showEmail = this.showEmail.bind(this);
@@ -100,7 +101,11 @@ class Home extends Component {
 	}
 
 	closeCase() {
-		this.setState({ showCloseCase: true })
+		this.setState({ showCloseCase: true, isDiscard: false })
+	}
+
+	discardCase() {
+		this.setState({ showCloseCase: true, isDiscard: true })
 	}
 
 	sendEmailToCustomer(id, nextId, userActivityId) {
@@ -297,6 +302,10 @@ class Home extends Component {
 								</Button>
 						}
 
+						<Button onClick={quoteDetails.status > 99 ? () => { } : (e) => this.discardCase(e)}>
+							{quoteDetails.status > 99 ? 'Quote Discarded' : 'Discard'}
+						</Button>
+
 					</div>
 
 				</div>
@@ -332,7 +341,7 @@ class Home extends Component {
 						<Scheduler scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showScheduler} quoteDetails={quoteDetails} /> : null
 				}
 				{
-					this.state.showCloseCase ? <CloseQuote scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showCloseCase} quoteDetails={quoteDetails} /> : null
+					this.state.showCloseCase ? <CloseQuote isDiscard={this.state.isDiscard} scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showCloseCase} quoteDetails={quoteDetails} /> : null
 				}
 				{
 					this.state.showDispatchSummary ? <DispatchSummary scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showDispatchSummary} quoteDetails={quoteDetails} products={products} /> : null

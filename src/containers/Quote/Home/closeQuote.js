@@ -53,8 +53,18 @@ class CloseQuote extends Component {
   }
 
   render() {
+    const { isDiscard } = this.props;
+    let options;
+
+    if (isDiscard) {
+      options = [{ text: 'Discard', value: 102 }];
+    } else {
+      options = [{ text: 'Confirmed', value: 100 },
+      { text: 'Not Confirmed', value: 101 }];
+    }
+
     return (
-      <StandardModal btnText='Close' heading='Close Quote' isLoading={false} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.lgClose} handleModelClick={this.lgClose}>
+      <StandardModal btnText='Close' heading={isDiscard ? 'Discard Quote' : 'Close Quote'} isLoading={false} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.lgClose} handleModelClick={this.lgClose}>
         <Form>
           <Row className="show-grid">
             <Col xs={8} md={12}>
@@ -65,9 +75,7 @@ class CloseQuote extends Component {
                 value={this.state.closeQuote.quote_status}
                 onChange={this.handleInput}
                 placeholder='--Select Status--'
-                options={[{ text: 'Confirmed', value: 100 },
-                { text: 'Not Confirmed', value: 101 }
-                ]}
+                options={options}
               />
             </Col>
             <Col xs={8} md={12}>
