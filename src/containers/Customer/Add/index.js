@@ -4,6 +4,7 @@ import { Form, Row, Col, Table } from 'react-bootstrap'
 
 import Modal from '../../../components/Modals/StandardModal'
 import Input from '../../../components/Input'
+import Textarea from '../../../components/Textarea'
 import { Success } from '../../../components/Alerts'
 
 import { addCustomer } from '../../../core/api/customer'
@@ -171,7 +172,7 @@ class Add extends Component {
 							<Input label='Firm Name:' handleError={this.handleError} isRequired={true} inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newCustomer.name} name='name' id='name' type='input' placeholder='Enter Firm Name' />
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='Address:' handleError={this.handleError} isRequired={true} type='input' onChange={this.handleInput} value={this.state.newCustomer.address} name='address' id='address' placeholder='Enter Addrress' />
+							<Textarea label='Address:' handleError={this.handleError} isRequired={true} type='input' onChange={this.handleInput} value={this.state.newCustomer.address} name='address' id='address' placeholder='Enter Addrress' />
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Telephone Number:' handleError={this.handleError} isRequired={true} type='input' onChange={this.handleInput} value={this.state.newCustomer.telephone} name='telephone' id='telephone' placeholder='Enter Telephone Number' />

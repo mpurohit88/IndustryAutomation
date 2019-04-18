@@ -250,7 +250,7 @@ class Home extends Component {
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 												onClick={(e) => { this.doneTask(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId, quoteDetails.id, 5) }}
 											>
-												Done
+												Stop Reminder
 											</Button>
 										</div>
 									}
