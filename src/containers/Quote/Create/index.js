@@ -31,6 +31,7 @@ class Create extends Component {
 			listOfProduct: [],
 			products: [],
 			contactList: [],
+			currencyList: [{ text: 'Rupee', value: '1' }, { text: 'Dollor', value: '2' }, { text: 'Euro', value: '3' }, { text: 'Yen', value: '4' }],
 			imgSrc: undefined
 		}
 
@@ -61,6 +62,7 @@ class Create extends Component {
 				document.getElementById('unit').innerText = product.unit;
 				that.refs.imgName.src = `img/product/${product.imgName}`;
 				that.setState({ imgSrc: `img/product/${product.imgName}` });
+				that.refs.description.innerText = product.description;
 			}
 		});
 
@@ -126,6 +128,8 @@ class Create extends Component {
 			this.refs.rate.value = '';
 			this.refs.gst.value = '';
 			this.refs.imgName.src = '';
+			this.refs.description.innerHTML = '';
+
 			document.getElementById('unit').innerText = '';
 		} else {
 			alert("Product quantity should be greater then Zero");
@@ -238,6 +242,21 @@ class Create extends Component {
 		this.setState({ showSucess: false });
 	}
 
+	getCurrencySymbole(currency) {
+		switch (currency) {
+			case '1':
+				return '&#8377;';
+			case '2':
+				return '&#36;';
+			case '3':
+				return '&#8364;';
+			case '4':
+				return '&#165;';
+			default:
+				return '&#8377;';
+		}
+	}
+
 	render() {
 		const that = this;
 		const { partyList, productList } = that.props;
@@ -254,6 +273,10 @@ class Create extends Component {
 			return { text: contact.name, value: contact.id };
 		});
 
+		// let currencyDrpDwn = this.state.currencyList.map((currency) => {
+		// 	return { text: currency.name, value: currency.id };
+		// });
+
 		let product = this.state.products.map(function (product, index) {
 			return (
 				<tr key={product.id}>
@@ -262,7 +285,7 @@ class Create extends Component {
 					</td>
 					<td>{product.hsn}</td>
 					<td>{product.qty}</td>
-					<td>{product.rate}/- per {product.unit}</td>
+					<td><span dangerouslySetInnerHTML={{ __html: that.getCurrencySymbole(that.state.newQuote.currency_type) }} /> {product.rate}/- per {product.unit}</td>
 					<td>{product.gst}</td>
 					<td>{that.state.imgSrc && <Zoom src={that.state.imgSrc} />
 					}</td>
@@ -293,7 +316,17 @@ class Create extends Component {
 							<Col xs={4} md={6}>
 								<Input label='Phone no.:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newQuote.phoneNo} name='phoneNo' id='phoneNo' placeholder='Enter Phone No' />
 							</Col>
-							<Col xs={6} md={6}></Col>
+							<Col xs={6} md={6}>
+								<Dropdown
+									id='currency_type'
+									name='currency_type'
+									label='Currency Type:'
+									value={this.state.newQuote.currency_type}
+									onChange={this.handleInput}
+									placeholder='--Select Currency Type--'
+									options={this.state.currencyList}
+								/>
+							</Col>
 							<Col xs={8} md={6}>
 								<Dropdown
 									id='contact_person'
@@ -336,6 +369,7 @@ class Create extends Component {
 												})
 											}
 										</select>
+										<label ref="description"></label>
 									</td>
 									<td>
 										<input type='input' className='form-control' ref="hsnCode" />
@@ -347,7 +381,7 @@ class Create extends Component {
 										<input type='input' className='form-control' ref="rate" /> <span id='unit'></span>
 									</td>
 									<td>
-										<input type='input' className='form-control' ref="gst" value='18' />
+										<input type='input' className='form-control' ref="gst" />
 									</td>
 									<td>
 										{/* {this.state.imgSrc && <Zoom src = {this.state.imgSrc} />} */}

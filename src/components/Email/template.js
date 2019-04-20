@@ -16,11 +16,31 @@ const css = `br { line-height: 1}
 //3. Create your react component using react-html-email components
 const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) {
     let showImageColumn = false;
+    let isShowGST = false;
+
+    let getCurrencySymbole = function (currency) {
+        switch (currency) {
+            case 1:
+                return '&#8377;';
+            case 2:
+                return '&#36;';
+            case 3:
+                return '&#8364;';
+            case 4:
+                return '&#165;';
+            default:
+                return '&#8377;';
+        }
+    }
 
     if (products) {
         products.map((product) => {
             if (product.imgName && product.imgName !== '') {
                 showImageColumn = true;
+            }
+
+            if (product.imgName && (product.gstn !== '' && product.gstn !== '0')) {
+                isShowGST = true;
             }
         })
     }
@@ -57,7 +77,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                         <td><br /></td>
                     </tr>
                     <tr>
-                        <td colSpan='2'><input size="100" type='text' id='refSubject' name='refSubject' value='Ref. Your Email Enquiry Dated 27.12.2018 for OTR Tyre Accessories.' /></td>
+                        <td colSpan='2'><input size="100" type='text' id='refSubject' name='refSubject' value='Ref. Your Email Enquiry Dated' /></td>
                     </tr>
                     <tr>
                         <td colSpan='2' style={{ lineHeight: '1.6' }}>Dear Sir, <br />
@@ -80,7 +100,8 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                                     <th style={{ border: '1px solid black', padding: '10px' }}>HSN code</th>
                                     <th style={{ border: '1px solid black', padding: '10px' }}>Qty.</th>
                                     <th style={{ border: '1px solid black', padding: '10px' }}>Rate</th>
-                                    <th style={{ border: '1px solid black', padding: '10px' }}>GST</th>
+                                    {isShowGST && <th style={{ border: '1px solid black', padding: '10px' }}>GST</th>}
+
                                 </tr>
                                 {
                                     products.map((product, index) => {
@@ -94,8 +115,8 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                                             </td>}
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.hsnCode}</td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.quantity}</td>
-                                            <td style={{ border: '1px solid black', padding: '10px' }}>Rs. {product.rate}/- Per {product.unit}</td>
-                                            <td style={{ border: '1px solid black', padding: '10px' }}>{product.gstn}%</td>
+                                            <td style={{ border: '1px solid black', padding: '10px' }}><span dangerouslySetInnerHTML={{ __html: getCurrencySymbole(product.currency_type) }} /> {product.rate}/- Per {product.unit}</td>
+                                            {isShowGST && <td style={{ border: '1px solid black', padding: '10px' }}>{product.gstn}%</td>}
                                         </tr>
                                     })
                                 }

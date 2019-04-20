@@ -91,7 +91,7 @@ class Main extends Component {
 			'<p><h5>Kindly Atten: Mr. Daya Pvt. Ltd. <br />Ultratech Cement Limited <br />Nathdwara (Rajasthan) </h5>' +
 			'<h5> Phone No. 02971-235005-12 <br />Email: mapurohit88@gmail.com <br />kishore.kabl@adityabirla.com</h5></p>' +
 			// '</tbody></table>' +
-			'<p>Ref. Your Email Enquiry Dated 27.12.2018 for OTR Tyre Accessories.</p>' +
+			'<p>Ref. Your Email Enquiry Dated</p>' +
 			'<p>Dear Sir,</p>' +
 			'<p>We thank you very much for your above enquiry and pleased to quote our lowest offer as under:-</p>' +
 			'<p>&nbsp;</p></br>' +

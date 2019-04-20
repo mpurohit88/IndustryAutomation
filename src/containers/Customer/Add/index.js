@@ -178,7 +178,7 @@ class Add extends Component {
 							<Input label='Telephone Number:' handleError={this.handleError} isRequired={true} type='input' onChange={this.handleInput} value={this.state.newCustomer.telephone} name='telephone' id='telephone' placeholder='Enter Telephone Number' />
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='GSTN:' handleError={this.handleError} isRequired={true} onChange={this.handleInput} value={this.state.newCustomer.gstn} name='gstn' id='gstn' type='input' placeholder='Enter GSTN' />
+							<Input label='GSTN:' handleError={this.handleError} onChange={this.handleInput} value={this.state.newCustomer.gstn} name='gstn' id='gstn' type='input' placeholder='Enter GSTN' />
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Email:' handleError={this.handleError} isRequired={true} onChange={this.handleInput} value={this.state.newCustomer.email} name='email' id='email' type='email' placeholder='Enter Email' />
