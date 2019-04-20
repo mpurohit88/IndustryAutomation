@@ -23,7 +23,8 @@ class Add extends Component {
 				description: '',
 				unit: '',
 				img: '',
-				hsnCode: ''
+				hsnCode: '',
+				isActive: true
 			}
 		}
 
@@ -35,13 +36,20 @@ class Add extends Component {
 
 	componentWillMount() {
 		if (this.props.newProduct) {
-			this.setState({ newProduct: this.props.newProduct, isEdit: true });
+			let isActive = this.props.newProduct.isActive === 1 ? true : false;
+			let newProductVar = { ...this.props.newProduct };
+			newProductVar.isActive = isActive;
+			this.setState({ newProduct: newProductVar, isEdit: true });
 		}
 	}
 
 	handleInput(e) {
 		let value = e.target.value;
 		let name = e.target.name;
+
+		if (e.target.name === 'isActive') {
+			value = e.target.checked
+		}
 
 		this.setState(prevState => {
 			return {
@@ -84,7 +92,8 @@ class Add extends Component {
 					description: '',
 					unit: '',
 					img: '',
-					hsnCode: ''
+					hsnCode: '',
+					isActive: true
 				}
 			});
 		} else {
@@ -107,18 +116,24 @@ class Add extends Component {
 						<Col xs={4} md={6}>
 							<Input label='Name Of Product:' validationType='string' min={2} max={50} isRequired={true} inputRef={this.nameInput} onBlur={this.resetSuccess} onChange={this.handleInput} value={this.state.newProduct.name} name='name' id='name' type='input' placeholder='Enter Name Of Product' />
 						</Col>
-						<Col xs={4} md={6}>
+						{/* <Col xs={4} md={6}>
 							<Textarea label='Description:' validationType='string' min={2} max={1000} type='input' onChange={this.handleInput} value={this.state.newProduct.description} name='description' id='description' placeholder='Enter Description' />
-						</Col>
+						</Col> */}
 						<Col xs={4} md={6}>
 							<Input label='Name Of Unit:' isRequired={true} type='input' onChange={this.handleInput} value={this.state.newProduct.unit} name='unit' id='unit' placeholder='Enter Unit' />
+						</Col>
+						<Col xs={4} md={6}>
+							<Input label='HSN Code:' isRequired={true} onChange={this.handleInput} value={this.state.newProduct.hsnCode} name='hsnCode' id='hsnCode' type='input' placeholder='Enter HSN Code' />
 						</Col>
 						<Col xs={4} md={6}>
 							<Input type='file' label='Browse Image:' accept="image/*" onChange={this.handleInput} value={this.state.newProduct.img} name='img' id='img' />
 						</Col>
 						<Col xs={4} md={6}>
-							<Input label='HSN Code:' isRequired={true} onChange={this.handleInput} value={this.state.newProduct.hsnCode} name='hsnCode' id='hsnCode' type='input' placeholder='Enter HSN Code' />
+							<Form.Group controlId="formBasicChecbox">
+								<Form.Check type="checkbox" label="Active" onChange={this.handleInput} checked={this.state.newProduct.isActive} value={this.state.newProduct.isActive} name='isActive' id='isActive' />
+							</Form.Group>
 						</Col>
+
 					</Row>
 				</Form>
 			</Modal>

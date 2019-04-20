@@ -45,18 +45,19 @@ class List extends Component {
 		const popover = (
 			<Popover id="popover-basic" title="Product List">
 				<table>
-					<thead><tr><th>Name</th><th>Quantity</th><th>GSTN</th></tr></thead>
+					<thead><tr><th>Name</th><th>Description</th><th>Quantity</th><th>GSTN</th></tr></thead>
 					<tbody>
 						{this.state.quoteProductList.map((list) => {
 							return <tr>
 								<td>{list.name}</td>
+								<td>{list.description}</td>
 								<td>{list.quantity}</td>
 								<td>{list.gstn}</td>
 							</tr>
 						})}
 					</tbody>
 				</table>
-			</Popover>
+			</Popover >
 		);
 
 		return (

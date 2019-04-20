@@ -42,7 +42,7 @@ class List extends Component {
 						<tr>
 							{/* <td>Id</td> */}
 							<td>Name</td>
-							<td>Description</td>
+							{/* <td>Description</td> */}
 							<td>Unit</td>
 							<td>HSN Code</td>
 							<td>Image</td>
@@ -59,7 +59,7 @@ class List extends Component {
 										<img height='17' src='/img/userEdit.png' />
 										<a href='#' onClick={() => this.handleProductRegClick(true, product)}>{product.name}</a>
 									</td>
-									<td>{product.description}</td>
+									{/* <td>{product.description}</td> */}
 									<td>{product.unit}</td>
 									<td>{product.hsnCode}</td>
 									<td> {product.imgName && <img height="80" width="80" src={`/img/product/${product.imgName}`} />}</td>

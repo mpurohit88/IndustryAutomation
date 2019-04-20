@@ -222,7 +222,7 @@ class Home extends Component {
 									<div className={`${this.showStepCircle(task.startDate, task.endDate)}`}>
 										<label className='text'>{task.text}</label>
 									</div>
-
+								<div>
 									{
 										task.taskId === 1 && <Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 											onClick={(e) => this.showEmail(task.id, tasks[index + 1].id, task.userActivityId)}
@@ -231,6 +231,14 @@ class Home extends Component {
 																</Button>
 									}
 
+									{
+										task.taskId === 1 && <Button variant="outline-primary" type="button"
+											onClick={(e) => this.showEmail(task.id, tasks[index + 1].id, task.userActivityId)}
+										>
+											View Email
+																</Button>
+									}
+							</div>
 									{
 										task.taskId === 2 && <div>
 											{

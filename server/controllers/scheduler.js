@@ -11,12 +11,12 @@ const add = function (req, res, next) {
         company_id: req.decoded.companyId,
         subject: req.body.nextSchedule.subject,
         message_body: '',
-        next_reminder_date: req.body.next_reminder_date,
+        next_reminder_date: req.body.nextSchedule.schedule_day,
         from_address: req.body.nextSchedule.companyEmailId,
         to_address: req.body.nextSchedule.to,
         cc_address: req.body.nextSchedule.cc || '',
         bcc_address: req.body.nextSchedule.bcc || '',
-        frequency: req.body.nextSchedule.schedule_day,
+        frequency: req.body.nextSchedule.schedule_time,
         time: req.body.nextSchedule.schedule_time,
         is_reminder: true
     };

@@ -39,7 +39,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                 showImageColumn = true;
             }
 
-            if (product.imgName && (product.gstn !== '' && product.gstn !== '0')) {
+            if (product.gstn && (product.gstn !== '' && product.gstn !== '0')) {
                 isShowGST = true;
             }
         })

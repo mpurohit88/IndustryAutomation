@@ -46,3 +46,12 @@ img {
 	display: block;
   pointer-events: none;
 }
+
+:local(.styles) {
+	@media (min-width: 576px) {
+		.modal-dialog {
+			max-width: 1198px !important;
+			margin: 1.75rem auto;
+		}
+	}
+}

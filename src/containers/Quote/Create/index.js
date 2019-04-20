@@ -62,13 +62,13 @@ class Create extends Component {
 				document.getElementById('unit').innerText = product.unit;
 				that.refs.imgName.src = `img/product/${product.imgName}`;
 				that.setState({ imgSrc: `img/product/${product.imgName}` });
-				that.refs.description.innerText = product.description;
+				// that.refs.description.innerText = product.description;
 			}
 		});
 
 		this.forceUpdate();
 
-		this.refs.qty.focus();
+		this.refs.description.focus();
 	}
 
 	handleRowDel(product) {
@@ -113,6 +113,7 @@ class Create extends Component {
 				name: this.refs.name[this.refs.name.selectedIndex].text,
 				product_id: this.refs.name.value,
 				hsn: this.refs.hsnCode.value,
+				description: this.refs.description.value,
 				qty: this.refs.qty.value,
 				rate: this.refs.rate.value,
 				gst: this.refs.gst.value,
@@ -128,7 +129,7 @@ class Create extends Component {
 			this.refs.rate.value = '';
 			this.refs.gst.value = '';
 			this.refs.imgName.src = '';
-			this.refs.description.innerHTML = '';
+			this.refs.description.value = '';
 
 			document.getElementById('unit').innerText = '';
 		} else {
@@ -280,9 +281,9 @@ class Create extends Component {
 		let product = this.state.products.map(function (product, index) {
 			return (
 				<tr key={product.id}>
-					<td>{index + 1}</td>
-					<td>{product.name}
-					</td>
+					{/* <td>{index + 1}</td> */}
+					<td>{product.name}</td>
+					<td>{product.description}</td>
 					<td>{product.hsn}</td>
 					<td>{product.qty}</td>
 					<td><span dangerouslySetInnerHTML={{ __html: that.getCurrencySymbole(that.state.newQuote.currency_type) }} /> {product.rate}/- per {product.unit}</td>
@@ -345,10 +346,11 @@ class Create extends Component {
 						<Table responsive id='productList'>
 							<thead>
 								<tr>
-									<th>#</th>
+									{/* <th>#</th> */}
 									<th>Name of product/Description/
 										particulars
 									</th>
+									<th>Description</th>
 									<th>HSN Code</th>
 									<th>Quantity</th>
 									<th>Rate With unit</th>
@@ -359,7 +361,6 @@ class Create extends Component {
 							</thead>
 							<tbody>
 								<tr>
-									<td></td>
 									<td>
 										<select className='form-control' id='product' ref="name" onChange={this.handleProductChange} defaultValue='0'>
 											<option value='0' disabled>--Select Product--</option>
@@ -369,7 +370,10 @@ class Create extends Component {
 												})
 											}
 										</select>
-										<label ref="description"></label>
+										{/* <label ref="description"></label> */}
+									</td>
+									<td>
+										<textarea cols='70' type='input' className='form-control' ref="description" />
 									</td>
 									<td>
 										<input type='input' className='form-control' ref="hsnCode" />

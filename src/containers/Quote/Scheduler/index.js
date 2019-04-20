@@ -6,6 +6,8 @@ import { StandardModal } from '../../../components/Modals'
 
 import Dropdown from '../../../components/Dropdown'
 import Input from '../../../components/Input'
+import { getDateTimePickerDate } from '../../helper'
+
 import { getById } from '../../../core/api/company'
 import { setReminder, getScheduleDetails } from '../../../core/api/schedule'
 
@@ -46,10 +48,12 @@ class Scheduler extends Component {
 
         if (this.props.scheduleId) {
             getScheduleDetails(this.props.scheduleId).then((data) => {
+                document.getElementById('schedule_day').value = getDateTimePickerDate(data.schedule[0].next_reminder_date);
+
                 self.setState(prevState => {
                     return {
                         newSchedule: {
-                            ...prevState.newSchedule, ['schedule_day']: data.schedule[0].Frequency, ['schedule_time']: data.schedule[0].Time,
+                            ...prevState.newSchedule, ['schedule_day']: getDateTimePickerDate(data.schedule[0].next_reminder_date), ['schedule_time']: data.schedule[0].Frequency,
                             ['cc']: data.schedule[0].cc_address, ['bcc']: data.schedule[0].bcc_address
                         }
                     }
@@ -80,7 +84,7 @@ class Scheduler extends Component {
                     ...prevState.newSchedule, [name]: value
                 }
             }
-        }, () => {}
+        }, () => { }
         )
     }
 
@@ -106,10 +110,13 @@ class Scheduler extends Component {
                             <Input label='BCC:' handleError={() => { }} isRequired={true} onBlur={() => { }} onChange={this.handleInput} value={this.state.newSchedule.bcc} name='bcc' id='bcc' type='input' />
                         </Col>
                         <Col xs={8} md={4}>
-                            <Dropdown
+                            <Input label='First Schedule Date:' handleError={() => { }} isRequired={true} onBlur={() => { }} onChange={this.handleInput} value={this.state.newSchedule.schedule_day} name='schedule_day' id='schedule_day' type='date' />
+
+                            {/* <Form.Control type="date" /> */}
+                            {/* <Dropdown
                                 id='schedule_day'
                                 name='schedule_day'
-                                label='Every'
+                                label='First Date'
                                 value={this.state.newSchedule.schedule_day}
                                 onChange={this.handleInput}
                                 placeholder='--Select Schedule--'
@@ -122,42 +129,25 @@ class Scheduler extends Component {
                                 { text: 'Satrurday', value: 7 },
                                 { text: 'Sunday', value: 7 }
                                 ]}
-                            />
+                            /> */}
                         </Col>
                         <Col xs={8} md={4}>
                             <Dropdown
                                 id='schedule_time'
                                 name='schedule_time'
-                                label='Set Scheduler Time:'
+                                label='Set Interval Day:'
                                 value={this.state.newSchedule.schedule_time}
                                 defaultValue={this.state.newSchedule.schedule_day}
                                 onChange={this.handleInput}
-                                placeholder='--Select Time--'
+                                placeholder='--Select Inderval--'
                                 options={[
-                                    { text: '1 AM', value: 1 },
-                                    { text: '2 AM', value: 2 },
-                                    { text: '3 AM', value: 3 },
-                                    { text: '4 AM', value: 4 },
-                                    { text: '5 AM', value: 5 },
-                                    { text: '6 AM', value: 6 },
-                                    { text: '7 AM', value: 7 },
-                                    { text: '8 AM', value: 8 },
-                                    { text: '9 AM', value: 9 },
-                                    { text: '10 AM', value: 10 },
-                                    { text: '11 AM', value: 11 },
-                                    { text: '12 AM', value: 12 },
-                                    { text: '1 PM', value: 13 },
-                                    { text: '2 PM', value: 14 },
-                                    { text: '3 PM', value: 15 },
-                                    { text: '4 PM', value: 16 },
-                                    { text: '5 PM', value: 17 },
-                                    { text: '6 PM', value: 18 },
-                                    { text: '7 PM', value: 19 },
-                                    { text: '8 PM', value: 20 },
-                                    { text: '9 PM', value: 21 },
-                                    { text: '10 PM', value: 22 },
-                                    { text: '11 PM', value: 23 },
-                                    { text: '12 PM', value: 24 }]}
+                                    { text: '1', value: 1 },
+                                    { text: '2', value: 2 },
+                                    { text: '3', value: 3 },
+                                    { text: '4', value: 4 },
+                                    { text: '5', value: 5 },
+                                    { text: '6', value: 6 },
+                                    { text: '7', value: 7 }]}
                             />
                         </Col>
                     </Row>
