@@ -21,6 +21,7 @@ import { sendEmail } from '../../../core/api/email'
 import { getById } from '../../../core/api/company'
 import { quoteContactDetail } from '../../../core/api/customerContact'
 import { taskDone } from '../../../core/api/schedule'
+import { getEmailBody } from '../../../core/api/taskkEmail'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -42,7 +43,8 @@ class Home extends Component {
 			scheduleId: '',
 			showCloseCase: false,
 			showDispatchSummary: false,
-			isDiscard: false
+			isDiscard: false,
+			showEmail: false
 		}
 
 		this.showEmail = this.showEmail.bind(this);
@@ -53,6 +55,7 @@ class Home extends Component {
 		this.handleInput = this.handleInput.bind(this);
 		this.doneTask = this.doneTask.bind(this);
 		this.showDispatchSummary = this.showDispatchSummary.bind(this);
+		this.showEmailBody = this.showEmailBody.bind(this);
 	}
 
 	componentDidMount() {
@@ -78,7 +81,7 @@ class Home extends Component {
 	}
 
 	lgClose() {
-		this.setState({ showEditor: false, showCloseCase: false, showDispatchSummary: false })
+		this.setState({ showEditor: false, showEmail: false, showCloseCase: false, showDispatchSummary: false })
 	}
 
 	schedulerClose() {
@@ -98,6 +101,12 @@ class Home extends Component {
 		quoteContactDetail(this.props.details.quoteDetails.contact_person_id).then((result) => {
 			this.setState({ constactPerson: result, showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId })
 		})
+	}
+
+	showEmailBody(task_id, nextId, userActivityId) {
+		getEmailBody(task_id).then((data) => {
+			this.setState({ emailBody: data.body.body, to: data.body.to_address, cc: data.body.cc_address, companyEmailId: data.body.from_address, bcc: data.body.bcc_address, subject: data.body.subject, showEditor: true, acivityTaskId: task_id, nextActivityTaskId: nextId, userActivityId: userActivityId })
+		});
 	}
 
 	closeCase() {
@@ -188,6 +197,7 @@ class Home extends Component {
 		const isAdmin = getAdmin(), userName = getUserName(), cname = getCompanyName(), clogo = getCompanyLogo();
 		const { quoteDetails, tasks, products } = this.props.details;
 
+		console.log("this.state.showEmail..............", this.state.emailBody);
 		if (!quoteDetails) {
 			return (<div>data is loading...</div>)
 		}
@@ -222,23 +232,23 @@ class Home extends Component {
 									<div className={`${this.showStepCircle(task.startDate, task.endDate)}`}>
 										<label className='text'>{task.text}</label>
 									</div>
-								<div>
-									{
-										task.taskId === 1 && <Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-											onClick={(e) => this.showEmail(task.id, tasks[index + 1].id, task.userActivityId)}
-										>
-											Send Email
+									<div>
+										{
+											task.taskId === 1 && <Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+												onClick={(e) => this.showEmail(task.id, tasks[index + 1].id, task.userActivityId)}
+											>
+												Send Email
 																</Button>
-									}
+										}
 
-									{
-										task.taskId === 1 && <Button variant="outline-primary" type="button"
-											onClick={(e) => this.showEmail(task.id, tasks[index + 1].id, task.userActivityId)}
-										>
-											View Email
+										{
+											task.taskId === 1 && <Button variant="outline-primary" type="button"
+												onClick={(e) => this.showEmailBody(task.id, tasks[index + 1].id, task.userActivityId)}
+											>
+												View Email
 																</Button>
-									}
-							</div>
+										}
+									</div>
 									{
 										task.taskId === 2 && <div>
 											{
@@ -340,7 +350,11 @@ class Home extends Component {
 						<hr />
 
 						{/* <Main lgClose={this.lgClose} show={this.state.showEditor} handleSubmit={(body) => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId, body)} subject={this.state.subject} to={this.state.to} companyEmailId={this.state.companyEmailId} isLoading={this.state.isLoading} text={getTemplate(1, products, quoteDetails)} quoteDetails={quoteDetails} products={products} /> */}
-						<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson) }} />
+						{this.state.emailBody ?
+							<div dangerouslySetInnerHTML={{ __html: this.state.emailBody }} />
+							:
+							<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson) }} />
+						}
 					</StandardModal>
 					: null
 				}

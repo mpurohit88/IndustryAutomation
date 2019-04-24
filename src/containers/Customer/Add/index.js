@@ -27,7 +27,8 @@ class Add extends Component {
 				contact_person: '',
 				telephone: '',
 				gstn: '',
-				email: ''
+				email: '',
+				isActive: true
 			},
 			contactPerson: []
 		}
@@ -47,9 +48,13 @@ class Add extends Component {
 			let newContactArr = [];
 			this.props.newCustomer.customerContact.forEach((contact) => {
 				newContactArr.push(contact);
-			})
+			});
 
-			this.setState({ newCustomer: this.props.newCustomer, contactPerson: newContactArr, isEdit: true });
+			let isActive = this.props.newCustomer.isActive === 1 ? true : false;
+			let newCustomerVar = { ...this.props.newCustomer };
+			newCustomerVar.isActive = isActive;
+
+			this.setState({ newCustomer: newCustomerVar, contactPerson: newContactArr, isEdit: true });
 		}
 	}
 
@@ -100,6 +105,10 @@ class Add extends Component {
 		let value = e.target.value;
 		let name = e.target.name;
 
+		if (e.target.name === 'isActive') {
+			value = e.target.checked
+		}
+
 		this.setState(prevState => {
 			return {
 				newCustomer: {
@@ -133,8 +142,10 @@ class Add extends Component {
 					contact_person: '',
 					telephone: '',
 					gstn: '',
-					email: ''
-				}
+					email: '',
+					isActive: true
+				},
+				contactPerson: []
 			});
 		} else {
 			this.setState({ showSucess: true })
@@ -182,6 +193,11 @@ class Add extends Component {
 						</Col>
 						<Col xs={4} md={6}>
 							<Input label='Email:' handleError={this.handleError} isRequired={true} onChange={this.handleInput} value={this.state.newCustomer.email} name='email' id='email' type='email' placeholder='Enter Email' />
+						</Col>
+						<Col xs={4} md={6}>
+							<Form.Group controlId="formBasicChecbox">
+								<Form.Check type="checkbox" label="Active" onChange={this.handleInput} checked={this.state.newCustomer.isActive} value={this.state.newCustomer.isActive} name='isActive' id='isActive' />
+							</Form.Group>
 						</Col>
 					</Row>
 					<Table responsive>

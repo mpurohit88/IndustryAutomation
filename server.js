@@ -23,6 +23,7 @@ app.use(require('morgan')('short'));
   const schedulerRouter = require('./server/routes/scheduler');
   const customerContactRouter = require('./server/routes/customerContact');
   const activityTaskHistRouter = require('./server/routes/activityTaskHist');
+  const taskEmailRouter = require('./server/routes/taskEmail');
   const authRouter = require('./server/routes/auth');
 
   app.use(bodyParser.json());
@@ -59,6 +60,7 @@ app.use(require('morgan')('short'));
   app.use('/api/scheduler', schedulerRouter);
   app.use('/api/customerContact', customerContactRouter);
   app.use('/api/activityTaskHist', activityTaskHistRouter);
+  app.use('/api/taskEmail', taskEmailRouter);
 })()
 
 app.get('/*', function root(req, res) {

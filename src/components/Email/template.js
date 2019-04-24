@@ -64,6 +64,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                     <tr><td style={{ lineHeight: '1' }}><br /></td></tr>
                     <tr>
                         <td style={{ lineHeight: '1.4', maxWidth: '200px' }}>
+                            {quoteDetails.companyName} <br />
                             Kind Atten: {constactPerson[0].name} <br />
                             {quoteDetails.address}
                         </td>

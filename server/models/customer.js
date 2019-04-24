@@ -8,7 +8,7 @@ const Customer = function (params) {
 	this.gstn = params.gstn;
 	this.email = params.email
 	this.createdBy = params.createdBy;
-	this.isActive = 1;
+	this.isActive = params.isActive ? 1 : 0;
 };
 
 Customer.prototype.add = function () {
@@ -73,28 +73,35 @@ Customer.prototype.allByUserId = function (userId) {
 
 			const isActive = 1;
 			let result = [];
-
-			connection.query('select id, name, address, telephone, gstn, email, dateTimeCreated from customer where isActive=? and createdBy=?', [isActive, userId], function (error, rows, fields) {
+			console.log("userId.................", userId);
+			connection.query('select id, name, address, telephone, gstn, email, dateTimeCreated, isActive from customer where isActive=? and createdBy=?', [isActive, userId], function (error, rows, fields) {
 
 				if (!error) {
 
-					rows.map((customer, index) => {
-						connection.query('select id, name, designation, department, email, mobileNo, dateTimeCreated from customer_contact where customerId=?', [customer.id], function (error, customerContact, fields) {
-							if (!error) {
-								let obj = customer;
-								obj.customerContact = customerContact;
+					if (rows.length > 0) {
+						console.log("Customer..........", rows);
+						rows.map((customer, index) => {
+							connection.query('select id, name, designation, department, email, mobileNo, dateTimeCreated from customer_contact where customerId=?', [customer.id], function (error, customerContact, fields) {
+								if (!error) {
+									let obj = customer;
+									obj.customerContact = customerContact;
+									console.log("Customer contact Index ###########..........", index);
 
-								result.push(obj);
-								if (index === rows.length - 1) {
-									resolve(result);
+									console.log("Customer contact..........", customerContact);
+
+									result.push(obj);
+									if (index === rows.length - 1) {
+										resolve(result);
+									}
+								} else {
+									console.log("Error...", error);
+									reject(error);
 								}
-							} else {
-								console.log("Error...", error);
-								reject(error);
-							}
+							});
 						});
-					});
-
+					} else {
+						resolve(rows);
+					}
 					// resolve(rows);
 				} else {
 					console.log("Error...", error);
@@ -118,7 +125,7 @@ Customer.prototype.all = function () {
 			const isActive = 1;
 			let result = [];
 
-			connection.query('select id, name, address, telephone, gstn, email, dateTimeCreated from customer where isActive=?', [isActive], function (error, rows, fields) {
+			connection.query('select id, name, address, telephone, gstn, email, dateTimeCreated, isActive from customer where isActive=?', [isActive], function (error, rows, fields) {
 
 				if (!error) {
 

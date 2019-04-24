@@ -88,23 +88,23 @@ class Create extends Component {
 		if (this.refs.qty.value && parseInt(this.refs.qty.value) > 0) {
 
 			let id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
-			let isExists = false;
+			// let isExists = false;
 
 			if (this.refs.name.value === '0') {
 				alert('Please select product.');
 				return false;
 			}
 
-			this.state.products.map((product) => {
-				if (product.product_id === this.refs.name.value) {
-					isExists = true;
-				}
-			});
+			// this.state.products.map((product) => {
+			// 	if (product.product_id === this.refs.name.value) {
+			// 		isExists = true;
+			// 	}
+			// });
 
-			if (isExists) {
-				alert('Product already added.');
-				return false;
-			}
+			// if (isExists) {
+			// 	alert('Product already added.');
+			// 	return false;
+			// }
 
 			this.refs.name[this.refs.name.selectedIndex].text
 
