@@ -26,7 +26,9 @@ class Create extends Component {
 				party_name: '',
 				address: '',
 				phoneNo: '',
-				mobileNo: ''
+				mobileNo: '',
+				contact_person: '',
+				currency_type: ''
 			},
 			listOfProduct: [],
 			products: [],
@@ -43,6 +45,29 @@ class Create extends Component {
 		this.handleInput = this.handleInput.bind(this);
 		this.handleProductChange = this.handleProductChange.bind(this);
 		this.resetSuccess = this.resetSuccess.bind(this);
+	}
+
+	componentWillMount() {
+		if (this.props.newQuote) {
+			// let isActive = this.props.newProduct.isActive === 1 ? true : false;
+			let newQuoteVar = {};
+			// newProductVar.isActive = isActive;
+			newQuoteVar.id = this.props.newQuote.id;
+			newQuoteVar.party_name = this.props.newQuote.companyId;
+			newQuoteVar.address = this.props.newQuote.address;
+			newQuoteVar.phoneNo = this.props.newQuote.phoneNo;
+			newQuoteVar.mobileNo = this.props.newQuote.mobileNo;
+			newQuoteVar.currency_type = this.props.newQuote.currency_type;
+			newQuoteVar.contact_person = this.props.newQuote.contact_person_id;
+
+			let productsVar = [];
+			this.props.products.forEach((product) => {
+				productsVar.push(product);
+			});
+
+			this.handleInput({ target: { value: this.props.newQuote.contact_person_id, name: 'party_name' } })
+			this.setState({ newQuote: newQuoteVar, products: productsVar, isEdit: true });
+		}
 	}
 
 	handleFirmChange(e) {
@@ -112,11 +137,11 @@ class Create extends Component {
 				id: id,
 				name: this.refs.name[this.refs.name.selectedIndex].text,
 				product_id: this.refs.name.value,
-				hsn: this.refs.hsnCode.value,
+				hsnCode: this.refs.hsnCode.value,
 				description: this.refs.description.value,
-				qty: this.refs.qty.value,
+				quantity: this.refs.qty.value,
 				rate: this.refs.rate.value,
-				gst: this.refs.gst.value,
+				gstn: this.refs.gst.value,
 				unit: document.getElementById('unit').innerText,
 				imgName: this.state.imgSrc
 			}
@@ -198,7 +223,13 @@ class Create extends Component {
 			alert('Please select product')
 		}
 
+		if (isSave && this.state.newQuote.currency_type === '') {
+			isSave = false;
+			alert('Please select currency type')
+		}
+
 		if (isSave) {
+			document.getElementById('save_popup').disabled = true;
 			event.preventDefault();
 			this.setState({ isLoading: true });
 
@@ -233,7 +264,9 @@ class Create extends Component {
 				mobileNo: ''
 			},
 			products: []
-		})
+		});
+
+		document.getElementById('save_popup').disabled = false;
 
 		// this.props.lgClose(false);
 		// this.props.handleSuccess(true, response);
@@ -284,10 +317,10 @@ class Create extends Component {
 					{/* <td>{index + 1}</td> */}
 					<td>{product.name}</td>
 					<td>{product.description}</td>
-					<td>{product.hsn}</td>
-					<td>{product.qty}</td>
+					<td>{product.hsnCode}</td>
+					<td>{product.quantity}</td>
 					<td><span dangerouslySetInnerHTML={{ __html: that.getCurrencySymbole(that.state.newQuote.currency_type) }} /> {product.rate}/- per {product.unit}</td>
-					<td>{product.gst}</td>
+					<td>{product.gstn}</td>
 					<td>{that.state.imgSrc && <Zoom src={that.state.imgSrc} />
 					}</td>
 					<td className='link'><a id='remove_quote' href='#' onClick={() => that.handleRowDel(product).bind(this)}>Remove</a></td>

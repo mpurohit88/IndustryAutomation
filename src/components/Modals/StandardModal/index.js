@@ -56,12 +56,12 @@ class StandardModal extends Component {
                 {children}
               </Modal.Body>
               <Modal.Footer>
-              <Button variant="primary" type="button"
+              <Button variant="primary" type="button" id="save_popup"
                 onClick={(e) => this.props.handleSubmit(e)}
                 >
                 {this.props.btnText}
               </Button>
-              <Button variant="secondary" type="button" 
+              <Button variant="secondary" type="button"
                 style={{
                   marginLeft: 30
                 }}

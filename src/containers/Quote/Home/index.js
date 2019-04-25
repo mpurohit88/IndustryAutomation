@@ -2,6 +2,8 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
 
+import Create from '../Create/index';
+
 import { Badge } from '../../../components/Badge'
 import { getStatus, getVariant } from '../helper'
 import { appConfig } from 'configs/config-main'
@@ -44,7 +46,8 @@ class Home extends Component {
 			showCloseCase: false,
 			showDispatchSummary: false,
 			isDiscard: false,
-			showEmail: false
+			showEmail: false,
+			CreateQuoteShow: false
 		}
 
 		this.showEmail = this.showEmail.bind(this);
@@ -56,6 +59,7 @@ class Home extends Component {
 		this.doneTask = this.doneTask.bind(this);
 		this.showDispatchSummary = this.showDispatchSummary.bind(this);
 		this.showEmailBody = this.showEmailBody.bind(this);
+		this.handleQuoteEditClick = this.handleQuoteEditClick.bind(this);
 	}
 
 	componentDidMount() {
@@ -68,6 +72,8 @@ class Home extends Component {
 			});
 		});
 	}
+
+	handleQuoteEditClick = (flag) => this.setState({ CreateQuoteShow: flag });
 
 	doneTask(taskId, nextTaskid, userActivityId, scheduleId, quoteId, status) {
 		this.props.taskDone(taskId, nextTaskid, userActivityId, scheduleId, quoteId, status);
@@ -207,8 +213,10 @@ class Home extends Component {
 				<AppBar isAdmin={isAdmin} name={userName} cname={cname} clogo={clogo}>{appConfig.name}</AppBar>
 				<div className={styles}>
 					<div className='flex-center head'>
-						<div>
-							<strong>Quote No.: </strong>{quoteDetails.id} | <strong>Firm Name:</strong> {quoteDetails.companyName} | <strong>Created By:</strong> {quoteDetails.userName} | <strong>Created Date:</strong> {getISODateTime(quoteDetails.dateTimeCreated)}
+						<div className='imgEdit'>
+							<img height='17' src='/img/userEdit.png' />
+							<a href='#' style={{ color: 'white' }} onClick={() => this.handleQuoteEditClick(true)}><strong>Quote No.: </strong>{quoteDetails.id}</a>
+							&nbsp;|&nbsp;<strong>Firm Name:</strong> &nbsp;{quoteDetails.companyName} |&nbsp;<strong>Created By:</strong> &nbsp;{quoteDetails.userName} |&nbsp;<strong>Created Date:</strong> &nbsp;{getISODateTime(quoteDetails.dateTimeCreated)}
 						</div>
 
 						<div>
@@ -367,6 +375,11 @@ class Home extends Component {
 				}
 				{
 					this.state.showDispatchSummary ? <DispatchSummary scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showDispatchSummary} quoteDetails={quoteDetails} products={products} /> : null
+				}
+				{
+					this.state.CreateQuoteShow ? <Create heading='Quote Edit' show={this.state.CreateQuoteShow} newQuote={quoteDetails} products={products} lgClose={() => this.handleQuoteEditClick(false)} handleModelClick={this.handleQuoteEditClick} />
+						:
+						null
 				}
 			</Fragment>
 		)

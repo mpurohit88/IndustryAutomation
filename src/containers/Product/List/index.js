@@ -55,7 +55,7 @@ class List extends Component {
 							productList && productList.map((product, index) => {
 								return <tr key={index}>
 									{/* <td>{product.id}</td> */}
-									<td className='imgEdit'>
+									<td className='imgEdit' onClick={() => this.handleProductRegClick(true, product)} >
 										<img height='17' src='/img/userEdit.png' />
 										<a href='#' onClick={() => this.handleProductRegClick(true, product)}>{product.name}</a>
 									</td>

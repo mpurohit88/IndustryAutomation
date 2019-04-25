@@ -73,21 +73,16 @@ Customer.prototype.allByUserId = function (userId) {
 
 			const isActive = 1;
 			let result = [];
-			console.log("userId.................", userId);
 			connection.query('select id, name, address, telephone, gstn, email, dateTimeCreated, isActive from customer where isActive=? and createdBy=?', [isActive, userId], function (error, rows, fields) {
 
 				if (!error) {
 
 					if (rows.length > 0) {
-						console.log("Customer..........", rows);
 						rows.map((customer, index) => {
 							connection.query('select id, name, designation, department, email, mobileNo, dateTimeCreated from customer_contact where customerId=?', [customer.id], function (error, customerContact, fields) {
 								if (!error) {
 									let obj = customer;
 									obj.customerContact = customerContact;
-									console.log("Customer contact Index ###########..........", index);
-
-									console.log("Customer contact..........", customerContact);
 
 									result.push(obj);
 									if (index === rows.length - 1) {
