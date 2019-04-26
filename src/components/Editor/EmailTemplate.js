@@ -200,7 +200,7 @@ class Main extends Component {
 							<Input label='To:' onChange={this.handleInput} value={this.state.to} name='to' id='to' type='input' />
 						</Col>
 						<Col xs={12} md={12}>
-							<Input label='Suject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
+							<Input label='Subject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
 						</Col>
 					</Row>
 					<Editor

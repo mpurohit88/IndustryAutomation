@@ -352,7 +352,7 @@ class Home extends Component {
 								<Input label='BCC:' onChange={this.handleInput} value={this.state.bcc} name='bcc' id='bcc' type='input' />
 							</Col>
 							<Col xs={12} md={12}>
-								<Input label='Suject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
+								<Input label='Subject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
 							</Col>
 						</Row>
 						<hr />

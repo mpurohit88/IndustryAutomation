@@ -34,7 +34,8 @@ class Create extends Component {
 			products: [],
 			contactList: [],
 			currencyList: [{ text: 'Rupee', value: '1' }, { text: 'Dollor', value: '2' }, { text: 'Euro', value: '3' }, { text: 'Yen', value: '4' }],
-			imgSrc: undefined
+			imgSrc: undefined,
+			isEdit: false
 		}
 
 		this.handleAddEvent = this.handleAddEvent.bind(this);
@@ -49,6 +50,7 @@ class Create extends Component {
 
 	componentWillMount() {
 		if (this.props.newQuote) {
+			const self = this;
 			// let isActive = this.props.newProduct.isActive === 1 ? true : false;
 			let newQuoteVar = {};
 			// newProductVar.isActive = isActive;
@@ -65,8 +67,10 @@ class Create extends Component {
 				productsVar.push(product);
 			});
 
-			this.handleInput({ target: { value: this.props.newQuote.contact_person_id, name: 'party_name' } })
-			this.setState({ newQuote: newQuoteVar, products: productsVar, isEdit: true });
+			this.setState({ newQuote: newQuoteVar, products: productsVar, isEdit: true }, () => {
+				self.handleInput({ target: { value: newQuoteVar.party_name, name: 'party_name' } });
+				self.handleInput({ target: { value: newQuoteVar.contact_person, name: 'contact_person' } });
+			});
 		}
 	}
 
@@ -170,18 +174,18 @@ class Create extends Component {
 		let name = e.target.name;
 
 		if (name === 'party_name') {
-			fetchFirmContactList(e.target.value).then((contactList) => {
-				this.setState({ contactList })
-			});
+			fetchFirmContactList(value).then((contactList) => {
+				this.setState({ contactList });
 
-			this.props.partyList.map((data) => {
-				if (data.id.toString() === value) {
-					self.setState(prevState => {
-						return {
-							newQuote: { ...prevState.newQuote, ['address']: data.address, ['phoneNo']: data.telephone, [name]: value }
-						}
-					});
-				}
+				this.props.partyList.map((data) => {
+					if (data.id.toString() === value) {
+						self.setState(prevState => {
+							return {
+								newQuote: { ...prevState.newQuote, ['address']: data.address, ['phoneNo']: data.telephone, [name]: value }
+							}
+						});
+					}
+				});
 			});
 		} else if (name === 'contact_person') {
 			this.state.contactList.map((data) => {
@@ -254,17 +258,22 @@ class Create extends Component {
 	}
 
 	handleReset() {
-		this.setState({
-			isLoading: false,
-			showSucess: true,
-			newQuote: {
-				party_name: '',
-				address: '',
-				phoneNo: '',
-				mobileNo: ''
-			},
-			products: []
-		});
+		if (!this.state.isEdit) {
+
+			this.setState({
+				isLoading: false,
+				showSucess: true,
+				newQuote: {
+					party_name: '',
+					address: '',
+					phoneNo: '',
+					mobileNo: ''
+				},
+				products: []
+			});
+		} else {
+			this.setState({ showSucess: true, isLoading: false })
+		}
 
 		document.getElementById('save_popup').disabled = false;
 
@@ -331,7 +340,8 @@ class Create extends Component {
 			<Fragment>
 				<StandardModal btnText='Save' heading='Create Quote' isLoading={this.state.isLoading} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
 					<Form>
-						{this.state.showSucess ? <Success>Quote Created Successfully!</Success> : null}
+						{this.state.showSucess ? <Success>Quote {this.state.isEdit ? 'Updated' : 'Created'} Successfully!</Success> : null}
+
 						<Row className="show-grid">
 							<Col xs={8} md={6}>
 								<Dropdown
