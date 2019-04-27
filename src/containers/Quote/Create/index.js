@@ -5,7 +5,7 @@ import { Form, Row, Col, Table } from 'react-bootstrap'
 import { StandardModal } from '../../../components/Modals'
 import Input from '../../../components/Input'
 import Dropdown from '../../../components/Dropdown'
-import { Success } from '../../../components/Alerts'
+import { Success, Info } from '../../../components/Alerts'
 
 import { createQuote } from '../../../core/api/quote'
 import { fetchFirmContactList } from '../../../core/api/customer'
@@ -338,9 +338,10 @@ class Create extends Component {
 
 		return (
 			<Fragment>
-				<StandardModal btnText='Save' heading='Create Quote' isLoading={this.state.isLoading} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
+				<StandardModal btnText='Save' heading='Create Quote' isLoading={this.state.isLoading} handleSubmit={this.handleSubmit} isSubmitDisabled={this.props.isNonEditable ? true : false} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
 					<Form>
 						{this.state.showSucess ? <Success>Quote {this.state.isEdit ? 'Updated' : 'Created'} Successfully!</Success> : null}
+						{this.props.isNonEditable ? <Info>As Quote Email is already sent, Quote Editing is not allowed.</Info> : null}
 
 						<Row className="show-grid">
 							<Col xs={8} md={6}>

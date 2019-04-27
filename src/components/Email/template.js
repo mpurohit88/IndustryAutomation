@@ -65,7 +65,6 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                     <tr>
                         <td style={{ lineHeight: '1.4', maxWidth: '200px' }}>
                             <strong>{quoteDetails.companyName}</strong> <br />
-
                             {quoteDetails.address}
                         </td>
                         <td style={{ textAlign: 'right', lineHeight: '1.4' }}>

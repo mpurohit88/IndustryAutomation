@@ -73,7 +73,7 @@ class Home extends Component {
 		});
 	}
 
-	handleQuoteEditClick = (flag) => this.setState({ CreateQuoteShow: flag });
+	handleQuoteEditClick = (flag, isNonEditable) => this.setState({ CreateQuoteShow: flag, isNonEditable: isNonEditable });
 
 	doneTask(taskId, nextTaskid, userActivityId, scheduleId, quoteId, status) {
 		this.props.taskDone(taskId, nextTaskid, userActivityId, scheduleId, quoteId, status);
@@ -203,7 +203,6 @@ class Home extends Component {
 		const isAdmin = getAdmin(), userName = getUserName(), cname = getCompanyName(), clogo = getCompanyLogo();
 		const { quoteDetails, tasks, products } = this.props.details;
 
-		console.log("this.state.showEmail..............", this.state.emailBody);
 		if (!quoteDetails) {
 			return (<div>data is loading...</div>)
 		}
@@ -215,7 +214,7 @@ class Home extends Component {
 					<div className='flex-center head'>
 						<div className='imgEdit'>
 							<img height='17' src='/img/userEdit.png' />
-							<a href='#' style={{ color: 'white' }} onClick={() => this.handleQuoteEditClick(true)}><strong>Quote No.: </strong>{quoteDetails.id}</a>
+							<a href='#' style={{ color: 'white' }} onClick={() => this.handleQuoteEditClick(true, quoteDetails.status > 2)}><strong>Quote No.: </strong>{quoteDetails.id}</a>
 							&nbsp;|&nbsp;<strong>Firm Name:</strong> &nbsp;{quoteDetails.companyName} |&nbsp;<strong>Created By:</strong> &nbsp;{quoteDetails.userName} |&nbsp;<strong>Created Date:</strong> &nbsp;{getISODateTime(quoteDetails.dateTimeCreated)}
 						</div>
 
@@ -340,16 +339,16 @@ class Home extends Component {
 					<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.state.isLoading} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
 						<Row className="show-grid">
 							<Col xs={4} md={6}>
-								<Input label='From:' onChange={this.handleInput} value={this.state.companyEmailId} name='companyEmailId' id='companyEmailId' type='input' />
+								<Input hint='Please Use Comma(,) or Semicolon(;) to send Multiple Emails' label='From:' onChange={this.handleInput} value={this.state.companyEmailId} name='companyEmailId' id='companyEmailId' type='email' />
 							</Col>
 							<Col xs={4} md={6}>
-								<Input label='To:' onChange={this.handleInput} value={this.state.to} name='to' id='to' type='input' />
+								<Input hint='Please Use Comma(,) or Semicolon(;) to send Multiple Emails' label='To:' onChange={this.handleInput} value={this.state.to} name='to' id='to' type='email' />
 							</Col>
 							<Col xs={4} md={6}>
-								<Input label='CC:' onChange={this.handleInput} value={this.state.cc} name='cc' id='cc' type='input' />
+								<Input hint='Please Use Comma(,) or Semicolon(;) to send Multiple Emails' label='CC:' onChange={this.handleInput} value={this.state.cc} name='cc' id='cc' type='email' />
 							</Col>
 							<Col xs={4} md={6}>
-								<Input label='BCC:' onChange={this.handleInput} value={this.state.bcc} name='bcc' id='bcc' type='input' />
+								<Input hint='Please Use Comma(,) or Semicolon(;) to send Multiple Emails' label='BCC:' onChange={this.handleInput} value={this.state.bcc} name='bcc' id='bcc' type='email' />
 							</Col>
 							<Col xs={12} md={12}>
 								<Input label='Subject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
@@ -377,7 +376,7 @@ class Home extends Component {
 					this.state.showDispatchSummary ? <DispatchSummary scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showDispatchSummary} quoteDetails={quoteDetails} products={products} /> : null
 				}
 				{
-					this.state.CreateQuoteShow ? <Create heading='Quote Edit' show={this.state.CreateQuoteShow} newQuote={quoteDetails} products={products} lgClose={() => this.handleQuoteEditClick(false)} handleModelClick={this.handleQuoteEditClick} />
+					this.state.CreateQuoteShow ? <Create heading='Quote Edit' show={this.state.CreateQuoteShow} isNonEditable={this.state.isNonEditable} newQuote={quoteDetails} products={products} lgClose={() => this.handleQuoteEditClick(false)} handleModelClick={this.handleQuoteEditClick} />
 						:
 						null
 				}

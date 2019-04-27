@@ -56,8 +56,8 @@ class StandardModal extends Component {
                 {children}
               </Modal.Body>
               <Modal.Footer>
-              <Button variant="primary" type="button" id="save_popup"
-                onClick={(e) => this.props.handleSubmit(e)}
+              <Button variant={this.props.isSubmitDisabled ? "secondary" : "primary"} type="button" id="save_popup"
+                onClick={this.props.isSubmitDisabled ? () => {} : (e) => this.props.handleSubmit(e)}
                 >
                 {this.props.btnText}
               </Button>
