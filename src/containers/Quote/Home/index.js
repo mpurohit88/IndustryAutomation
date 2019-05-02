@@ -105,13 +105,25 @@ class Home extends Component {
 	showEmail(id, nextId, userActivityId) {
 
 		quoteContactDetail(this.props.details.quoteDetails.contact_person_id).then((result) => {
-			this.setState({ constactPerson: result, showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId })
+			this.setState({ constactPerson: result, showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId });
 		})
 	}
 
 	showEmailBody(task_id, nextId, userActivityId) {
 		getEmailBody(task_id).then((data) => {
-			this.setState({ emailBody: data.body.body, to: data.body.to_address, cc: data.body.cc_address, companyEmailId: data.body.from_address, bcc: data.body.bcc_address, subject: data.body.subject, showEditor: true, acivityTaskId: task_id, nextActivityTaskId: nextId, userActivityId: userActivityId })
+			this.setState({ emailBody: data.body.body, to: data.body.to_address, cc: data.body.cc_address, companyEmailId: data.body.from_address, bcc: data.body.bcc_address, subject: data.body.subject, showEditor: true, acivityTaskId: task_id, nextActivityTaskId: nextId, userActivityId: userActivityId },
+				() => {
+					document.getElementById("doPrint").addEventListener("click", function () {
+						var divContents = document.getElementById("printEmail").innerHTML;
+						var printWindow = window.open('', '', 'height=800,width=1200');
+						printWindow.document.write('<html><head><title>DIV Contents</title>');
+						printWindow.document.write('</head><body >');
+						printWindow.document.write(divContents);
+						printWindow.document.write('</body></html>');
+						printWindow.document.close();
+						printWindow.print();
+					});
+				})
 		});
 	}
 
@@ -130,7 +142,7 @@ class Home extends Component {
 
 			body = body.replace('<input type="text" id="refId" name="refId"/>', document.getElementById('refId').value)
 			body = body.replace('<input type="text" size="100" id="refSubject" name="refSubject" value="Ref. Your Email Enquiry Dated"/>', document.getElementById('refSubject').value)
-			body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="OTR Tubes %26 Flaps and &quot;O&quot; Rings available in all size"/>', document.getElementById('about-product').value)
+			body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="NOTE"/>', document.getElementById('about-product').value)
 			// body = body.replace('<textarea cols="40" rows="3" id="thanks" name="thanks"></textarea>', document.getElementById('thanks').value);
 
 			const post = document.createElement('p');
@@ -168,11 +180,15 @@ class Home extends Component {
 	}
 
 	isStepActive(status, startDate, endDate) {
-		if (startDate !== null && endDate === null) {
-			return true;
-		}
+		if (Number(status) > 99) {
+			return false;
+		} else {
+			if (startDate !== null && endDate === null) {
+				return true;
+			}
 
-		return false;
+			return false;
+		}
 	}
 
 	isActiveCloseBtn(tasks) {
@@ -353,6 +369,13 @@ class Home extends Component {
 							<Col xs={12} md={12}>
 								<Input label='Subject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
 							</Col>
+							{this.state.emailBody ?
+								<Col xs={12} md={12}>
+									<Button variant={"primary"} type="button" id="doPrint" className="float-right"
+									>
+										Print Quote
+								</Button>
+								</Col> : null}
 						</Row>
 						<hr />
 

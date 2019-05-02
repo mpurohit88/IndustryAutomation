@@ -6,3 +6,10 @@
 :global(body) {
 
 }
+
+.btn-fixed {
+  position: fixed;
+  z-index: 100;
+  right: 60px;
+  top: 93px;
+}

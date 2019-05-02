@@ -2,6 +2,14 @@ export const getISODateTime = function (dateTime) {
 	return new Date(dateTime).toLocaleString();
 }
 
+export const getDateTimePickerDateTime = function (date) {
+	const now = new Date(date);
+	const day = ("0" + now.getDate()).slice(-2);
+	const month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+	return now.getFullYear() + "-" + (month) + "-" + (day) + "T" + now.toTimeString().split(" ")[0];
+}
+
 export const getDateTimePickerDate = function (date) {
 	const now = new Date(date);
 	const day = ("0" + now.getDate()).slice(-2);
@@ -9,6 +17,13 @@ export const getDateTimePickerDate = function (date) {
 
 	return now.getFullYear() + "-" + (month) + "-" + (day);
 }
+
+export const getDateTimePickerTime = function (date) {
+	const now = new Date(date);
+
+	return now.toTimeString().split(" ")[0];
+}
+
 
 export const getAdmin = function () {
 	const user = JSON.parse(localStorage.getItem('user'));

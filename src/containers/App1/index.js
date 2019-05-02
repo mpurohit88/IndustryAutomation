@@ -5,9 +5,11 @@ import Home from 'containers/Home'
 import { appConfig } from 'configs/config-main'
 import { getAdmin, getUserName, getCompanyName, getCompanyLogo } from '../../configs/user'
 
+import Button from '../../components/Button'
+
 const MyContext = React.createContext(false);
 
-// import 'bootstrap/scss/bootstrap.scss';
+// import 'bootstrap/scss/boots trap.scss';
 
 // global styles for entire app
 import './styles.scss'
@@ -18,6 +20,7 @@ class App1 extends Component {
 
     return (
       <div>
+        <Button className="btn-fixed" variant="info" onClick={() => { window.location.replace('/') }} >Refresh Data</Button>
         <AppBar isAdmin={isAdmin} name={userName} cname={cname} clogo={clogo}>{appConfig.name}</AppBar>
         <Home />
       </div>

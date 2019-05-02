@@ -33,7 +33,7 @@ class Create extends Component {
 			listOfProduct: [],
 			products: [],
 			contactList: [],
-			currencyList: [{ text: 'Rupee', value: '1' }, { text: 'Dollor', value: '2' }, { text: 'Euro', value: '3' }, { text: 'Yen', value: '4' }],
+			currencyList: [{ text: 'Rupee', value: '1' }, { text: 'Dollar', value: '2' }, { text: 'Euro', value: '3' }, { text: 'Yen', value: '4' }],
 			imgSrc: undefined,
 			isEdit: false
 		}
@@ -423,13 +423,13 @@ class Create extends Component {
 										<input type='input' className='form-control' ref="hsnCode" />
 									</td>
 									<td>
-										<input type='input' className='form-control' ref="qty" />
+										<input type='number' className='form-control' ref="qty" />
 									</td>
 									<td>
-										<input type='input' className='form-control' ref="rate" /> <span id='unit'></span>
+										<input type='number' className='form-control' ref="rate" /> <span id='unit'></span>
 									</td>
 									<td>
-										<input type='input' className='form-control' ref="gst" />
+										<input type='number' className='form-control' ref="gst" />
 									</td>
 									<td>
 										{/* {this.state.imgSrc && <Zoom src = {this.state.imgSrc} />} */}

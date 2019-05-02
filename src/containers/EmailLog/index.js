@@ -1,0 +1,1 @@
+export { default as EmailLogList } from './List'

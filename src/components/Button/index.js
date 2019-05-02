@@ -6,10 +6,10 @@ import { Button as STButton } from 'react-bootstrap'
 import { styles } from './styles.scss'
 
 const Button = (props) => {
-  const { color, children } = props
+  const { color, children, className } = props
   return (
     <Fragment>
-      <STButton id={props.id} className='margin' variant={props.variant} color={color} onClick={props.onClick} disabled={props.isDisabled || false}>
+      <STButton id={props.id} className={`margin ${className}`} variant={props.variant} color={color} onClick={props.onClick} disabled={props.isDisabled || false}>
         {children}
       </STButton>
     </Fragment>

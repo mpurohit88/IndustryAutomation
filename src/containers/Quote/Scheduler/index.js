@@ -6,7 +6,7 @@ import { StandardModal } from '../../../components/Modals'
 
 import Dropdown from '../../../components/Dropdown'
 import Input from '../../../components/Input'
-import { getDateTimePickerDate } from '../../helper'
+import { getDateTimePickerDate, getDateTimePickerTime, getDateTimePickerDateTime } from '../../helper'
 
 import { getById } from '../../../core/api/company'
 import { setReminder, getScheduleDetails } from '../../../core/api/schedule'
@@ -22,13 +22,16 @@ class Scheduler extends Component {
                 cc: '',
                 bcc: '',
                 schedule_day: '',
+                schedule_date: '',
                 schedule_time: '',
+                schedule_time1: '',
                 companyEmailId: ''
             },
             scheduleList: [{ name: "Every", id: "1" }]
         }
 
         this.handleInput = this.handleInput.bind(this);
+        this.handleDate = this.handleDate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.lgClose = this.lgClose.bind(this);
     }
@@ -48,12 +51,13 @@ class Scheduler extends Component {
 
         if (this.props.scheduleId) {
             getScheduleDetails(this.props.scheduleId).then((data) => {
-                document.getElementById('schedule_day').value = getDateTimePickerDate(data.schedule[0].next_reminder_date);
+                document.getElementById('schedule_date').value = getDateTimePickerDate(data.schedule[0].next_reminder_date);
+                document.getElementById('schedule_time1').value = getDateTimePickerTime(data.schedule[0].next_reminder_date);
 
                 self.setState(prevState => {
                     return {
                         newSchedule: {
-                            ...prevState.newSchedule, ['schedule_day']: getDateTimePickerDate(data.schedule[0].next_reminder_date), ['schedule_time']: data.schedule[0].Frequency,
+                            ...prevState.newSchedule, ['schedule_day']: getDateTimePickerDateTime(data.schedule[0].next_reminder_date), ['schedule_time']: data.schedule[0].Frequency,
                             ['cc']: data.schedule[0].cc_address, ['bcc']: data.schedule[0].bcc_address
                         }
                     }
@@ -74,9 +78,24 @@ class Scheduler extends Component {
         this.props.lgClose(false);
     }
 
+    handleDate() {
+        let dateTime = document.getElementById('schedule_date').value + "T" + document.getElementById('schedule_time1').value;
+        this.setState(prevState => {
+            return {
+                newSchedule: {
+                    ...prevState.newSchedule, ['schedule_day']: dateTime
+                }
+            }
+        }, () => { }
+        )
+    }
+
     handleInput(e) {
         let value = e.target.value;
         let name = e.target.name;
+
+        if (name === "schedule_date" && value !== '') {
+        }
 
         this.setState(prevState => {
             return {
@@ -98,19 +117,24 @@ class Scheduler extends Component {
                 <Form>
                     <Row className="show-grid">
                         <Col xs={8} md={6}>
-                            <Input label='From:' handleError={() => { }} isRequired={true} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.newSchedule.companyEmailId} name='companyEmailId' id='companyEmailId' placeholder='Enter Company EmailId' />
+                            <Input hint='Please Use Comma(,) or Semicolon(;) to send Multiple Emails' label='From:' handleError={() => { }} isRequired={true} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.newSchedule.companyEmailId} name='companyEmailId' id='companyEmailId' placeholder='Enter Company EmailId' />
                         </Col>
                         <Col xs={8} md={6}>
-                            <Input label='To:' handleError={() => { }} isRequired={true} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.newSchedule.to} name='to' id='to' placeholder='Enter To' />
+                            <Input hint='Please Use Comma(,) or Semicolon(;) to send Multiple Emails' label='To:' handleError={() => { }} isRequired={true} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.newSchedule.to} name='to' id='to' placeholder='Enter To' />
                         </Col>
                         <Col xs={8} md={6}>
-                            <Input label='CC:' handleError={() => { }} isRequired={true} onBlur={() => { }} onChange={this.handleInput} value={this.state.newSchedule.cc} name='cc' id='cc' type='input' />
+                            <Input label='CC:' handleError={() => { }} onBlur={() => { }} onChange={this.handleInput} value={this.state.newSchedule.cc} name='cc' id='cc' type='input' />
                         </Col>
                         <Col xs={8} md={6}>
-                            <Input label='BCC:' handleError={() => { }} isRequired={true} onBlur={() => { }} onChange={this.handleInput} value={this.state.newSchedule.bcc} name='bcc' id='bcc' type='input' />
+                            <Input label='BCC:' handleError={() => { }} onBlur={() => { }} onChange={this.handleInput} value={this.state.newSchedule.bcc} name='bcc' id='bcc' type='input' />
                         </Col>
                         <Col xs={8} md={4}>
-                            <Input label='First Schedule Date:' handleError={() => { }} isRequired={true} onBlur={() => { }} onChange={this.handleInput} value={this.state.newSchedule.schedule_day} name='schedule_day' id='schedule_day' type='date' />
+                            {/* <Input hint='ex: dd/mm/yyyy hh:mm AM/PM' label='First Schedule Date:' handleError={() => { }} isRequired={true} onBlur={() => { }} onChange={this.handleInput} value={this.state.newSchedule.schedule_day} name='schedule_day' id='schedule_day' type='datetime-local' /> */}
+                            <Input hint='ex: dd/mm/yyyy' label='First Schedule Date:' handleError={() => { }} onBlur={() => { }} onChange={this.handleDate} name='schedule_date' id='schedule_date' type='date' />
+
+                        </Col>
+                        <Col xs={8} md={4}>
+                            <Input hint='ex: hh:mm AM/PM' label='First Schedule Time:' handleError={() => { }} onBlur={() => { }} onChange={this.handleDate} name='schedule_time1' id='schedule_time1' type='time' />
 
                             {/* <Form.Control type="date" /> */}
                             {/* <Dropdown

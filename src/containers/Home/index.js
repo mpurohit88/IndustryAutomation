@@ -9,6 +9,7 @@ import { ProductList } from '../Product'
 import { CompanyList } from '../Company'
 import { CustomerList } from '../Customer'
 import { UserList } from '../User'
+import { EmailLogList } from '../EmailLog'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -19,7 +20,14 @@ class Home extends Component {
 
     this.state = {
       key: 'quote',
+      errorCount: 0
     };
+
+    this.setErrorCount = this.setErrorCount.bind(this);
+  }
+
+  setErrorCount(count) {
+    this.setState({ errorCount: count })
   }
 
   render() {
@@ -49,6 +57,11 @@ class Home extends Component {
           {
             isAdmin && <Tab eventKey="user" title="User">
               <UserList />
+            </Tab>
+          }
+          {
+            isAdmin && <Tab eventKey="email" title={"Email Error Log (" + this.state.errorCount + ")"}>
+              <EmailLogList setErrorCount={this.setErrorCount} />
             </Tab>
           }
         </Tabs>

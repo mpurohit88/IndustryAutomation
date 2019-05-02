@@ -46,13 +46,13 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
     }
 
     return <Email title="Quotation" headCSS={css} className={styles} className="quotation">
-        <Box width="100%" style={{ lineHeight: 2 }}>
+        <Box width="100%" style={{ lineHeight: 2 }} id="printEmail">
             <Item width="100%" style={{ textAlign: 'center' }}>
-                <Span style={{ textDecoration: 'underline', fontWeight: 'bold', fontSize: 20 + 'px' }}>QUOTATION</Span>
+                <center><Span style={{ textAlign: 'center', textDecoration: 'underline', fontWeight: 'bold', fontSize: 20 + 'px' }}>QUOTATION</Span></center>
                 <br /> <br />
             </Item>
             <Item>
-                <table width="100%">
+                <table width="100%" id="printEmail">
                     <tr width="100%">
                         <td>
                             Our Ref <input type='text' id='refId' name='refId' />
@@ -63,7 +63,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                     </tr>
                     <tr><td style={{ lineHeight: '1' }}><br /></td></tr>
                     <tr>
-                        <td style={{ lineHeight: '1.4', maxWidth: '200px' }}>
+                        <td style={{ lineHeight: '1.4', maxWidth: '200px', verticalAlign: 'top' }}>
                             <strong>{quoteDetails.companyName}</strong> <br />
                             {quoteDetails.address}
                         </td>
@@ -96,8 +96,8 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                         <td colSpan='2' className='child'>
                             <table width="100%" height="100%" cellPadding="0" cellSpacing="0" border="0" align="left" valign="top">
                                 <tr>
-                                    <th style={{ border: '1px solid black', padding: '10px' }}>Sr. No.</th>
-                                    <th style={{ border: '1px solid black', padding: '10px' }}>Particular</th>
+                                    <th style={{ border: '1px solid black', padding: '10px', width: '68px' }}>Sr. No.</th>
+                                    <th style={{ border: '1px solid black', padding: '10px', width: '444px' }}>Particular</th>
                                     {showImageColumn && <th style={{ border: '1px solid black', padding: '10px' }}>Image</th>}
                                     <th style={{ border: '1px solid black', padding: '10px' }}>HSN code</th>
                                     <th style={{ border: '1px solid black', padding: '10px' }}>Qty.</th>
@@ -132,7 +132,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson }) 
                     </tr>
                     <tr>
                         <td colSpan='2' style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 + 'px' }}>
-                            <input size='70' type='text' id='about-product' name='about-product' value='OTR Tubes %26 Flaps and "O" Rings available in all size' />
+                            <input size='70' type='text' id='about-product' name='about-product' value='NOTE' />
                         </td>
                     </tr>
                     <tr>
