@@ -44,3 +44,8 @@ export const getCompanyLogo = function () {
 	const user = JSON.parse(localStorage.getItem('user'));
 	return user ? user.logo : undefined;
 }
+
+export const getFullUserName = function () {
+	const user = JSON.parse(localStorage.getItem('user'));
+	return user ? user.userName : undefined;
+}

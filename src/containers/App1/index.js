@@ -3,7 +3,7 @@ import theme from 'configs/config-theme'
 import AppBar from 'components/AppBar'
 import Home from 'containers/Home'
 import { appConfig } from 'configs/config-main'
-import { getAdmin, getUserName, getCompanyName, getCompanyLogo } from '../../configs/user'
+import { getAdmin, getUserName, getCompanyName, getCompanyLogo, getFullUserName } from '../../configs/user'
 
 import Button from '../../components/Button'
 
@@ -16,12 +16,12 @@ import './styles.scss'
 
 class App1 extends Component {
   render() {
-    const isAdmin = getAdmin(), userName = getUserName(), cname = getCompanyName(), clogo = getCompanyLogo();
+    const isAdmin = getAdmin(), userName = getUserName(), cname = getCompanyName(), clogo = getCompanyLogo(), fullUserName = getFullUserName();
 
     return (
       <div>
         <Button className="btn-fixed" variant="info" onClick={() => { window.location.replace('/') }} >Refresh Data</Button>
-        <AppBar isAdmin={isAdmin} name={userName} cname={cname} clogo={clogo}>{appConfig.name}</AppBar>
+        <AppBar isAdmin={isAdmin} name={userName} cname={cname} clogo={clogo} userName={fullUserName}>{appConfig.name}</AppBar>
         <Home />
       </div>
     )

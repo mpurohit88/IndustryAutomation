@@ -8,7 +8,7 @@ import { Badge } from '../../../components/Badge'
 import { getStatus, getVariant } from '../helper'
 import { appConfig } from 'configs/config-main'
 import AppBar from 'components/AppBar'
-import { getAdmin, getUserName, getCompanyName, getCompanyLogo } from '../../../configs/user'
+import { getAdmin, getUserName, getCompanyName, getCompanyLogo, getFullUserName } from '../../../configs/user'
 import { getISODateTime } from '../../helper'
 import Button from '../../../components/Button'
 import getTemplate from '../../../components/Email'
@@ -47,7 +47,8 @@ class Home extends Component {
 			showDispatchSummary: false,
 			isDiscard: false,
 			showEmail: false,
-			CreateQuoteShow: false
+			CreateQuoteShow: false,
+			selectedFile: []
 		}
 
 		this.showEmail = this.showEmail.bind(this);
@@ -77,6 +78,12 @@ class Home extends Component {
 
 	doneTask(taskId, nextTaskid, userActivityId, scheduleId, quoteId, status) {
 		this.props.taskDone(taskId, nextTaskid, userActivityId, scheduleId, quoteId, status);
+	}
+
+	onChangeHandler = event => {
+		this.setState({
+			selectedFile: event.target.files,
+		})
 	}
 
 	handleInput(e) {
@@ -115,7 +122,7 @@ class Home extends Component {
 				() => {
 					document.getElementById("doPrint").addEventListener("click", function () {
 						var divContents = document.getElementById("printEmail").innerHTML;
-						var printWindow = window.open('', '', 'height=800,width=1200');
+						var printWindow = window.open('', '', 'height=800,width=1000');
 						printWindow.document.write('<html><head><title>DIV Contents</title>');
 						printWindow.document.write('</head><body >');
 						printWindow.document.write(divContents);
@@ -155,17 +162,30 @@ class Home extends Component {
 			const cardStack = document.getElementById('term-data');
 			cardStack.insertBefore(card, cardStack.firstChild);
 
-			body = body.replace('<textarea cols="100" rows="7" id="terms" name="terms"></textarea>', card.innerHTML);
+			body = body.replace('<textarea cols="108" rows="20" id="terms" name="terms"></textarea>', card.innerHTML);
 
 			this.props.details.products.map((e, index) => {
 				body = body.replace('src="/img/product/' + e.imgName + '"', 'src="cid:EmbeddedContent_' + index + '"');
 			});
 
 			self.setState({ isLoading: true });
-			this.props.sendEmailAction(body, this.state.companyEmailId, this.state.to || this.props.details.quoteDetails.email, this.state.cc || '', this.state.bcc || '', this.state.subject, id, nextId, userActivityId, () => {
-				self.lgClose();
-				self.setState({ isLoading: false });
-			}, this.props.details.quoteDetails.id);
+
+			let data = { body: body, from: this.state.companyEmailId, to: this.state.to || this.props.details.quoteDetails.email, cc: this.state.cc || '', bcc: this.state.bcc || '', subject: this.state.subject, taskId: id, nextTaskId: nextId, userActivityId: userActivityId, quoteId: this.props.details.quoteDetails.id };
+			const formData = new FormData();
+			formData.append('data', JSON.stringify(data));
+
+			for (var x = 0; x < this.state.selectedFile.length; x++) {
+				formData.append('avatar', this.state.selectedFile[x])
+			}
+
+			// formData.append('avatar', document.getElementById('attachments').files)
+
+			this.props.sendEmailAction({
+				formData: formData, cb: () => {
+					self.lgClose();
+					self.setState({ isLoading: false });
+				}
+			});
 		} else {
 			alert('Subject is required');
 		}
@@ -216,8 +236,13 @@ class Home extends Component {
 	}
 
 	render() {
-		const isAdmin = getAdmin(), userName = getUserName(), cname = getCompanyName(), clogo = getCompanyLogo();
+		const isAdmin = getAdmin(), userName = getUserName(), cname = getCompanyName(), clogo = getCompanyLogo(), fullUserName = getFullUserName();
 		const { quoteDetails, tasks, products } = this.props.details;
+		let files = [];
+
+		for (var x = 0; x < this.state.selectedFile.length; x++) {
+			files.push(this.state.selectedFile[x].name);
+		}
 
 		if (!quoteDetails) {
 			return (<div>data is loading...</div>)
@@ -225,13 +250,12 @@ class Home extends Component {
 
 		return (
 			<Fragment>
-				<AppBar isAdmin={isAdmin} name={userName} cname={cname} clogo={clogo}>{appConfig.name}</AppBar>
+				<AppBar isAdmin={isAdmin} name={userName} cname={cname} clogo={clogo} userName={fullUserName}>{appConfig.name}</AppBar>
 				<div className={styles}>
 					<div className='flex-center head'>
 						<div className='imgEdit'>
 							<img height='17' src='/img/userEdit.png' />
 							<a href='#' style={{ color: 'white' }} onClick={() => this.handleQuoteEditClick(true, quoteDetails.status > 2)}><strong>Quote No.: </strong>{quoteDetails.id}</a>
-							&nbsp;|&nbsp;<strong>Firm Name:</strong> &nbsp;{quoteDetails.companyName} |&nbsp;<strong>Created By:</strong> &nbsp;{quoteDetails.userName} |&nbsp;<strong>Created Date:</strong> &nbsp;{getISODateTime(quoteDetails.dateTimeCreated)}
 						</div>
 
 						<div>
@@ -244,7 +268,11 @@ class Home extends Component {
 							</Button> : null}
 						</div>
 					</div>
-
+					<div style={{ display: 'flex', padding: '15px', borderBottom: '2px solid #3c9aae', justifyContent: 'space-between' }}>
+						<div><strong>Firm Name:</strong> &nbsp;{quoteDetails.companyName}</div>
+						<div><strong>Created By:</strong> &nbsp;<span style={{ textTransform: 'capitalize' }}>{quoteDetails.userName}</span></div>
+						<div><strong>Created Date:</strong> &nbsp;{getISODateTime(quoteDetails.dateTimeCreated)}</div>
+					</div>
 					<div style={{ marginTop: 15 + 'px' }}>
 						{
 							tasks.map((task, index) => {
@@ -369,6 +397,16 @@ class Home extends Component {
 							<Col xs={12} md={12}>
 								<Input label='Subject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
 							</Col>
+							<Col xs={12} md={12}>
+								Attachments: <input type="file" id="attachments" class="form-control" multiple onChange={this.onChangeHandler} />
+								{/* <Input type='file' label='Browse Image:' accept="image/*" onChange={this.handleInput} value={this.state.attachments} name='attachments' id='attachments' /> */}
+
+								{
+									files.map((file) => {
+										return <strong>&nbsp;&nbsp;{file}</strong>
+									})
+								}
+							</Col>
 							{this.state.emailBody ?
 								<Col xs={12} md={12}>
 									<Button variant={"primary"} type="button" id="doPrint" className="float-right"
@@ -381,9 +419,9 @@ class Home extends Component {
 
 						{/* <Main lgClose={this.lgClose} show={this.state.showEditor} handleSubmit={(body) => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId, body)} subject={this.state.subject} to={this.state.to} companyEmailId={this.state.companyEmailId} isLoading={this.state.isLoading} text={getTemplate(1, products, quoteDetails)} quoteDetails={quoteDetails} products={products} /> */}
 						{this.state.emailBody ?
-							<div dangerouslySetInnerHTML={{ __html: this.state.emailBody }} />
+							<div id="printEmail" dangerouslySetInnerHTML={{ __html: this.state.emailBody }} />
 							:
-							<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson) }} />
+							<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson, quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular') }} />
 						}
 					</StandardModal>
 					: null
@@ -419,7 +457,7 @@ const mapDispatchToProps = (dispatch) => {
 		taskDone: (taskHistId, nextTaskHistId, userActivityId, scheduleId, quoteId, status) => dispatch(taskDone(taskHistId, nextTaskHistId, userActivityId, scheduleId, quoteId, status)),
 		fetchQuoteDetails: (quoteId, cb) => dispatch(itemsFetchQuoteDetails(quoteId, cb)),
 		quoteStartAction: (taskHistId, quoteId) => dispatch(quoteStart(taskHistId, quoteId)),
-		sendEmailAction: (body, from, to, cc, bcc, subject, taskHistId, nextTaskHistId, userActivityId, cb, quoteId) => dispatch(sendEmail(body, from, to, cc, bcc, subject, taskHistId, nextTaskHistId, userActivityId, cb, quoteId))
+		sendEmailAction: (data) => dispatch(sendEmail(data))
 	};
 };
 

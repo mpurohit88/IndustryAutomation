@@ -1,1 +1,1 @@
-export { getAdmin, getUserName, getCompanyName, getCompanyLogo } from '../containers/helper'
+export { getAdmin, getUserName, getCompanyName, getCompanyLogo, getFullUserName } from '../containers/helper'

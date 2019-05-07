@@ -42,7 +42,7 @@ export default class AppBar extends React.Component {
   handleSuccessModal = (flag, response) => this.setState({ successShow: flag, msg: response });
 
   render() {
-    const { isAdmin, name, cname, clogo } = this.props;
+    const { isAdmin, name, cname, clogo, userName } = this.props;
 
     return (
       <div className='test'
@@ -53,16 +53,16 @@ export default class AppBar extends React.Component {
       >
         <header style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '15px' }}>
-            <img src={clogo ? "/img/company/" + clogo : "/img/logo.png"} height="40" />
+            <img style={{ background: 'white', borderRadius: '15%' }} src={clogo ? "/img/company/" + clogo : "/img/logo.png"} height="40" />
             <Link
               to="/"
               className="logo"
             >
-              {this.props.children} {cname && `| ${cname}`}
+              {cname ? cname : this.props.children}
             </Link>
           </div>
 
-          <nav className="nav-collapse">
+          <nav className="nav-collapse" id="navbar">
             <ul>
               {/* active */}
               {!isAdmin && <li className="menu-item"><a href="#" onClick={() => this.setState({ lgShow: true })}>Create Quote</a></li>}
@@ -70,19 +70,23 @@ export default class AppBar extends React.Component {
               {isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleUserRegClick(true)}>User Registration</a></li>}
               {!isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleProductClick(true)}>Add Product</a></li>}
               {!isAdmin && <li className="menu-item"><a href="#" onClick={() => this.handleCustomerClick(true)}>Add Customer</a></li>}
-              <li className="menu-item user">
-                <a>
-                  <span>Welcome: {name.toUpperCase()}</span>
-                </a>
-              </li>
-              <li className="menu-item"><Link style={{
-                color: `white`,
-                textDecoration: `none`,
-              }}
-                to="/login">Logout</Link></li>
             </ul>
           </nav>
+          <div style={{ display: 'flex', width: '326px', padding: '15px' }}>
+            <a style={{ color: 'white' }}>
+              <span>Hello, {userName && userName.toUpperCase()} !</span>
+            </a>
+            <Link style={{
+              color: `white`,
+              textDecoration: `none`,
+              paddingLeft: '30px'
+            }}
+              to="/login" className='imgEdit'>
 
+              <img height='17' src='/img/logout.png' />
+              <span id="logout" style={{ paddingLeft: '2px' }}>Logout</span>
+            </Link>
+          </div>
         </header>
 
         {

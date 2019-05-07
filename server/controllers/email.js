@@ -9,26 +9,37 @@ const Schedule = require("../models/schedule");
 const Quote = require("../models/quote");
 
 const send = function (req, res, next) {
+
+  console.log("****************", req.files);
+  const data = JSON.parse(req.body.data)
+
+  let attachments = [];
+
+  req.files.map( (file) => {
+    attachments.push(file.filename);
+  });
+
   let params = {
     createdBy: req.decoded.id,
-    task_id: req.body.taskId,
-    subject: req.body.message.subject,
-    body: req.body.message.body,
-    quoteId: req.body.quoteId
+    task_id: data.taskId,
+    subject: data.subject,
+    body: data.body,
+    quoteId: data.quoteId
   };
 
   const params1 = {
     createdBy: req.decoded.id,
     scheduleId: undefined,
-    task_id: req.body.taskId,
+    task_id: data.taskId,
     company_id: req.decoded.companyId,
-    subject: req.body.message.subject,
-    message_body: req.body.message.body,
+    subject: data.subject,
+    message_body: data.body,
     next_reminder_date: new Date(),
-    from_address: req.body.message.from,
-    to_address: req.body.message.to,
-    cc_address: req.body.message.cc || '',
-    bcc_address: req.body.message.bcc || '',
+    from_address: data.from,
+    to_address: data.to,
+    cc_address: data.cc || '',
+    bcc_address: data.bcc || '',
+    attachments: attachments.join(','),
     is_reminder: false,
     frequency: 0,
     time: 0
@@ -38,10 +49,10 @@ const send = function (req, res, next) {
 
   if (process.env.NODE_ENV === 'development') {
     const mail = {
-      from: req.body.message.from,
-      to: req.body.message.to,
-      subject: req.body.message.subject,
-      html: req.body.message.body
+      from: data.from,
+      to: data.to,
+      subject: data.subject,
+      html: data.body
     }
 
     serverTrans.use('compile', inlineBase64({ cidPrefix: 'img_' }));
@@ -50,7 +61,7 @@ const send = function (req, res, next) {
         console.log(err);
         res.status(200).send({ msg: "fail" });
       } else {
-        new ActviityTaskHist({}).getByActivityId([{ id: req.body.userActivityId }]).then(function (tasks) {
+        new ActviityTaskHist({}).getByActivityId([{ id: data.userActivityId }]).then(function (tasks) {
           res.status(200).send({ tasks: tasks });
         });
       }
