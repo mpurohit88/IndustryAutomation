@@ -31,7 +31,7 @@ class DispatchSummary extends Component {
   handleSubmit() {
     const self = this;
 
-    this.props.dispatchSummary(self.props.quoteDetails.id, self.props.quoteDetails.companyId, self.props.acivityTaskId, this.state.dispatchSummary, () => {
+    this.props.dispatchSummary(self.props.quoteDetails.id, self.props.quoteDetails.customer_id, self.props.acivityTaskId, this.state.dispatchSummary, () => {
       self.lgClose();
     });
   }
@@ -144,7 +144,7 @@ class DispatchSummary extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    dispatchSummary: (quoteId, companyId, acivityTaskId, data, cb) => dispatch(updateDispatchSummary(quoteId, companyId, acivityTaskId, data, cb))
+    dispatchSummary: (quoteId, companyId, acivityTaskId, data, cb) => dispatch(updateDispatchSummary(quoteId, customerId, acivityTaskId, data, cb))
   };
 };
 

@@ -145,7 +145,7 @@ class Home extends Component {
 	sendEmailToCustomer(id, nextId, userActivityId) {
 		if (this.state.subject.trim() !== "") {
 			const self = this;
-			let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson);
+			let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson, this.props.details.quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular');
 
 			body = body.replace('<input type="text" id="refId" name="refId"/>', document.getElementById('refId').value)
 			body = body.replace('<input type="text" size="100" id="refSubject" name="refSubject" value="Ref. Your Email Enquiry Dated"/>', document.getElementById('refSubject').value)

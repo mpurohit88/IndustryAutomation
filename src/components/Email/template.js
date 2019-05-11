@@ -33,6 +33,15 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
         }
     }
 
+    let getRateSybmole = function (currency) {
+        switch (currency) {
+            case 1:
+                return '/-';
+            default:
+                return ''
+        }
+    }
+
     if (products) {
         products.map((product) => {
             if (product.imgName && product.imgName !== '') {
@@ -116,8 +125,8 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                                                 <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} />
                                             </td>}
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.hsnCode}</td>
-                                            <td style={{ border: '1px solid black', padding: '10px' }}>{product.quantity}</td>
-                                            <td style={{ border: '1px solid black', padding: '10px' }}><span dangerouslySetInnerHTML={{ __html: getCurrencySymbole(product.currency_type) }} /> {product.rate}/- Per {product.unit}</td>
+                                            <td style={{ border: '1px solid black', padding: '10px' }}>{product.quantity} {product.unit}</td>
+                                            <td style={{ border: '1px solid black', padding: '10px' }}><span dangerouslySetInnerHTML={{ __html: getCurrencySymbole(product.currency_type) }} /> {product.rate}{getRateSybmole(product.currency_type)} Per {product.unit}</td>
                                             {isShowGST && <td style={{ border: '1px solid black', padding: '10px' }}>{product.gstn}%</td>}
                                         </tr>
                                     })
@@ -159,5 +168,5 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
 // function, which converts it into the needed html, tables and all.
 // https://stackoverflow.com/questions/40417527/how-do-i-preserve-line-breaks-when-getting-text-from-a-textarea/40426477
 export const GetContactEmail = function (products, quoteDetails, constactPerson, particular) {
-    return renderEmail(<ContactMeTemplate products={products} quoteDetails={quoteDetails} constactPerson={constactPerson} particular={particular}/>);
+    return renderEmail(<ContactMeTemplate products={products} quoteDetails={quoteDetails} constactPerson={constactPerson} particular={particular} />);
 }

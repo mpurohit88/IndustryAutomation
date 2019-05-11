@@ -56,14 +56,17 @@ class Login extends React.Component {
 	render() {
 		const { username, password, submitted, loading, error } = this.state;
 		return (
-			<div className="col-md-6 col-md-offset-3 login">
+			<div className="col-md-4 col-md-offset-4 login">
 				<div className="card card-signin">
 					<div className="card-body">
 						{/* <div className="alert alert-info">
 											Username: test<br />
 											Password: test
 									</div> */}
-						<h5 className="card-title text-center">Member Login</h5>
+						<div style={{ paddingBottom: "18px" }}>
+							<img style={{ margin: "0 auto" }} height="80" src={`/img/logo.png`} />
+						</div>
+						<h5 className="card-title text-center">Sign in</h5>
 						<form name="form" onSubmit={this.handleSubmit}>
 							<div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
 								<label htmlFor="username">Username</label>
@@ -80,7 +83,7 @@ class Login extends React.Component {
 								}
 							</div>
 							<div className="form-group">
-								<button className="btn btn-lg btn-primary btn-block text-uppercase" disabled={loading}>Sign in</button>
+								<button className="btn btn-lg btn-primary-login btn-block" disabled={loading}>Sign in</button>
 								{loading &&
 									<img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
 								}

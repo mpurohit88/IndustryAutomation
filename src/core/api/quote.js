@@ -73,11 +73,11 @@ export function updateStatus(quoteId, status, cb) {
 	};
 }
 
-export function updateDispatchSummary(quoteId, companyId, acivityTaskId, data, cb) {
+export function updateDispatchSummary(quoteId, customerId, acivityTaskId, data, cb) {
 	return (dispatch) => {
 		dispatch(quoteAction.quoteStartIsLoading(true));
 
-		post('api/quote/updateDispatchSummary', { quoteId, companyId, acivityTaskId, data, })
+		post('api/quote/updateDispatchSummary', { quoteId, customerId, acivityTaskId, data, })
 			.then((data) => {
 				dispatch(quoteAction.quoteStartIsLoading(false));
 				return data;

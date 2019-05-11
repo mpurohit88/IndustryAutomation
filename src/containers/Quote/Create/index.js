@@ -149,8 +149,10 @@ class Create extends Component {
 				unit: document.getElementById('unit').innerText,
 				imgName: this.state.imgSrc
 			}
-			this.state.products.push(product);
-			this.setState(this.state.products);
+
+			let productsListTemp = this.state.products;
+			productsListTemp.push(product);
+			this.setState({ products: productsListTemp });
 
 			this.refs.name.value = '0';
 			this.refs.hsnCode.value = '';
@@ -300,6 +302,15 @@ class Create extends Component {
 		}
 	}
 
+	getRateSybmole = function (currency) {
+		switch (currency) {
+			case 1:
+				return '/-';
+			default:
+				return ''
+		}
+	}
+
 	render() {
 		const that = this;
 		const { partyList, productList } = that.props;
@@ -328,7 +339,7 @@ class Create extends Component {
 					<td>{product.description}</td>
 					<td>{product.hsnCode}</td>
 					<td>{product.quantity}</td>
-					<td><span dangerouslySetInnerHTML={{ __html: that.getCurrencySymbole(that.state.newQuote.currency_type) }} /> {product.rate}/- per {product.unit}</td>
+					<td><span dangerouslySetInnerHTML={{ __html: that.getCurrencySymbole(that.state.newQuote.currency_type) }} /> {product.rate}{that.getRateSybmole(that.state.newQuote.currency_type)} per {product.unit}</td>
 					<td>{product.gstn}</td>
 					<td>{that.state.imgSrc && <Zoom src={that.state.imgSrc} />
 					}</td>
