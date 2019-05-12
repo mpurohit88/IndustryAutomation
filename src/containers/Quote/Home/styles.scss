@@ -16,7 +16,7 @@ strong {
 
 .head {
   padding: 15px;
-  background-color: #3c9aae;
+  background-color: #fbb749;
   color: white;
 }
 
@@ -120,3 +120,24 @@ div.checkmark .disabled-circle:before {
 .float-right {
   float: right
 }
+
+#steps > div.active-step:hover {
+  box-shadow: 0px 5px 25px rgba(29,34,47,0.15);
+}
+
+// #steps > div.flex-center.step.checkmark.active-step > div > button {
+//   background-color: #f08820;
+//   color: white;
+//   border-color: #f08820;
+// }
+
+// #steps > div.flex-center.step.checkmark.active-step > div > button:hover {
+//   background-color: #f9f9f9;
+//   color: #f08820;
+//   border-color: #f08820;
+// }
+
+// #steps > div.disabled > div > button {
+//   color: #f08820;
+//   border-color: #f08820;
+// }

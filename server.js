@@ -25,6 +25,8 @@ app.use(require('morgan')('short'));
   const activityTaskHistRouter = require('./server/routes/activityTaskHist');
   const taskEmailRouter = require('./server/routes/taskEmail');
   const emailLogRouter = require('./server/routes/emailLog');
+  const currencyTypeRouter = require('./server/routes/currencyType');
+  const reminderRouter = require('./server/routes/reminder');
   const authRouter = require('./server/routes/auth');
 
   app.use(bodyParser.json());
@@ -62,7 +64,9 @@ app.use(require('morgan')('short'));
   app.use('/api/customerContact', customerContactRouter);
   app.use('/api/activityTaskHist', activityTaskHistRouter);
   app.use('/api/taskEmail', taskEmailRouter);
+  app.use('/api/currencyType', currencyTypeRouter);
   app.use('/api/emailLog', emailLogRouter);
+  app.use('/api/reminder', reminderRouter);
 })()
 
 app.get('/*', function root(req, res) {

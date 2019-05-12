@@ -25,7 +25,7 @@ class Scheduler extends Component {
                 schedule_date: '',
                 schedule_time: '',
                 schedule_time1: '',
-                companyEmailId: ''
+                companyEmailId: props.quoteDetails.userEmail
             },
             scheduleList: [{ name: "Every", id: "1" }]
         }
@@ -39,15 +39,15 @@ class Scheduler extends Component {
     componentDidMount() {
         const self = this;
 
-        getById().then((data) => {
-            self.setState(prevState => {
-                return {
-                    newSchedule: {
-                        ...prevState.newSchedule, ['companyEmailId']: data
-                    }
-                }
-            });
-        });
+        // getById().then((data) => {
+        //     self.setState(prevState => {
+        //         return {
+        //             newSchedule: {
+        //                 ...prevState.newSchedule, ['companyEmailId']: data
+        //             }
+        //         }
+        //     });
+        // });
 
         if (this.props.scheduleId) {
             getScheduleDetails(this.props.scheduleId).then((data) => {

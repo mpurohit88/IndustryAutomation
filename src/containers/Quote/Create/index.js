@@ -9,6 +9,8 @@ import { Success, Info } from '../../../components/Alerts'
 
 import { createQuote } from '../../../core/api/quote'
 import { fetchFirmContactList } from '../../../core/api/customer'
+import { getCurrencyType } from '../../../core/api/currencyType'
+
 import Zoom from './Zoom'
 
 /* component styles */
@@ -33,7 +35,8 @@ class Create extends Component {
 			listOfProduct: [],
 			products: [],
 			contactList: [],
-			currencyList: [{ text: 'Rupee', value: '1' }, { text: 'Dollar', value: '2' }, { text: 'Euro', value: '3' }, { text: 'Yen', value: '4' }],
+			currencyList: [],
+			currencyHtmlCode: [],
 			imgSrc: undefined,
 			isEdit: false
 		}
@@ -46,6 +49,22 @@ class Create extends Component {
 		this.handleInput = this.handleInput.bind(this);
 		this.handleProductChange = this.handleProductChange.bind(this);
 		this.resetSuccess = this.resetSuccess.bind(this);
+		this.getCurrencySymbole = this.getCurrencySymbole.bind(this);
+	}
+
+	componentDidMount() {
+		getCurrencyType().then((listOfCurrency) => {
+			let currencyList = [];
+			let currencyHtmlCode = [];
+
+			listOfCurrency.map(currency => {
+				currencyList.push({ text: currency.name, value: currency.id });
+
+				currencyHtmlCode.push({ id: currency.id, code: currency.html_code })
+			});
+
+			this.setState({ currencyList: currencyList, currencyHtmlCode: currencyHtmlCode });
+		});
 	}
 
 	componentWillMount() {
@@ -87,6 +106,7 @@ class Create extends Component {
 		that.props.productList.map((product) => {
 			if (product.id === parseInt(e.target.value)) {
 				that.refs.hsnCode.value = product.hsnCode;
+				that.refs.unit.value = product.unit;
 				// that.refs.rate.value = product.unit;
 				document.getElementById('unit').innerText = product.unit;
 				that.refs.imgName.src = `img/product/${product.imgName}`;
@@ -101,14 +121,15 @@ class Create extends Component {
 	}
 
 	handleRowDel(product) {
-		var index = -1;
-		var clength = this.state.products.length;
+		let index = -1;
+		const clength = this.state.products.length;
 		for (var i = 0; i < clength; i++) {
 			if (this.state.products[i].id === product.id) {
 				index = i;
 				break;
 			}
 		}
+
 		this.state.products.splice(index, 1);
 		this.setState({ products: this.state.products });
 	};
@@ -121,6 +142,11 @@ class Create extends Component {
 
 			if (this.refs.name.value === '0') {
 				alert('Please select product.');
+				return false;
+			}
+
+			if (this.refs.rate.value === '') {
+				alert('Please Enter Rate.');
 				return false;
 			}
 
@@ -146,7 +172,7 @@ class Create extends Component {
 				quantity: this.refs.qty.value,
 				rate: this.refs.rate.value,
 				gstn: this.refs.gst.value,
-				unit: document.getElementById('unit').innerText,
+				unit: this.refs.unit.value,
 				imgName: this.state.imgSrc
 			}
 
@@ -161,6 +187,7 @@ class Create extends Component {
 			this.refs.gst.value = '';
 			this.refs.imgName.src = '';
 			this.refs.description.value = '';
+			this.refs.unit.value = '';
 
 			document.getElementById('unit').innerText = '';
 		} else {
@@ -288,18 +315,27 @@ class Create extends Component {
 	}
 
 	getCurrencySymbole(currency) {
-		switch (currency) {
-			case '1':
-				return '&#8377;';
-			case '2':
-				return '&#36;';
-			case '3':
-				return '&#8364;';
-			case '4':
-				return '&#165;';
-			default:
-				return '&#8377;';
-		}
+		let code;
+
+		this.state.currencyHtmlCode.map((htmlCode) => {
+			if (htmlCode.id == currency) {
+				code = htmlCode.code;
+			}
+		});
+
+		return code;
+		// switch (currency) {
+		// 	case '1':
+		// 		return '&#8377;';
+		// 	case '2':
+		// 		return '&#36;';
+		// 	case '3':
+		// 		return '&#8364;';
+		// 	case '4':
+		// 		return '&#165;';
+		// 	default:
+		// 		return '&#8377;';
+		// }
 	}
 
 	getRateSybmole = function (currency) {
@@ -340,6 +376,7 @@ class Create extends Component {
 					<td>{product.hsnCode}</td>
 					<td>{product.quantity}</td>
 					<td><span dangerouslySetInnerHTML={{ __html: that.getCurrencySymbole(that.state.newQuote.currency_type) }} /> {product.rate}{that.getRateSybmole(that.state.newQuote.currency_type)} per {product.unit}</td>
+					<td>{product.unit}</td>
 					<td>{product.gstn}</td>
 					<td>{that.state.imgSrc && <Zoom src={that.state.imgSrc} />
 					}</td>
@@ -349,7 +386,7 @@ class Create extends Component {
 
 		return (
 			<Fragment>
-				<StandardModal btnText='Save' heading='Create Quote' isLoading={this.state.isLoading} handleSubmit={this.handleSubmit} isSubmitDisabled={this.props.isNonEditable ? true : false} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
+				<StandardModal btnText='Save' heading='Create Quote' id='CreateQuote' isLoading={this.state.isLoading} handleSubmit={this.handleSubmit} isSubmitDisabled={this.props.isNonEditable ? true : false} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.handleModelClick}>
 					<Form>
 						{this.state.showSucess ? <Success>Quote {this.state.isEdit ? 'Updated' : 'Created'} Successfully!</Success> : null}
 						{this.props.isNonEditable ? <Info>As Quote Email is already sent, Quote Editing is not allowed.</Info> : null}
@@ -409,6 +446,7 @@ class Create extends Component {
 									<th>HSN Code</th>
 									<th>Quantity</th>
 									<th>Rate With unit</th>
+									<th>Unit</th>
 									<th>GST(%)</th>
 									<th>Image</th>
 									<th></th>
@@ -428,19 +466,22 @@ class Create extends Component {
 										{/* <label ref="description"></label> */}
 									</td>
 									<td>
-										<textarea cols='70' type='input' className='form-control' ref="description" />
+										<textarea cols='60' type='input' className='form-control' ref="description" />
 									</td>
 									<td>
 										<input type='input' className='form-control' ref="hsnCode" />
 									</td>
 									<td>
-										<input type='number' className='form-control' ref="qty" />
+										<input style={{ width: '70px' }} type='input' className='form-control' ref="qty" />
 									</td>
 									<td>
-										<input type='number' className='form-control' ref="rate" /> <span id='unit'></span>
+										<input type='input' className='form-control' ref="rate" /> <span id='unit'>{this.refs.unit && this.refs.unit.value}</span>
 									</td>
 									<td>
-										<input type='number' className='form-control' ref="gst" />
+										<input style={{ width: '75px' }} type='input' className='form-control' ref="unit" />
+									</td>
+									<td>
+										<input style={{ width: '62px' }} type='number' className='form-control' ref="gst" />
 									</td>
 									<td>
 										{/* {this.state.imgSrc && <Zoom src = {this.state.imgSrc} />} */}

@@ -1,9 +1,9 @@
-import React, { Component }   from 'react'
-import PropTypes              from 'prop-types'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Modal } from 'react-bootstrap';
 import LoadingOverlay from 'react-loading-overlay';
 
-import { styles }             from './styles.scss'
+import { styles } from './styles.scss'
 import Button from '../../Button'
 
 class StandardModal extends Component {
@@ -15,7 +15,7 @@ class StandardModal extends Component {
     }
   }
 
-  handleClose=() => {
+  handleClose = () => {
     const { actions, modalKey, onClose } = this.props
     actions.ui.closeModal({ modalKey })
     if (onClose) { onClose() }
@@ -29,36 +29,39 @@ class StandardModal extends Component {
       modalState,
       title,
       heading,
+      id,
       ...other
     } = this.props
     const { open } = this.state
     const mergedStyles = `${styles} ${cssModule}`
 
     return (
-      <div>
-          <Modal
-            size="lg"
-            show={this.props.show}
-            onHide={() => this.props.handleModelClick(false)}
-            aria-labelledby="example-modal-sizes-title-lg"
+      <div className='test'>
+        <Modal
+          size="lg"
+          show={this.props.show}
+          onHide={() => this.props.handleModelClick(false)}
+          aria-labelledby="example-modal-sizes-title-lg"
+          className='test'
+          id={id}
+        >
+          <LoadingOverlay
+            active={this.props.isLoading}
+            spinner
+            text='Please wait...'
           >
-          	<LoadingOverlay
-              active={this.props.isLoading}
-              spinner
-              text='Please wait...'
-            >
-              <Modal.Header closeButton>
-                <Modal.Title id="example-modal-sizes-title-lg">
-                  {heading}
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                {children}
-              </Modal.Body>
-              <Modal.Footer>
+            <Modal.Header closeButton>
+              <Modal.Title id="example-modal-sizes-title-lg">
+                {heading}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {children}
+            </Modal.Body>
+            <Modal.Footer>
               <Button variant={this.props.isSubmitDisabled ? "secondary" : "primary"} type="button" id="save_popup"
-                onClick={this.props.isSubmitDisabled ? () => {} : (e) => this.props.handleSubmit(e)}
-                >
+                onClick={this.props.isSubmitDisabled ? () => { } : (e) => this.props.handleSubmit(e)}
+              >
                 {this.props.btnText}
               </Button>
               <Button variant="secondary" type="button"
@@ -69,8 +72,8 @@ class StandardModal extends Component {
                 Cancel
               </Button>
             </Modal.Footer>
-            </LoadingOverlay>
-          </Modal>
+          </LoadingOverlay>
+        </Modal>
       </div>
     )
   }

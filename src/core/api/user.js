@@ -27,6 +27,18 @@ export function itemsFetchData() {
 	};
 }
 
+export const getUniqueNames = function (task_id) {
+	return new Promise(function (resolve, reject) {
+		get('api/user/getUniqueNames')
+			.then(result => {
+				resolve(result);
+			}).catch(err => {
+				console.log(err);
+				reject(err);
+			});
+	});
+}
+
 export function clearCredentials() {
 	return (dispatch) => {
 		dispatch(userAction.userClearCredentials());

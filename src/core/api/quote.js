@@ -13,11 +13,11 @@ export function createQuote(newQuote) {
 	};
 }
 
-export function itemsFetchData() {
+export function itemsFetchData(customerId, userId, statusId, from_date, to_date) {
 	return (dispatch) => {
 		dispatch(quoteAction.quoteListAreLoading(true));
 
-		get('api/quote/all')
+		get('api/quote/all', { customerId, userId, statusId, from_date, to_date })
 			.then((data) => {
 				dispatch(quoteAction.quoteListAreLoading(false));
 				return data;

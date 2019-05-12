@@ -14,23 +14,20 @@ const css = `br { line-height: 1}
 
 
 //3. Create your react component using react-html-email components
-const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, particular }) {
+const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, particular, currencyHtmlCode }) {
     let showImageColumn = false;
     let isShowGST = false;
 
     let getCurrencySymbole = function (currency) {
-        switch (currency) {
-            case 1:
-                return '&#8377;';
-            case 2:
-                return '&#36;';
-            case 3:
-                return '&#8364;';
-            case 4:
-                return '&#165;';
-            default:
-                return '&#8377;';
-        }
+        let code;
+
+        currencyHtmlCode.map((htmlCode) => {
+            if (htmlCode.id == currency) {
+                code = htmlCode.code;
+            }
+        });
+
+        return code;
     }
 
     let getRateSybmole = function (currency) {
@@ -105,12 +102,12 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                         <td colSpan='2' className='child'>
                             <table width="100%" height="100%" cellPadding="0" cellSpacing="0" border="0" align="left" valign="top">
                                 <tr>
-                                    <th style={{ border: '1px solid black', padding: '10px', width: '68px' }}>Sr. No.</th>
-                                    <th style={{ border: '1px solid black', padding: '10px', width: '444px' }}>{particular}</th>
+                                    <th style={{ border: '1px solid black', padding: '10px', maxWidth: '68px' }}>Sr. No.</th>
+                                    <th style={{ border: '1px solid black', padding: '10px', maxWidth: '350px' }}>{particular}</th>
                                     {showImageColumn && <th style={{ border: '1px solid black', padding: '10px' }}>Image</th>}
                                     <th style={{ border: '1px solid black', padding: '10px' }}>HSN code</th>
                                     <th style={{ border: '1px solid black', padding: '10px' }}>Qty.</th>
-                                    <th style={{ border: '1px solid black', padding: '10px' }}>Rate</th>
+                                    <th style={{ border: '1px solid black', padding: '10px', maxWidth: '130px' }}>Rate</th>
                                     {isShowGST && <th style={{ border: '1px solid black', padding: '10px' }}>GST</th>}
 
                                 </tr>
@@ -167,6 +164,6 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
 // 4. Feed your component into react-html-email's renderEmail 
 // function, which converts it into the needed html, tables and all.
 // https://stackoverflow.com/questions/40417527/how-do-i-preserve-line-breaks-when-getting-text-from-a-textarea/40426477
-export const GetContactEmail = function (products, quoteDetails, constactPerson, particular) {
-    return renderEmail(<ContactMeTemplate products={products} quoteDetails={quoteDetails} constactPerson={constactPerson} particular={particular} />);
+export const GetContactEmail = function (products, quoteDetails, constactPerson, particular, currencyHtmlCode) {
+    return renderEmail(<ContactMeTemplate products={products} quoteDetails={quoteDetails} constactPerson={constactPerson} particular={particular} currencyHtmlCode={currencyHtmlCode} />);
 }

@@ -4,3 +4,11 @@
     padding: 0px;
   }
 }
+
+
+@media (min-width: 576px) {
+  #CreateQuote {
+    max-width: 1060px;
+    margin: 1.75rem auto;
+  }
+}

@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
+import CKEditor from "react-ckeditor-component";
 
 import Create from '../Create/index';
 
@@ -25,6 +26,8 @@ import { quoteContactDetail } from '../../../core/api/customerContact'
 import { taskDone } from '../../../core/api/schedule'
 import { getEmailBody } from '../../../core/api/taskkEmail'
 
+import { getCurrencyType } from '../../../core/api/currencyType'
+
 /* component styles */
 import { styles } from './styles.scss'
 
@@ -48,7 +51,9 @@ class Home extends Component {
 			isDiscard: false,
 			showEmail: false,
 			CreateQuoteShow: false,
-			selectedFile: []
+			selectedFile: [],
+			currencyHtmlCode: [],
+			content: 'Terms & Conditions:'
 		}
 
 		this.showEmail = this.showEmail.bind(this);
@@ -61,6 +66,7 @@ class Home extends Component {
 		this.showDispatchSummary = this.showDispatchSummary.bind(this);
 		this.showEmailBody = this.showEmailBody.bind(this);
 		this.handleQuoteEditClick = this.handleQuoteEditClick.bind(this);
+		this.updateContent = this.updateContent.bind(this);
 	}
 
 	componentDidMount() {
@@ -69,9 +75,41 @@ class Home extends Component {
 
 		self.props.fetchQuoteDetails(quoteId, (data) => {
 			getById().then((emailId) => {
-				self.setState({ companyEmailId: emailId, to: data.quoteDetails.email });
+				self.setState({ companyEmailId: data.quoteDetails.userEmail, to: data.quoteDetails.email });
 			});
 		});
+
+		getCurrencyType().then((listOfCurrency) => {
+			let currencyHtmlCode = [];
+
+			listOfCurrency.map(currency => {
+				currencyHtmlCode.push({ id: currency.id, code: currency.html_code })
+			});
+
+			this.setState({ currencyHtmlCode: currencyHtmlCode });
+		});
+	}
+
+	updateContent(newContent) {
+		this.setState({
+			content: newContent
+		})
+	}
+
+	onChange(evt) {
+		console.log("onChange fired with event info: ", evt);
+		var newContent = evt.editor.getData();
+		this.setState({
+			content: newContent
+		})
+	}
+
+	onBlur(evt) {
+		console.log("onBlur event called with event info: ", evt);
+	}
+
+	afterPaste(evt) {
+		console.log("afterPaste event called with event info: ", evt);
 	}
 
 	handleQuoteEditClick = (flag, isNonEditable) => this.setState({ CreateQuoteShow: flag, isNonEditable: isNonEditable });
@@ -145,7 +183,7 @@ class Home extends Component {
 	sendEmailToCustomer(id, nextId, userActivityId) {
 		if (this.state.subject.trim() !== "") {
 			const self = this;
-			let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson, this.props.details.quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular');
+			let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson, this.props.details.quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode);
 
 			body = body.replace('<input type="text" id="refId" name="refId"/>', document.getElementById('refId').value)
 			body = body.replace('<input type="text" size="100" id="refSubject" name="refSubject" value="Ref. Your Email Enquiry Dated"/>', document.getElementById('refSubject').value)
@@ -273,10 +311,10 @@ class Home extends Component {
 						<div><strong>Created By:</strong> &nbsp;<span style={{ textTransform: 'capitalize' }}>{quoteDetails.userName}</span></div>
 						<div><strong>Created Date:</strong> &nbsp;{getISODateTime(quoteDetails.dateTimeCreated)}</div>
 					</div>
-					<div style={{ marginTop: 15 + 'px' }}>
+					<div style={{ marginTop: 15 + 'px' }} id='steps'>
 						{
 							tasks.map((task, index) => {
-								return <div className={`flex-center step checkmark${this.isStepActive(quoteDetails.status, task.startDate, task.endDate) ? ' active-step' : ''}`}>
+								return <div className={`flex-center step checkmark${this.isStepActive(quoteDetails.status, task.startDate, task.endDate) ? ' active-step' : ' disabled'}`}>
 
 									{index + 1 < tasks.length && <div className="vertical-line"></div>}
 
@@ -421,8 +459,19 @@ class Home extends Component {
 						{this.state.emailBody ?
 							<div id="printEmail" dangerouslySetInnerHTML={{ __html: this.state.emailBody }} />
 							:
-							<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson, quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular') }} />
+							<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson, quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode) }} />
 						}
+
+						{/* <CKEditor
+							activeClass="p10"
+							content={this.state.content}
+							events={{
+								"blur": this.onBlur,
+								"afterPaste": this.afterPaste,
+								"change": this.onChange
+							}}
+						/> */}
+
 					</StandardModal>
 					: null
 				}
