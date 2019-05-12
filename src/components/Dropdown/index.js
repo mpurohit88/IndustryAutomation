@@ -11,7 +11,7 @@ const Dropdown = (props) => {
     <Form.Group controlId="formBasicEmail">
       <Form.Label>{props.label}</Form.Label>
       <select className="form-control" onChange={props.onChange} id={props.id} name={props.name} value={props.value || '0'}>
-        <option value="0">{props.placeholder}</option>
+        <option value="0" disabled>{props.placeholder}</option>
         {
           props.options.map((data, index) => {
             return <option key={index + `drpdwn`} value={data.value} key={index}>{data.text}</option>
