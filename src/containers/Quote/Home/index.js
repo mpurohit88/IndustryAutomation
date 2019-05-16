@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
-import CKEditor from "react-ckeditor-component";
+import { Editor, EditorState, RichUtils, ContentState, convertToRaw, convertFromHTML } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
 
 import Create from '../Create/index';
 
@@ -18,6 +19,7 @@ import Scheduler from '../Scheduler'
 import CloseQuote from './closeQuote'
 import DispatchSummary from './dispatchSummary'
 import Input from '../../../components/Input'
+import MyEditor from '../../../components/Editor/MyEditor'
 
 import { itemsFetchQuoteDetails, quoteStart } from '../../../core/api/quote'
 import { sendEmail } from '../../../core/api/email'
@@ -25,6 +27,7 @@ import { getById } from '../../../core/api/company'
 import { quoteContactDetail } from '../../../core/api/customerContact'
 import { taskDone } from '../../../core/api/schedule'
 import { getEmailBody } from '../../../core/api/taskkEmail'
+// import Toaster from '../../../components/Toaster';
 
 import { getCurrencyType } from '../../../core/api/currencyType'
 
@@ -36,25 +39,77 @@ class Home extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			isLoading: false,
-			showEditor: false,
-			showScheduler: false,
-			companyEmailId: '',
-			to: '',
-			cc: '',
-			bcc: '',
-			subject: 'Provide Subject',
-			scheduleId: '',
-			showCloseCase: false,
-			showDispatchSummary: false,
-			isDiscard: false,
-			showEmail: false,
-			CreateQuoteShow: false,
-			selectedFile: [],
-			currencyHtmlCode: [],
-			content: 'Terms & Conditions:'
+		const html = '<p>&nbsp;&nbsp;</p>' +
+			'<p><strong><ins>Payment</ins></strong>  <strong>:  </strong>20% Advance along with PO must be required to deposit GST amount with government &amp; Balance 80% against our P.I. before dispatch by RTGS only. We only accept payment through RTGS mode. Any cheque payment is not acceptable. Kindly incorporate in your PO accordingly.&nbsp;' +
+			'<br/><strong>GST             :</strong><br/>' +
+			'<strong>Delivery    :</strong>  <br/>' +
+			'<strong><ins>FOR</ins>            :</strong><strong>                                          Insurance</strong> : n Buyer`s a/c.&nbsp;<br/>' +
+			'<strong><ins>Packing</ins>     :</strong>   <br/>' +
+			'<strong><ins>Validity</ins>     :</strong>   <br/>' +
+			'<strong><ins>Tolerance</ins></strong><strong> :   </strong>The Conveyor belts are being manufactured according to IS – 1891 – Standards. The Tolerance in length i.e +2% ; -0.5%% to be incorporated in purchase order.<br/>' +
+			'<strong><ins>Warranty </ins></strong> <strong>:</strong><br/><br/></p' +
+
+			'<p>Thanking you in anticipation, assuring you of our best attention, cooperation, and consideration at all times and awaiting your valued purchase order please.<br/><br/></p>' +
+
+			'<p><strong>Thanks &amp; Regards </strong><br/><br/></p>' +
+			'<p></p>' +
+
+			'<p>&#10;&#10;&#10;<strong>Member     +91 77268-66661</strong>' +
+			'<strong>BOTS (Back Office Team – SOMI- MKTG. DEPT.)          </strong>&nbsp;<br/><br/></p>' +
+			'<p><strong>Note: SCBL special feature with respect to Elongation in Conveyor Beltings will be less than 2%. SCBL is presently INDIA biggest and largest manufacturer of</strong> <strong>all types of Fabric, Steel Cord &amp; Bucket Elevator Belts.</strong><br/><br/></p>' +
+			'<p><strong><em><ins>SCBL Warranty clauses against manufacturing defects:-</ins></em></strong></p>' +
+			'<p><em>In the event of failure through defect, SCBL will repair or replace the damaged portion of the main belt body applicable for all Grade/Types of Belts except spliced portion. The judgment of failure shall be purely of SCBL. SCBL liability is limited to the purchased price of the conveyor belts or replacement made with due allowance for the services rendered. </em><br/></p>' +
+			'<p><em>SCBL shall not be liable for any consequential claim or other loss or damage of any nature arising out of the use of its product under following conditions:<br/></em>' +
+			'<em>1. For HRT-1 (120°C Max.), For HRT-2/ SHR (150ºC Max.), For HRT-3/UHR (180°C Max.) and our SEHR-36 Grade (250ºC Max.): The belt speed should not be less than 2.5 mtrs/ sec. The total travelled time with loaded material on belt should be more than 6 minutes. The belt should not be in stopped condition with loaded hot material for more than 2 minutes.<br/></em>' +
+			'<em>2. Penetration of belt by tramp metal, etc., as evidenced by longitudinal ripping. <br/></em>' +
+			'<em>3. Objects between belt and pulley as evidenced by rupture.<br/></em>' +
+			'<em>4. Extreme lateral distortion (folding) as evidenced by longitudinal cracking.<br/></em>' +
+			'<em>5. Running off against structures as evidenced by edge breaks.<br/></em>' +
+			'<em>6. Abnormal pulley systems.<br/></em>' +
+			'<em>7. Extreme skirt-board wear.<br/></em>' +
+			'<em>8. Edge wear – edge cover torn.<br/></em>' +
+			'<em>9. Grease damage to pulley cover.<br/></em>' +
+			'<em>10. Wear of fatigue due to worn pulley lagging.<br/></em>' +
+			'<em>11. Extreme mal-distribution of cover wear (top.)<br/></em>' +
+			'<em>12. Wear due to frozen or damaged idlers.<br/></em>' +
+			'<em>13. Wear due to material build – up.<br/></em>' +
+			'<em>14. Increase in Hardness of cover Rubber in Belt.<br/></em>' +
+			'<em>15. Temperature of material carried on Belt exceeds specified / agreed temperature conditions.<br/></em>' +
+			'<em>16. Belt Storage: Six months maximum subject to belt should be rotated 90º approx. wind/unwind every 30 days. Storage should be under roof (No effect of direct sunlight &amp; weather)<br/></em>' +
+			'<em>17. Loading/Unloading damage: SCBL ensures proper packaging however transit damage is out of liability coverage. SCBL suggest to use cloth sling during lifting/unloading of the belt.<br/></em>' +
+			'<em>18. Carcass opening in Belt due to Improper selection of pulley diameter below minimum ratings ;<br/></em>' +
+			'<em>19. Pulley Cover Swelling and peeling due to hydrocarbon based oil / grease spillage from idlers due to excessive lubrication ;<br/></em>' +
+			'<em>20. Star Breaks on Surface of Belt Cover due to Impact of Sharp Material on Belt at Loading Point; Chute Design and Gap<br/></em>' +
+			'<em>21. Any types of Jointing Failure.<br/></em></p>';
+
+		const contentBlock = convertFromHTML(html);
+
+		let editorState = '';
+		if (contentBlock) {
+			const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+			editorState = EditorState.createWithContent(contentState);
+			this.state = {
+				isLoading: false,
+				showEditor: false,
+				showScheduler: false,
+				companyEmailId: '',
+				to: '',
+				cc: '',
+				bcc: '',
+				subject: 'Provide Subject',
+				scheduleId: '',
+				showCloseCase: false,
+				showDispatchSummary: false,
+				isDiscard: false,
+				showEmail: false,
+				CreateQuoteShow: false,
+				selectedFile: [],
+				currencyHtmlCode: [],
+				editorState: editorState // Editor
+			}
 		}
+
+
 
 		this.showEmail = this.showEmail.bind(this);
 		this.lgClose = this.lgClose.bind(this);
@@ -67,6 +122,16 @@ class Home extends Component {
 		this.showEmailBody = this.showEmailBody.bind(this);
 		this.handleQuoteEditClick = this.handleQuoteEditClick.bind(this);
 		this.updateContent = this.updateContent.bind(this);
+
+		// Editor
+		this.focus = () => this.refs.editor.focus();
+		this.onChange = (editorState) => this.setState({ editorState });
+
+		this.handleKeyCommand = (command) => this._handleKeyCommand(command);
+		this.onTab = (e) => this._onTab(e);
+		this.toggleBlockType = (type) => this._toggleBlockType(type);
+		this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
+		//
 	}
 
 	componentDidMount() {
@@ -92,25 +157,46 @@ class Home extends Component {
 
 	updateContent(newContent) {
 		this.setState({
-			content: newContent
+			editorState: newContent
 		})
 	}
 
-	onChange(evt) {
-		console.log("onChange fired with event info: ", evt);
-		var newContent = evt.editor.getData();
-		this.setState({
-			content: newContent
-		})
+	// Editor
+
+	_handleKeyCommand(command) {
+		const { editorState } = this.state;
+		const newState = RichUtils.handleKeyCommand(editorState, command);
+		if (newState) {
+			this.onChange(newState);
+			return true;
+		}
+		return false;
 	}
 
-	onBlur(evt) {
-		console.log("onBlur event called with event info: ", evt);
+	_onTab(e) {
+		const maxDepth = 4;
+		this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
 	}
 
-	afterPaste(evt) {
-		console.log("afterPaste event called with event info: ", evt);
+	_toggleBlockType(blockType) {
+		this.onChange(
+			RichUtils.toggleBlockType(
+				this.state.editorState,
+				blockType
+			)
+		);
 	}
+
+	_toggleInlineStyle(inlineStyle) {
+		this.onChange(
+			RichUtils.toggleInlineStyle(
+				this.state.editorState,
+				inlineStyle
+			)
+		);
+	}
+
+	// End
 
 	handleQuoteEditClick = (flag, isNonEditable) => this.setState({ CreateQuoteShow: flag, isNonEditable: isNonEditable });
 
@@ -186,21 +272,29 @@ class Home extends Component {
 			let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson, this.props.details.quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode);
 
 			body = body.replace('<input type="text" id="refId" name="refId"/>', document.getElementById('refId').value)
-			body = body.replace('<input type="text" size="100" id="refSubject" name="refSubject" value="Ref. Your Email Enquiry Dated"/>', document.getElementById('refSubject').value)
-			body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="NOTE"/>', document.getElementById('about-product').value)
+			body = body.replace('<input type="text" size="104" id="refSubject" name="refSubject" value="Ref. Your Email Enquiry Dated"/>', document.getElementById('refSubject').value)
+			body = body.replace('<textarea cols="60" rows="2" id="about-product" name="about-product"></textarea>', document.getElementById('about-product').value)
+			body = body.replace('<textarea cols="107" rows="2" id="refMsg" name="refMsg">We thank you very much for your above enquiry and pleased to quote our lowest offer as under:-</textarea>', document.getElementById('refMsg').value)
+			// body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="NOTE"/>', document.getElementById('about-product').value)
 			// body = body.replace('<textarea cols="40" rows="3" id="thanks" name="thanks"></textarea>', document.getElementById('thanks').value);
 
-			const post = document.createElement('p');
-			post.style.cssText = 'line-height: 1; color:black;';
-			const postText = document.getElementById('terms').value;
-			post.textContent = postText;
-			post.innerHTML = post.innerHTML.replace(/\n/g, '<br style="line-height:">\n');  // <-- THIS FIXES THE LINE BREAKS
-			const card = document.createElement('div');
-			card.appendChild(post);
-			const cardStack = document.getElementById('term-data');
-			cardStack.insertBefore(card, cardStack.firstChild);
+			// const post = document.createElement('p');
+			// post.style.cssText = 'line-height: 1; color:black;';
+			// const postText = document.getElementById('terms').value;
+			// post.textContent = postText;
+			// post.innerHTML = post.innerHTML.replace(/\n/g, '<br style="line-height:">\n');  // <-- THIS FIXES THE LINE BREAKS
+			// const card = document.createElement('div');
+			// card.appendChild(post);
+			// const cardStack = document.getElementById('term-data');
+			// cardStack.insertBefore(card, cardStack.firstChild);
 
-			body = body.replace('<textarea cols="108" rows="20" id="terms" name="terms"></textarea>', card.innerHTML);
+			const termsAndCondition = draftToHtml(
+				convertToRaw(
+					this.state.editorState.getCurrentContent()
+				)
+			)
+
+			body = body.replace('<div id="terms" name="terms"></div>', termsAndCondition);
 
 			this.props.details.products.map((e, index) => {
 				body = body.replace('src="/img/product/' + e.imgName + '"', 'src="cid:EmbeddedContent_' + index + '"');
@@ -278,6 +372,22 @@ class Home extends Component {
 		const { quoteDetails, tasks, products } = this.props.details;
 		let files = [];
 
+		// Editor
+
+		const { editorState } = this.state;
+
+		// If the user changes block type before entering any text, we can
+		// either style the placeholder or hide it. Let's just hide it now.
+		let className = 'RichEditor-editor';
+		var contentState = editorState.getCurrentContent();
+		if (!contentState.hasText()) {
+			if (contentState.getBlockMap().first().getType() !== 'unstyled') {
+				className += ' RichEditor-hidePlaceholder';
+			}
+		}
+
+		// End
+
 		for (var x = 0; x < this.state.selectedFile.length; x++) {
 			files.push(this.state.selectedFile[x].name);
 		}
@@ -288,6 +398,7 @@ class Home extends Component {
 
 		return (
 			<Fragment>
+				{/* <Toaster /> */}
 				<AppBar isAdmin={isAdmin} name={userName} cname={cname} clogo={clogo} userName={fullUserName}>{appConfig.name}</AppBar>
 				<div className={styles}>
 					<div className='flex-center head'>
@@ -418,7 +529,7 @@ class Home extends Component {
 				</div>
 
 				{this.state.showEditor ?
-					<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.state.isLoading} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
+					<StandardModal btnText='Send Email' heading='Create Quotation' isLoading={this.state.isLoading} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} show={this.state.showEditor} lgClose={this.lgClose} handleModelClick={this.lgClose}>
 						<Row className="show-grid">
 							<Col xs={4} md={6}>
 								<Input hint='Please Use Comma(,) or Semicolon(;) to send Multiple Emails' label='From:' onChange={this.handleInput} value={this.state.companyEmailId} name='companyEmailId' id='companyEmailId' type='email' />
@@ -462,15 +573,33 @@ class Home extends Component {
 							<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson, quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode) }} />
 						}
 
-						{/* <CKEditor
-							activeClass="p10"
-							content={this.state.content}
-							events={{
-								"blur": this.onBlur,
-								"afterPaste": this.afterPaste,
-								"change": this.onChange
-							}}
-						/> */}
+						{/* Editor */}
+
+						{this.state.emailBody ? '' : <div className={styles + " RichEditor-root"}>
+							<BlockStyleControls
+								editorState={editorState}
+								onToggle={this.toggleBlockType}
+							/>
+							<InlineStyleControls
+								editorState={editorState}
+								onToggle={this.toggleInlineStyle}
+							/>
+							<div className={className} onClick={this.focus}>
+								<Editor
+									blockStyleFn={getBlockStyle}
+									customStyleMap={styleMap}
+									editorState={editorState}
+									handleKeyCommand={this.handleKeyCommand}
+									onChange={this.onChange}
+									onTab={this.onTab}
+									ref="editor"
+									spellCheck={true}
+								/>
+							</div>
+						</div>
+						}
+
+						{/* End */}
 
 					</StandardModal>
 					: null
@@ -512,3 +641,103 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
 
+// Editor
+// Custom overrides for "code" style.
+const styleMap = {
+	CODE: {
+		backgroundColor: 'rgba(0, 0, 0, 0.05)',
+		fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
+		fontSize: 16,
+		padding: 2,
+	},
+};
+
+function getBlockStyle(block) {
+	switch (block.getType()) {
+		case 'blockquote': return 'RichEditor-blockquote';
+		default: return null;
+	}
+}
+
+class StyleButton extends React.Component {
+	constructor() {
+		super();
+		this.onToggle = (e) => {
+			e.preventDefault();
+			this.props.onToggle(this.props.style);
+		};
+	}
+
+	render() {
+		let className = 'RichEditor-styleButton';
+		if (this.props.active) {
+			className += ' RichEditor-activeButton';
+		}
+
+		return (
+			<span className={className} onMouseDown={this.onToggle}>
+				{this.props.label}
+			</span>
+		);
+	}
+}
+
+const BLOCK_TYPES = [
+	{ label: 'H1', style: 'header-one' },
+	{ label: 'H2', style: 'header-two' },
+	{ label: 'H3', style: 'header-three' },
+	{ label: 'H4', style: 'header-four' },
+	{ label: 'H5', style: 'header-five' },
+	{ label: 'H6', style: 'header-six' },
+	{ label: 'Blockquote', style: 'blockquote' },
+	{ label: 'UL', style: 'unordered-list-item' },
+	{ label: 'OL', style: 'ordered-list-item' },
+	{ label: 'Code Block', style: 'code-block' },
+];
+
+const BlockStyleControls = (props) => {
+	const { editorState } = props;
+	const selection = editorState.getSelection();
+	const blockType = editorState
+		.getCurrentContent()
+		.getBlockForKey(selection.getStartKey())
+		.getType();
+
+	return (
+		<div className="RichEditor-controls">
+			{BLOCK_TYPES.map((type) =>
+				<StyleButton
+					key={type.label}
+					active={type.style === blockType}
+					label={type.label}
+					onToggle={props.onToggle}
+					style={type.style}
+				/>
+			)}
+		</div>
+	);
+};
+
+var INLINE_STYLES = [
+	{ label: 'Bold', style: 'BOLD' },
+	{ label: 'Italic', style: 'ITALIC' },
+	{ label: 'Underline', style: 'UNDERLINE' },
+	{ label: 'Monospace', style: 'CODE' },
+];
+
+const InlineStyleControls = (props) => {
+	var currentStyle = props.editorState.getCurrentInlineStyle();
+	return (
+		<div className="RichEditor-controls">
+			{INLINE_STYLES.map(type =>
+				<StyleButton
+					key={type.label}
+					active={currentStyle.has(type.style)}
+					label={type.label}
+					onToggle={props.onToggle}
+					style={type.style}
+				/>
+			)}
+		</div>
+	);
+};

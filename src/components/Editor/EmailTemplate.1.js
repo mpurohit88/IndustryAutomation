@@ -85,7 +85,19 @@ class Main extends Component {
 	constructor(props) {
 		super(props);
 
-		const html = '<p>Term & Condition</p>';
+		const html = '<p><blockquote><cetner><strong><u>QUOTATION</u></strong><cetner></blockquote></p>' +
+			'<p>Our Ref: xxx/xxx/x/xxx/xx-xx/xxx &nbsp;&nbsp;&nbsp;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Date: ' + getTodaysDate() + '</p>' +
+			// '<table><tbody>' +
+			'<p><h5>Kindly Atten: Mr. Daya Pvt. Ltd. <br />Ultratech Cement Limited <br />Nathdwara (Rajasthan) </h5>' +
+			'<h5> Phone No. 02971-235005-12 <br />Email: mapurohit88@gmail.com <br />kishore.kabl@adityabirla.com</h5></p>' +
+			// '</tbody></table>' +
+			'<p>Ref. Your Email Enquiry Dated</p>' +
+			'<p>Dear Sir,</p>' +
+			'<p>We thank you very much for your above enquiry and pleased to quote our lowest offer as under:-</p>' +
+			'<p>&nbsp;</p></br>' +
+			'<p><h6>Our Ref: XXXXXXXXXXX </h6></p> </br>' +
+			'<blockquote><strong>OTR Tubes & Flaps and "O" Rings available in all size</strong></blockquote></br></br>' +
+			'<p>Thanks & Regards,</p>';
 
 		const contentBlock = convertFromHTML(html);
 
@@ -95,6 +107,9 @@ class Main extends Component {
 
 			this.state = {
 				editorState,
+				companyEmailId: this.props.companyEmailId,
+				to: this.props.to,
+				subject: 'Provide Subject'
 			}
 		}
 
@@ -110,7 +125,6 @@ class Main extends Component {
 				this.state.editorState.getCurrentContent()
 			)
 		)
-
 		this.props.handleSubmit(body);
 	}
 
@@ -163,30 +177,43 @@ class Main extends Component {
 		const { editorState } = this.state;
 		const { quoteDetails, products } = this.props;
 
-		// const blockRenderMap = DefaultDraftBlockRenderMap.merge(
-		// 	Immutable.Map({
-		// 		// 'header-six': {
-		// 		// 	wrapper: <Hello quoteDetails={quoteDetails} products={products} />
-		// 		// },
-		// 		'header-five': {
-		// 			element: 'div',
-		// 			wrapper: <CodeBlock />
-		// 		}
-		// 	})
-		// );
+		const blockRenderMap = DefaultDraftBlockRenderMap.merge(
+			Immutable.Map({
+				// 'header-six': {
+				// 	wrapper: <Hello quoteDetails={quoteDetails} products={products} />
+				// },
+				'header-five': {
+					element: 'div',
+					wrapper: <CodeBlock />
+				}
+			})
+		);
 
 		return (
 			<div className={styles}>
-				<Editor
-					editorState={editorState}
-					toolbarClassName="toolbarClassName"
-					wrapperClassName="c-react-draft"
-					editorClassName="demo-editor"
-					onEditorStateChange={this.onEditorStateChange}
-				// blockStyleFn={this.myBlockStyleFn}
-				// blockRenderMap={blockRenderMap}
-				// blockRendererFn={this.myBlockRenderer}
-				/>
+				<StandardModal btnText='Send Email' heading='Qutation' isLoading={this.props.isLoading} handleSubmit={() => this.handleSubmit()} show={this.props.show} lgClose={this.props.lgClose} handleModelClick={this.props.lgClose}>
+					<Row className="show-grid">
+						<Col xs={4} md={6}>
+							<Input label='From:' onChange={this.handleInput} value={this.state.companyEmailId} name='from' id='from' type='input' />
+						</Col>
+						<Col xs={4} md={6}>
+							<Input label='To:' onChange={this.handleInput} value={this.state.to} name='to' id='to' type='input' />
+						</Col>
+						<Col xs={12} md={12}>
+							<Input label='Subject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
+						</Col>
+					</Row>
+					<Editor
+						editorState={editorState}
+						toolbarClassName="toolbarClassName"
+						wrapperClassName="c-react-draft"
+						editorClassName="demo-editor"
+						onEditorStateChange={this.onEditorStateChange}
+						blockStyleFn={this.myBlockStyleFn}
+						blockRenderMap={blockRenderMap}
+						blockRendererFn={this.myBlockRenderer}
+					/>
+				</StandardModal>
 			</div>
 		);
 	}

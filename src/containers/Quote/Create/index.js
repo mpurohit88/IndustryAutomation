@@ -171,7 +171,7 @@ class Create extends Component {
 				description: this.refs.description.value,
 				quantity: this.refs.qty.value,
 				rate: this.refs.rate.value,
-				gstn: this.refs.gst.value,
+				gstn: this.refs.gst.value === '' ? 0 : this.refs.gst.value,
 				unit: this.refs.unit.value,
 				imgName: this.state.imgSrc
 			}

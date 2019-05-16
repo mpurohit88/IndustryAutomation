@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Row, Col, Button } from 'react-bootstrap'
 
 import Input from '../../../components/Input'
+import { Badge } from '../../../components/Badge'
 
 import { getAllReminders } from '../../../core/api/reminder'
 
@@ -127,7 +128,10 @@ class List extends Component {
               reminderList && reminderList.map((reminder, index) => {
                 return <tr key={index}>
                   <td>
-                    <Link to={`/quote/${reminder.quote_id}`}>{`Quote ${reminder.quote_id}`}</Link>
+
+                    <Link to={`/quote/${reminder.quote_id}`}>{`Quote ${reminder.quote_id}`}&nbsp;</Link>
+                    {reminder.is_new === 1 && <Badge variant='success'>New</Badge>}
+
                   </td>
                   <td>{reminder.from_address}</td>
                   <td>{reminder.to_address}</td>

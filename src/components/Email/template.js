@@ -75,7 +75,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                         </td>
                         <td style={{ textAlign: 'right', lineHeight: '1.4' }}>
                             <strong>Kind Atten: {constactPerson[0].name}</strong> <br />
-                            Designation: {constactPerson[0].designation} <br />
+                            {constactPerson[0].designation ? <span>Designation: {constactPerson[0].designation}<br /></span> : ''} 
                             Phone No.: {quoteDetails.phoneNo}<br />
                             Email: {constactPerson[0].email}<br />
                             {constactPerson[0].email === quoteDetails.email ? '' : quoteDetails.email}
@@ -85,11 +85,11 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                         <td><br /></td>
                     </tr>
                     <tr>
-                        <td colSpan='2'><input size="100" type='text' id='refSubject' name='refSubject' value='Ref. Your Email Enquiry Dated' /></td>
+                        <td colSpan='2'><input size="104" type='text' id='refSubject' name='refSubject' value='Ref. Your Email Enquiry Dated' /></td>
                     </tr>
                     <tr>
                         <td colSpan='2' style={{ lineHeight: '1.6' }}>Dear Sir, <br />
-                            We thank you very much for your above enquiry and pleased to quote our lowest offer as under:-
+                            <textarea cols="107" rows="2" id='refMsg' name='refMsg' value='We thank you very much for your above enquiry and pleased to quote our lowest offer as under:-' />
                             <br /> <br />
                         </td>
                     </tr>
@@ -102,12 +102,12 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                         <td colSpan='2' className='child'>
                             <table width="100%" height="100%" cellPadding="0" cellSpacing="0" border="0" align="left" valign="top">
                                 <tr>
-                                    <th style={{ border: '1px solid black', padding: '10px', maxWidth: '68px' }}>Sr. No.</th>
-                                    <th style={{ border: '1px solid black', padding: '10px', maxWidth: '350px' }}>{particular}</th>
+                                    <th style={{ border: '1px solid black', padding: '10px', width: '68px' }}>S. No.</th>
+                                    <th style={{ border: '1px solid black', padding: '10px', width: '350px' }}>{particular}</th>
                                     {showImageColumn && <th style={{ border: '1px solid black', padding: '10px' }}>Image</th>}
                                     <th style={{ border: '1px solid black', padding: '10px' }}>HSN code</th>
                                     <th style={{ border: '1px solid black', padding: '10px' }}>Qty.</th>
-                                    <th style={{ border: '1px solid black', padding: '10px', maxWidth: '130px' }}>Rate</th>
+                                    <th style={{ border: '1px solid black', padding: '10px', width: '130px' }}>Rate</th>
                                     {isShowGST && <th style={{ border: '1px solid black', padding: '10px' }}>GST</th>}
 
                                 </tr>
@@ -138,13 +138,13 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                     </tr>
                     <tr>
                         <td colSpan='2' style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20 + 'px' }}>
-                            <input size='70' type='text' id='about-product' name='about-product' value='NOTE' />
+                            <textarea cols="60" rows="2" id='about-product' name='about-product' />
                         </td>
                     </tr>
                     <tr>
                         <td colSpan='2' style={{ lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
                             Terms & Conditions: <br />
-                            <textarea cols="108" rows="20" id='terms' name='terms' />
+                            <div id='terms' name='terms' />
                             <p id="term-data" style={{ lineHeight: '1.6' }}></p>
                         </td>
                     </tr>
