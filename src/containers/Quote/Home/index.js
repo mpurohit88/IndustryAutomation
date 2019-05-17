@@ -43,18 +43,14 @@ class Home extends Component {
 			'<p><strong><ins>Payment</ins></strong>  <strong>:  </strong>20% Advance along with PO must be required to deposit GST amount with government &amp; Balance 80% against our P.I. before dispatch by RTGS only. We only accept payment through RTGS mode. Any cheque payment is not acceptable. Kindly incorporate in your PO accordingly.&nbsp;' +
 			'<br/><strong>GST             :</strong><br/>' +
 			'<strong>Delivery    :</strong>  <br/>' +
-			'<strong><ins>FOR</ins>            :</strong><strong>                                          Insurance</strong> : n Buyer`s a/c.&nbsp;<br/>' +
+			'<strong><ins>FOR</ins>            :</strong>      <strong>                         Insurance</strong> : n Buyer`s a/c.&nbsp;<br/>' +
 			'<strong><ins>Packing</ins>     :</strong>   <br/>' +
 			'<strong><ins>Validity</ins>     :</strong>   <br/>' +
 			'<strong><ins>Tolerance</ins></strong><strong> :   </strong>The Conveyor belts are being manufactured according to IS – 1891 – Standards. The Tolerance in length i.e +2% ; -0.5%% to be incorporated in purchase order.<br/>' +
-			'<strong><ins>Warranty </ins></strong> <strong>:</strong><br/><br/></p' +
-
-			'<p>Thanking you in anticipation, assuring you of our best attention, cooperation, and consideration at all times and awaiting your valued purchase order please.<br/><br/></p>' +
-
-			'<p><strong>Thanks &amp; Regards </strong><br/><br/></p>' +
-			'<p></p>' +
-
-			'<p>&#10;&#10;&#10;<strong>Member     +91 77268-66661</strong>' +
+			'<strong><ins>Warranty </ins></strong> <strong>:</strong><br/><br/>' +
+			'<span>Thanking you in anticipation, assuring you of our best attention, cooperation, and consideration at all times and awaiting your valued purchase order please.<br/><br/></span>' +
+			'<strong>Thanks &amp; Regards </strong><br/><br/>' +
+			'&#10;&#10;&#10;<strong>Member     +91 77268-66661</strong>' +
 			'<strong>BOTS (Back Office Team – SOMI- MKTG. DEPT.)          </strong>&nbsp;<br/><br/></p>' +
 			'<p><strong>Note: SCBL special feature with respect to Elongation in Conveyor Beltings will be less than 2%. SCBL is presently INDIA biggest and largest manufacturer of</strong> <strong>all types of Fabric, Steel Cord &amp; Bucket Elevator Belts.</strong><br/><br/></p>' +
 			'<p><strong><em><ins>SCBL Warranty clauses against manufacturing defects:-</ins></em></strong></p>' +
@@ -247,8 +243,8 @@ class Home extends Component {
 					document.getElementById("doPrint").addEventListener("click", function () {
 						var divContents = document.getElementById("printEmail").innerHTML;
 						var printWindow = window.open('', '', 'height=800,width=1000');
-						printWindow.document.write('<html><head><title>DIV Contents</title>');
-						printWindow.document.write('</head><body >');
+						printWindow.document.write('<html><meta charset="utf-8"><head><title>' + getCompanyName() + '</title>');
+						printWindow.document.write('</head><body>');
 						printWindow.document.write(divContents);
 						printWindow.document.write('</body></html>');
 						printWindow.document.close();
@@ -269,7 +265,7 @@ class Home extends Component {
 	sendEmailToCustomer(id, nextId, userActivityId) {
 		if (this.state.subject.trim() !== "") {
 			const self = this;
-			let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson, this.props.details.quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode);
+			let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson, this.props.details.quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode, this.state.subject);
 
 			body = body.replace('<input type="text" id="refId" name="refId"/>', document.getElementById('refId').value)
 			body = body.replace('<input type="text" size="104" id="refSubject" name="refSubject" value="Ref. Your Email Enquiry Dated"/>', document.getElementById('refSubject').value)
@@ -446,7 +442,7 @@ class Home extends Component {
 												onClick={(e) => this.showEmailBody(task.id, tasks[index + 1].id, task.userActivityId)}
 											>
 												View Email
-																</Button>
+											</Button>
 										}
 									</div>
 									{
@@ -547,7 +543,7 @@ class Home extends Component {
 								<Input label='Subject:' onChange={this.handleInput} value={this.state.subject} name='subject' id='subject' type='input' />
 							</Col>
 							<Col xs={12} md={12}>
-								Attachments: <input type="file" id="attachments" class="form-control" multiple onChange={this.onChangeHandler} />
+								Attachments: <input type="file" id="attachments" className="form-control" multiple onChange={this.onChangeHandler} />
 								{/* <Input type='file' label='Browse Image:' accept="image/*" onChange={this.handleInput} value={this.state.attachments} name='attachments' id='attachments' /> */}
 
 								{
@@ -570,7 +566,7 @@ class Home extends Component {
 						{this.state.emailBody ?
 							<div id="printEmail" dangerouslySetInnerHTML={{ __html: this.state.emailBody }} />
 							:
-							<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson, quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode) }} />
+							<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson, quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode, this.state.subject) }} />
 						}
 
 						{/* Editor */}

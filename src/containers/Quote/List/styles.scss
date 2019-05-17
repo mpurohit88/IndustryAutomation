@@ -8,3 +8,12 @@
         font-weight: 600;
     }
 }
+
+#popover-basic > div.popover-body > table > tbody > tr > td {
+    border: 1px solid gray;
+    padding: 5px;
+}
+
+#popover-basic {
+    max-width: 500px !important;
+}

@@ -7,14 +7,18 @@ import { styles } from './styles.scss'
 
 // 2. Create some CSS to be injected in the head as a prop of
 // the <Email> component. See step #3 below.
-const css = `br { line-height: 1} 
+const css = `br { line-height: 1}  table { page-break-after:auto }
+  tr    { page-break-inside:avoid; page-break-after:auto }
+  td    { page-break-inside:avoid; page-break-after:auto }
+  thead { display:table-header-group }
+  tfoot { display:table-footer-group }
 @media only screen and (max-device-width: 480px) {
   font-size: 20px !important;
 }`.trim();
 
 
 //3. Create your react component using react-html-email components
-const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, particular, currencyHtmlCode }) {
+const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, particular, currencyHtmlCode, subject }) {
     let showImageColumn = false;
     let isShowGST = false;
 
@@ -58,7 +62,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                 <br /> <br />
             </Item>
             <Item>
-                <table width="100%">
+                <table width="100%" style={{ font: 'Times New Roman' }}>
                     <tr width="100%">
                         <td>
                             Our Ref <input type='text' id='refId' name='refId' />
@@ -75,7 +79,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                         </td>
                         <td style={{ textAlign: 'right', lineHeight: '1.4' }}>
                             <strong>Kind Atten: {constactPerson[0].name}</strong> <br />
-                            {constactPerson[0].designation ? <span>Designation: {constactPerson[0].designation}<br /></span> : ''} 
+                            {constactPerson[0].designation ? <span>Designation: {constactPerson[0].designation}<br /></span> : ''}
                             Phone No.: {quoteDetails.phoneNo}<br />
                             Email: {constactPerson[0].email}<br />
                             {constactPerson[0].email === quoteDetails.email ? '' : quoteDetails.email}
@@ -83,6 +87,11 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                     </tr>
                     <tr>
                         <td><br /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Subject: {subject}
+                        </td>
                     </tr>
                     <tr>
                         <td colSpan='2'><input size="104" type='text' id='refSubject' name='refSubject' value='Ref. Your Email Enquiry Dated' /></td>
@@ -103,11 +112,11 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                             <table width="100%" height="100%" cellPadding="0" cellSpacing="0" border="0" align="left" valign="top">
                                 <tr>
                                     <th style={{ border: '1px solid black', padding: '10px', width: '68px' }}>S. No.</th>
-                                    <th style={{ border: '1px solid black', padding: '10px', width: '350px' }}>{particular}</th>
+                                    <th style={{ border: '1px solid black', padding: '10px', width: '225px' }}>{particular}</th>
                                     {showImageColumn && <th style={{ border: '1px solid black', padding: '10px' }}>Image</th>}
                                     <th style={{ border: '1px solid black', padding: '10px' }}>HSN code</th>
                                     <th style={{ border: '1px solid black', padding: '10px' }}>Qty.</th>
-                                    <th style={{ border: '1px solid black', padding: '10px', width: '130px' }}>Rate</th>
+                                    <th style={{ border: '1px solid black', padding: '10px', width: '100px' }}>Rate</th>
                                     {isShowGST && <th style={{ border: '1px solid black', padding: '10px' }}>GST</th>}
 
                                 </tr>
@@ -119,7 +128,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                                             </td>
                                             <td style={{ border: '1px solid black', padding: '10px', lineHeight: '1.3' }}>{product.name} <br /> {product.description}</td>
                                             {showImageColumn && <td style={{ border: '1px solid black', padding: '10px' }}>
-                                                <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} />
+                                                {product.imgName && <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} />}
                                             </td>}
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.hsnCode}</td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.quantity} {product.unit}</td>
@@ -142,7 +151,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                         </td>
                     </tr>
                     <tr>
-                        <td colSpan='2' style={{ lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                        <td colSpan='2' style={{ lineHeight: '1.6', pageBreakBefore: 'always' }}>
                             Terms & Conditions: <br />
                             <div id='terms' name='terms' />
                             <p id="term-data" style={{ lineHeight: '1.6' }}></p>
@@ -164,6 +173,6 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
 // 4. Feed your component into react-html-email's renderEmail 
 // function, which converts it into the needed html, tables and all.
 // https://stackoverflow.com/questions/40417527/how-do-i-preserve-line-breaks-when-getting-text-from-a-textarea/40426477
-export const GetContactEmail = function (products, quoteDetails, constactPerson, particular, currencyHtmlCode) {
-    return renderEmail(<ContactMeTemplate products={products} quoteDetails={quoteDetails} constactPerson={constactPerson} particular={particular} currencyHtmlCode={currencyHtmlCode} />);
+export const GetContactEmail = function (products, quoteDetails, constactPerson, particular, currencyHtmlCode, subject) {
+    return renderEmail(<ContactMeTemplate products={products} quoteDetails={quoteDetails} constactPerson={constactPerson} particular={particular} currencyHtmlCode={currencyHtmlCode} subject={subject} />);
 }

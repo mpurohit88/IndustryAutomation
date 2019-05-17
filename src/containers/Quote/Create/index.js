@@ -74,7 +74,7 @@ class Create extends Component {
 			let newQuoteVar = {};
 			// newProductVar.isActive = isActive;
 			newQuoteVar.id = this.props.newQuote.id;
-			newQuoteVar.party_name = this.props.newQuote.companyId;
+			newQuoteVar.party_name = this.props.newQuote.customer_id;
 			newQuoteVar.address = this.props.newQuote.address;
 			newQuoteVar.phoneNo = this.props.newQuote.phoneNo;
 			newQuoteVar.mobileNo = this.props.newQuote.mobileNo;
