@@ -18,7 +18,7 @@ const css = `br { line-height: 1}  table { page-break-after:auto; text-align: le
 
 
 //3. Create your react component using react-html-email components
-const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, particular, currencyHtmlCode, subject }) {
+const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, particular, currencyHtmlCode }) {
     let showImageColumn = false;
     let isShowGST = false;
 
@@ -90,7 +90,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                     </tr>
                     <tr>
                         <td>
-                            Subject: {subject}
+                            Subject: <label id="subjectLabel"></label>
                         </td>
                     </tr>
                     <tr>
@@ -173,6 +173,6 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
 // 4. Feed your component into react-html-email's renderEmail 
 // function, which converts it into the needed html, tables and all.
 // https://stackoverflow.com/questions/40417527/how-do-i-preserve-line-breaks-when-getting-text-from-a-textarea/40426477
-export const GetContactEmail = function (products, quoteDetails, constactPerson, particular, currencyHtmlCode, subject) {
-    return renderEmail(<ContactMeTemplate products={products} quoteDetails={quoteDetails} constactPerson={constactPerson} particular={particular} currencyHtmlCode={currencyHtmlCode} subject={subject} />);
+export const GetContactEmail = function (products, quoteDetails, constactPerson, particular, currencyHtmlCode) {
+    return renderEmail(<ContactMeTemplate products={products} quoteDetails={quoteDetails} constactPerson={constactPerson} particular={particular} currencyHtmlCode={currencyHtmlCode} />);
 }

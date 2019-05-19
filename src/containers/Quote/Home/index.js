@@ -210,6 +210,10 @@ class Home extends Component {
 		let value = e.target.value;
 		let name = e.target.name;
 
+		if (name === 'subject') {
+			document.getElementById('subjectLabel').innerHTML = value;
+		}
+
 		this.setState({ [name]: value })
 	}
 
@@ -265,12 +269,14 @@ class Home extends Component {
 	sendEmailToCustomer(id, nextId, userActivityId) {
 		if (this.state.subject.trim() !== "") {
 			const self = this;
-			let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson, this.props.details.quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode, this.state.subject);
+			let body = getTemplate(this.props.details.quoteDetails.companyId, this.props.details.products, this.props.details.quoteDetails, this.state.constactPerson, this.props.details.quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode);
 
 			body = body.replace('<input type="text" id="refId" name="refId"/>', document.getElementById('refId').value)
 			body = body.replace('<input type="text" size="104" id="refSubject" name="refSubject" value="Ref. Your Email Enquiry Dated"/>', document.getElementById('refSubject').value)
 			body = body.replace('<textarea cols="60" rows="2" id="about-product" name="about-product"></textarea>', document.getElementById('about-product').value)
 			body = body.replace('<textarea cols="107" rows="2" id="refMsg" name="refMsg">We thank you very much for your above enquiry and pleased to quote our lowest offer as under:-</textarea>', document.getElementById('refMsg').value)
+			body = body.replace('<label id="subjectLabel"></label>', document.getElementById('subjectLabel').innerHTML)
+
 			// body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="NOTE"/>', document.getElementById('about-product').value)
 			// body = body.replace('<textarea cols="40" rows="3" id="thanks" name="thanks"></textarea>', document.getElementById('thanks').value);
 
@@ -400,7 +406,7 @@ class Home extends Component {
 					<div className='flex-center head'>
 						<div className='imgEdit'>
 							<img height='17' src='/img/userEdit.png' />
-							<a href='#' style={{ color: 'white' }} onClick={() => this.handleQuoteEditClick(true, quoteDetails.status > 2)}><strong>Quote No.: </strong>{quoteDetails.id}</a>
+							<a href='#' style={{ color: 'white' }} onClick={() => this.handleQuoteEditClick(true, quoteDetails.status > 3)}><strong>Quote No.: </strong>{quoteDetails.id}</a>
 						</div>
 
 						<div>
@@ -574,7 +580,7 @@ class Home extends Component {
 						{this.state.emailBody ?
 							<div id="printEmail" dangerouslySetInnerHTML={{ __html: this.state.emailBody }} />
 							:
-							<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson, quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode, this.state.subject) }} />
+							<div dangerouslySetInnerHTML={{ __html: getTemplate(quoteDetails.companyId, products, quoteDetails, this.state.constactPerson, quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode) }} />
 						}
 
 						{/* Editor */}

@@ -16,6 +16,17 @@ import Zoom from './Zoom'
 /* component styles */
 import { styles } from './styles.scss'
 
+const INITIAL_STATE = {
+	newQuote: {
+		party_name: '',
+		address: '',
+		phoneNo: '',
+		mobileNo: '',
+		contact_person: '',
+		currency_type: ''
+	},
+};
+
 // Quote Create
 class Create extends Component {
 	constructor(props) {
@@ -24,14 +35,7 @@ class Create extends Component {
 		this.state = {
 			isLoading: false,
 			showSucess: false,
-			newQuote: {
-				party_name: '',
-				address: '',
-				phoneNo: '',
-				mobileNo: '',
-				contact_person: '',
-				currency_type: ''
-			},
+			newQuote: INITIAL_STATE,
 			listOfProduct: [],
 			products: [],
 			contactList: [],
@@ -50,6 +54,9 @@ class Create extends Component {
 		this.handleProductChange = this.handleProductChange.bind(this);
 		this.resetSuccess = this.resetSuccess.bind(this);
 		this.getCurrencySymbole = this.getCurrencySymbole.bind(this);
+		this.handleRowEdit = this.handleRowEdit.bind(this);
+		this.onUpdateProduct = this.onUpdateProduct.bind(this);
+		this.reset = this.reset.bind(this);
 	}
 
 	componentDidMount() {
@@ -120,6 +127,62 @@ class Create extends Component {
 		this.refs.description.focus();
 	}
 
+	handleRowEdit(product) {
+		let index = -1;
+		const clength = this.state.products.length;
+		for (var i = 0; i < clength; i++) {
+			if (this.state.products[i].product_id === product.product_id) {
+				index = i;
+				break;
+			}
+		}
+
+		const productEdit = this.state.products[index];
+
+		this.refs.name.value = productEdit.product_id;
+		this.refs.hsnCode.value = productEdit.hsnCode;
+		this.refs.qty.value = productEdit.quantity;
+		this.refs.rate.value = productEdit.rate;
+		this.refs.gst.value = productEdit.gstn;
+		this.refs.imgName.src = productEdit.imgName;
+		this.refs.description.value = productEdit.description;
+		this.refs.unit.value = productEdit.unit;
+
+		this.setState({ productEdit: productEdit })
+	};
+
+	onUpdateProduct = event => {
+		const that = this;
+
+		this.setState(state => {
+			const products = state.products.map((item, j) => {
+				if (item.product_id === that.state.productEdit.product_id) {
+					return {
+						id: that.state.productEdit.product_id,
+						name: that.state.productEdit.name,
+						product_id: that.state.productEdit.product_id,
+						hsnCode: this.refs.hsnCode.value,
+						description: this.refs.description.value,
+						quantity: this.refs.qty.value,
+						rate: this.refs.rate.value,
+						gstn: this.refs.gst.value === '' ? 0 : this.refs.gst.value,
+						unit: this.refs.unit.value,
+						imgName: this.state.imgSrc
+
+					};
+				} else {
+					return item;
+				}
+			});
+
+			that.reset();
+			return {
+				products,
+				productEdit: null
+			};
+		});
+	};
+
 	handleRowDel(product) {
 		let index = -1;
 		const clength = this.state.products.length;
@@ -179,21 +242,24 @@ class Create extends Component {
 			let productsListTemp = this.state.products;
 			productsListTemp.push(product);
 			this.setState({ products: productsListTemp });
+			reset();
 
-			this.refs.name.value = '0';
-			this.refs.hsnCode.value = '';
-			this.refs.qty.value = '';
-			this.refs.rate.value = '';
-			this.refs.gst.value = '';
-			this.refs.imgName.src = '';
-			this.refs.description.value = '';
-			this.refs.unit.value = '';
-
-			document.getElementById('unit').innerText = '';
 		} else {
 			alert("Product quantity should be greater then Zero");
 			this.refs.qty.focus();
 		}
+	}
+
+	reset() {
+		this.refs.name.value = '0';
+		this.refs.hsnCode.value = '';
+		this.refs.qty.value = '';
+		this.refs.rate.value = '';
+		this.refs.gst.value = '';
+		this.refs.imgName.src = '';
+		this.refs.description.value = '';
+		this.refs.unit.value = '';
+		document.getElementById('unit').innerText = '';
 	}
 
 	handleInput(e) {
@@ -292,12 +358,7 @@ class Create extends Component {
 			this.setState({
 				isLoading: false,
 				showSucess: true,
-				newQuote: {
-					party_name: '',
-					address: '',
-					phoneNo: '',
-					mobileNo: ''
-				},
+				newQuote: INITIAL_STATE,
 				products: []
 			});
 		} else {
@@ -324,18 +385,6 @@ class Create extends Component {
 		});
 
 		return code;
-		// switch (currency) {
-		// 	case '1':
-		// 		return '&#8377;';
-		// 	case '2':
-		// 		return '&#36;';
-		// 	case '3':
-		// 		return '&#8364;';
-		// 	case '4':
-		// 		return '&#165;';
-		// 	default:
-		// 		return '&#8377;';
-		// }
 	}
 
 	getRateSybmole = function (currency) {
@@ -380,7 +429,10 @@ class Create extends Component {
 					<td>{product.gstn}</td>
 					<td>{that.state.imgSrc && <Zoom src={that.state.imgSrc} />
 					}</td>
-					<td className='link'><a id='remove_quote' href='#' onClick={() => that.handleRowDel(product).bind(this)}>Remove</a></td>
+					<td className='link'>
+						<a id='edit_quote' href='#' onClick={() => that.handleRowEdit(product)}>Edit</a><br />
+						<a id='remove_quote' href='#' onClick={() => that.handleRowDel(product).bind(this)}>Remove</a>
+					</td>
 				</tr>)
 		});
 
@@ -491,7 +543,12 @@ class Create extends Component {
 										</figure> */}
 									</td>
 									<td>
-										<input type='button' value='Add' onClick={this.handleAddEvent} />
+										{
+											this.state.productEdit ?
+												<input type='button' value='Update' onClick={this.onUpdateProduct} />
+												:
+												<input type='button' value='Add' onClick={this.handleAddEvent} />
+										}
 									</td>
 								</tr>
 								{product}
