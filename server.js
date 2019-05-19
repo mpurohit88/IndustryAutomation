@@ -79,4 +79,16 @@ server.listen(process.env.PORT || 3000, function onListen() {
   console.log('Listening on: %j', address)
   console.log(' -> that probably means: http://localhost:%d', address.port)
 })
+
+function errorHandler(err, req, res, next) {
+  if (res.headersSent) {
+    return next(err)
+  }
+
+  res.status(500)
+  res.render('error', { error: err })
+}
+
+app.use(errorHandler)
+
 /* eslint-disable */

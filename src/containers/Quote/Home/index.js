@@ -232,7 +232,7 @@ class Home extends Component {
 	showEmail(id, nextId, userActivityId) {
 
 		quoteContactDetail(this.props.details.quoteDetails.contact_person_id).then((result) => {
-			this.setState({ constactPerson: result, showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId });
+			this.setState({ emailBody: null, constactPerson: result, showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId });
 		})
 	}
 
@@ -433,8 +433,8 @@ class Home extends Component {
 											task.taskId === 1 && <Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 												onClick={(e) => this.showEmail(task.id, tasks[index + 1].id, task.userActivityId)}
 											>
-												Send Email
-																</Button>
+												{task.scheduleId ? 'Resend Email' : 'Send Email'}
+											</Button>
 										}
 
 										{
@@ -444,6 +444,14 @@ class Home extends Component {
 												View Email
 											</Button>
 										}
+										{
+											task.taskId === 1 && <Button variant="outline-primary" type="button" isDisabled={task.scheduleId === null ? true : this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+												onClick={(e) => { this.doneTask(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId, quoteDetails.id, 8) }}
+											>
+												Finalize Quote
+										</Button>
+										}
+
 									</div>
 									{
 										task.taskId === 2 && <div>

@@ -7,7 +7,7 @@ import { styles } from './styles.scss'
 
 // 2. Create some CSS to be injected in the head as a prop of
 // the <Email> component. See step #3 below.
-const css = `br { line-height: 1}  table { page-break-after:auto }
+const css = `br { line-height: 1}  table { page-break-after:auto; text-align: left; }
   tr    { page-break-inside:avoid; page-break-after:auto }
   td    { page-break-inside:avoid; page-break-after:auto }
   thead { display:table-header-group }
@@ -62,7 +62,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                 <br /> <br />
             </Item>
             <Item>
-                <table width="100%" style={{ font: 'Times New Roman' }}>
+                <table width="100%" style={{ font: 'Times New Roman', textAlign: 'left' }}>
                     <tr width="100%">
                         <td>
                             Our Ref <input type='text' id='refId' name='refId' />
