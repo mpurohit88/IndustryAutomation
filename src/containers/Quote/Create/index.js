@@ -127,15 +127,15 @@ class Create extends Component {
 		this.refs.description.focus();
 	}
 
-	handleRowEdit(product) {
-		let index = -1;
-		const clength = this.state.products.length;
-		for (var i = 0; i < clength; i++) {
-			if (this.state.products[i].product_id === product.product_id) {
-				index = i;
-				break;
-			}
-		}
+	handleRowEdit(product, index) {
+		// let index = -1;
+		// const clength = this.state.products.length;
+		// for (var i = 0; i < clength; i++) {
+		// 	if (i === index) {
+		// 		index = i;
+		// 		break;
+		// 	}
+		// }
 
 		const productEdit = this.state.products[index];
 
@@ -147,8 +147,9 @@ class Create extends Component {
 		this.refs.imgName.src = productEdit.imgName;
 		this.refs.description.value = productEdit.description;
 		this.refs.unit.value = productEdit.unit;
+		this.refs.imgName.src = `img/product/${productEdit.imgName}`;
 
-		this.setState({ productEdit: productEdit })
+		this.setState({ productEdit: productEdit, editIndex: index })
 	};
 
 	onUpdateProduct = event => {
@@ -156,7 +157,8 @@ class Create extends Component {
 
 		this.setState(state => {
 			const products = state.products.map((item, j) => {
-				if (item.product_id === that.state.productEdit.product_id) {
+				if (j === that.state.editIndex) {
+
 					return {
 						id: that.state.productEdit.product_id,
 						name: that.state.productEdit.name,
@@ -167,7 +169,7 @@ class Create extends Component {
 						rate: this.refs.rate.value,
 						gstn: this.refs.gst.value === '' ? 0 : this.refs.gst.value,
 						unit: this.refs.unit.value,
-						imgName: this.state.imgSrc
+						imgName: that.state.productEdit.imgName
 
 					};
 				} else {
@@ -178,23 +180,29 @@ class Create extends Component {
 			that.reset();
 			return {
 				products,
-				productEdit: null
+				productEdit: null,
+				imgSrc: null
 			};
 		});
 	};
 
-	handleRowDel(product) {
-		let index = -1;
-		const clength = this.state.products.length;
-		for (var i = 0; i < clength; i++) {
-			if (this.state.products[i].id === product.id) {
-				index = i;
-				break;
-			}
-		}
+	handleRowDel(product, index) {
+		// let index = -1;
+		// const clength = this.state.products.length;
+		// for (var i = 0; i < clength; i++) {
+		// 	if (this.state.products[i].id === product.id) {
+		// 		index = i;
+		// 		break;
+		// 	}
+		// }
 
-		this.state.products.splice(index, 1);
-		this.setState({ products: this.state.products });
+		this.setState(state => {
+			const products = state.products.filter((product, j) => index !== j);
+
+			return {
+				products,
+			};
+		});
 	};
 
 	handleAddEvent() {
@@ -430,8 +438,8 @@ class Create extends Component {
 					<td>{that.state.imgSrc && <Zoom src={that.state.imgSrc} />
 					}</td>
 					<td className='link'>
-						<a id='edit_quote' href='#' onClick={() => that.handleRowEdit(product)}>Edit</a><br />
-						<a id='remove_quote' href='#' onClick={() => that.handleRowDel(product).bind(this)}>Remove</a>
+						<a id='edit_quote' href='#' onClick={() => that.handleRowEdit(product, index)}>Edit</a><br />
+						<a id='remove_quote' href='#' onClick={() => that.handleRowDel(product, index).bind(this)}>Remove</a>
 					</td>
 				</tr>)
 		});

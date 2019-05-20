@@ -327,7 +327,11 @@ class Home extends Component {
 			body = body.replace('<div id="terms" name="terms"></div>', html);
 
 			this.props.details.products.map((e, index) => {
-				body = body.replace('src="/img/product/' + e.imgName + '"', 'src="cid:EmbeddedContent_' + index + '"');
+				if (e.imgName === '') {
+					body = body.replace('src="/img/blankImg.png"',  'src="cid:EmbeddedContent_' + index + '"');
+				} else {
+					body = body.replace('src="/img/product/' + e.imgName + '"', 'src="cid:EmbeddedContent_' + index + '"');
+				}
 			});
 
 			self.setState({ isLoading: true });

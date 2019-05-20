@@ -128,7 +128,9 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                                             </td>
                                             <td style={{ border: '1px solid black', padding: '10px', lineHeight: '1.3' }}>{product.name} <br /> {product.description}</td>
                                             {showImageColumn && <td style={{ border: '1px solid black', padding: '10px' }}>
-                                                {product.imgName && <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} />}
+                                                {product.imgName ? <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} />
+                                                :
+                                                <img height="80" id={'img-' + index} src={`/img/blankImg.png`} alt={product.imgName} />}
                                             </td>}
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.hsnCode}</td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.quantity} {product.unit}</td>
