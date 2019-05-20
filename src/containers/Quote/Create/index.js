@@ -242,7 +242,7 @@ class Create extends Component {
 			let productsListTemp = this.state.products;
 			productsListTemp.push(product);
 			this.setState({ products: productsListTemp });
-			reset();
+			this.reset();
 
 		} else {
 			alert("Product quantity should be greater then Zero");

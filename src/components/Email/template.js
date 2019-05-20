@@ -7,7 +7,7 @@ import { styles } from './styles.scss'
 
 // 2. Create some CSS to be injected in the head as a prop of
 // the <Email> component. See step #3 below.
-const css = `br { line-height: 1}  table { page-break-after:auto; text-align: left; }
+const css = ` h5 {display:flex; justify-content: space-between;} br { line-height: 1}  table { page-break-after:auto; text-align: left; }
   tr    { page-break-inside:avoid; page-break-after:auto }
   td    { page-break-inside:avoid; page-break-after:auto }
   thead { display:table-header-group }
@@ -55,7 +55,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
         })
     }
 
-    return <Email title="Quotation" headCSS={css} className={styles} className="quotation">
+    return <Email title="Quotation" headCSS={css} className={styles} className="quotation" id="quotation">
         <Box width="100%" style={{ lineHeight: 2 }}>
             <Item width="100%" style={{ textAlign: 'center' }}>
                 <center><div style={{ textAlign: 'center', textDecoration: 'underline', fontWeight: 'bold', fontSize: 20 + 'px' }}>QUOTATION</div></center>
@@ -165,9 +165,9 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                         </td>
                     </tr> */}
                 </table>
-            </Item>
-        </Box>
-    </Email>;
+            </Item >
+        </Box >
+    </Email >;
 };
 
 // 4. Feed your component into react-html-email's renderEmail 

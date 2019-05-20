@@ -1,8 +1,10 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
-import { Editor, EditorState, RichUtils, ContentState, convertToRaw, convertFromHTML } from 'draft-js';
+import { Editor, EditorState, RichUtils, ContentState, convertToRaw, convertFromHTML, DefaultDraftBlockRenderMap } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+import Immutable from 'immutable';
+import { stateToHTML } from 'draft-js-export-html';
 
 import Create from '../Create/index';
 
@@ -34,75 +36,97 @@ import { getCurrencyType } from '../../../core/api/currencyType'
 /* component styles */
 import { styles } from './styles.scss'
 
+const html = '<p>&nbsp;&nbsp;</p>' +
+	'<p><strong><ins>Payment</ins></strong>  <strong>:  </strong>20% Advance along with PO must be required to deposit GST amount with government &amp; Balance 80% against our P.I. before dispatch by RTGS only. We only accept payment through RTGS mode. Any cheque payment is not acceptable. Kindly incorporate in your PO accordingly.&nbsp;' +
+	'<br/><strong>GST             :</strong><br/>' +
+	'<strong>Delivery    :</strong>  <br/>' +
+	'<strong><ins>FOR</ins>            :</strong>      <strong>                         Insurance</strong> : n Buyer`s a/c.&nbsp;<br/>' +
+	'<strong><ins>Packing</ins>     :</strong>   <br/>' +
+	'<strong><ins>Validity</ins>     :</strong>   <br/>' +
+	'<strong><ins>Tolerance</ins></strong><strong> :   </strong>The Conveyor belts are being manufactured according to IS – 1891 – Standards. The Tolerance in length i.e +2% ; -0.5%% to be incorporated in purchase order.<br/>' +
+	'<strong><ins>Warranty </ins></strong> <strong>:</strong><br/><br/>' +
+	'<span>Thanking you in anticipation, assuring you of our best attention, cooperation, and consideration at all times and awaiting your valued purchase order please.<br/><br/></span>' +
+	'<strong>Thanks &amp; Regards </strong><br/><br/>' +
+	'&#10;&#10;&#10;<strong>Member     +91 77268-66661</strong>' +
+	'<strong>BOTS (Back Office Team – SOMI- MKTG. DEPT.)          </strong>&nbsp;<br/><br/></p>' +
+	'<p><strong>Note: SCBL special feature with respect to Elongation in Conveyor Beltings will be less than 2%. SCBL is presently INDIA biggest and largest manufacturer of</strong> <strong>all types of Fabric, Steel Cord &amp; Bucket Elevator Belts.</strong><br/><br/></p>' +
+	'<p><strong><em><ins>SCBL Warranty clauses against manufacturing defects:-</ins></em></strong></p>' +
+	'<p><em>In the event of failure through defect, SCBL will repair or replace the damaged portion of the main belt body applicable for all Grade/Types of Belts except spliced portion. The judgment of failure shall be purely of SCBL. SCBL liability is limited to the purchased price of the conveyor belts or replacement made with due allowance for the services rendered. </em><br/></p>' +
+	'<p><em>SCBL shall not be liable for any consequential claim or other loss or damage of any nature arising out of the use of its product under following conditions:<br/></em>' +
+	'<em>1. For HRT-1 (120°C Max.), For HRT-2/ SHR (150ºC Max.), For HRT-3/UHR (180°C Max.) and our SEHR-36 Grade (250ºC Max.): The belt speed should not be less than 2.5 mtrs/ sec. The total travelled time with loaded material on belt should be more than 6 minutes. The belt should not be in stopped condition with loaded hot material for more than 2 minutes.<br/></em>' +
+	'<em>2. Penetration of belt by tramp metal, etc., as evidenced by longitudinal ripping. <br/></em>' +
+	'<em>3. Objects between belt and pulley as evidenced by rupture.<br/></em>' +
+	'<em>4. Extreme lateral distortion (folding) as evidenced by longitudinal cracking.<br/></em>' +
+	'<em>5. Running off against structures as evidenced by edge breaks.<br/></em>' +
+	'<em>6. Abnormal pulley systems.<br/></em>' +
+	'<em>7. Extreme skirt-board wear.<br/></em>' +
+	'<em>8. Edge wear – edge cover torn.<br/></em>' +
+	'<em>9. Grease damage to pulley cover.<br/></em>' +
+	'<em>10. Wear of fatigue due to worn pulley lagging.<br/></em>' +
+	'<em>11. Extreme mal-distribution of cover wear (top.)<br/></em>' +
+	'<em>12. Wear due to frozen or damaged idlers.<br/></em>' +
+	'<em>13. Wear due to material build – up.<br/></em>' +
+	'<em>14. Increase in Hardness of cover Rubber in Belt.<br/></em>' +
+	'<em>15. Temperature of material carried on Belt exceeds specified / agreed temperature conditions.<br/></em>' +
+	'<em>16. Belt Storage: Six months maximum subject to belt should be rotated 90º approx. wind/unwind every 30 days. Storage should be under roof (No effect of direct sunlight &amp; weather)<br/></em>' +
+	'<em>17. Loading/Unloading damage: SCBL ensures proper packaging however transit damage is out of liability coverage. SCBL suggest to use cloth sling during lifting/unloading of the belt.<br/></em>' +
+	'<em>18. Carcass opening in Belt due to Improper selection of pulley diameter below minimum ratings ;<br/></em>' +
+	'<em>19. Pulley Cover Swelling and peeling due to hydrocarbon based oil / grease spillage from idlers due to excessive lubrication ;<br/></em>' +
+	'<em>20. Star Breaks on Surface of Belt Cover due to Impact of Sharp Material on Belt at Loading Point; Chute Design and Gap<br/></em>' +
+	'<em>21. Any types of Jointing Failure.<br/></em></p>';
+
+
+const exportHtml = '<p><strong>Price Basis</strong>	-	CIF upto Jakarta seaport</br>' +
+	'<strong>Delivery</strong> 	-	Dispatch within 3-5 weeks from the date of receipt of PO</br>' +
+	'<strong>Validity</strong>	-	Our offer is valid for 30 days</br>' +
+	'<strong>Packing</strong>	-	As Required in International export standard, approx weight 9000 kg each roll.</br>' +
+	'<strong>Test -Certificates</strong>	-	Will be provided at the time of dispatch.</br>' +
+	'<strong>Mfg standards</strong>	-	As per International Standards IS/DIN/AS  specifications</br>' +
+	'<strong>Warranty</strong>	-	We Offer Standard Warranty 18 months from the date of supply or 12 Months from the date of Instalation whichever is earlier.</br></br>' +
+
+	'We’re sure you will find our above quoted price to be the most competitive and will be glad to send your valued purchase order soon.  Please revert back with your immediate understanding and please feel free to ask if you need any further information or have any concern. </br></br>' +
+
+	'Thanking you for your kind cooperation and we will appreciate your prompt revert.</br></br>' +
+
+	'Gopi Sharma, </br></br>' +
+
+	'Manager International Sales</br>' +
+	'SOMI CONVEYOR BELTINGS LTD.</br>' +
+	'Cell: +91 95496-50303, 94141 29472</br>' +
+	'export@somiconveyor.com                                      Company’s video: http://youtu.be/7lrE6iQyZtU </br>' +
+	'www.somiconveyor.com                                            CIN:L25192RJ2000PLC016480	</p>';
+
 // Home Of Quote Component
 class Home extends Component {
 	constructor(props) {
 		super(props);
 
-		const html = '<p>&nbsp;&nbsp;</p>' +
-			'<p><strong><ins>Payment</ins></strong>  <strong>:  </strong>20% Advance along with PO must be required to deposit GST amount with government &amp; Balance 80% against our P.I. before dispatch by RTGS only. We only accept payment through RTGS mode. Any cheque payment is not acceptable. Kindly incorporate in your PO accordingly.&nbsp;' +
-			'<br/><strong>GST             :</strong><br/>' +
-			'<strong>Delivery    :</strong>  <br/>' +
-			'<strong><ins>FOR</ins>            :</strong>      <strong>                         Insurance</strong> : n Buyer`s a/c.&nbsp;<br/>' +
-			'<strong><ins>Packing</ins>     :</strong>   <br/>' +
-			'<strong><ins>Validity</ins>     :</strong>   <br/>' +
-			'<strong><ins>Tolerance</ins></strong><strong> :   </strong>The Conveyor belts are being manufactured according to IS – 1891 – Standards. The Tolerance in length i.e +2% ; -0.5%% to be incorporated in purchase order.<br/>' +
-			'<strong><ins>Warranty </ins></strong> <strong>:</strong><br/><br/>' +
-			'<span>Thanking you in anticipation, assuring you of our best attention, cooperation, and consideration at all times and awaiting your valued purchase order please.<br/><br/></span>' +
-			'<strong>Thanks &amp; Regards </strong><br/><br/>' +
-			'&#10;&#10;&#10;<strong>Member     +91 77268-66661</strong>' +
-			'<strong>BOTS (Back Office Team – SOMI- MKTG. DEPT.)          </strong>&nbsp;<br/><br/></p>' +
-			'<p><strong>Note: SCBL special feature with respect to Elongation in Conveyor Beltings will be less than 2%. SCBL is presently INDIA biggest and largest manufacturer of</strong> <strong>all types of Fabric, Steel Cord &amp; Bucket Elevator Belts.</strong><br/><br/></p>' +
-			'<p><strong><em><ins>SCBL Warranty clauses against manufacturing defects:-</ins></em></strong></p>' +
-			'<p><em>In the event of failure through defect, SCBL will repair or replace the damaged portion of the main belt body applicable for all Grade/Types of Belts except spliced portion. The judgment of failure shall be purely of SCBL. SCBL liability is limited to the purchased price of the conveyor belts or replacement made with due allowance for the services rendered. </em><br/></p>' +
-			'<p><em>SCBL shall not be liable for any consequential claim or other loss or damage of any nature arising out of the use of its product under following conditions:<br/></em>' +
-			'<em>1. For HRT-1 (120°C Max.), For HRT-2/ SHR (150ºC Max.), For HRT-3/UHR (180°C Max.) and our SEHR-36 Grade (250ºC Max.): The belt speed should not be less than 2.5 mtrs/ sec. The total travelled time with loaded material on belt should be more than 6 minutes. The belt should not be in stopped condition with loaded hot material for more than 2 minutes.<br/></em>' +
-			'<em>2. Penetration of belt by tramp metal, etc., as evidenced by longitudinal ripping. <br/></em>' +
-			'<em>3. Objects between belt and pulley as evidenced by rupture.<br/></em>' +
-			'<em>4. Extreme lateral distortion (folding) as evidenced by longitudinal cracking.<br/></em>' +
-			'<em>5. Running off against structures as evidenced by edge breaks.<br/></em>' +
-			'<em>6. Abnormal pulley systems.<br/></em>' +
-			'<em>7. Extreme skirt-board wear.<br/></em>' +
-			'<em>8. Edge wear – edge cover torn.<br/></em>' +
-			'<em>9. Grease damage to pulley cover.<br/></em>' +
-			'<em>10. Wear of fatigue due to worn pulley lagging.<br/></em>' +
-			'<em>11. Extreme mal-distribution of cover wear (top.)<br/></em>' +
-			'<em>12. Wear due to frozen or damaged idlers.<br/></em>' +
-			'<em>13. Wear due to material build – up.<br/></em>' +
-			'<em>14. Increase in Hardness of cover Rubber in Belt.<br/></em>' +
-			'<em>15. Temperature of material carried on Belt exceeds specified / agreed temperature conditions.<br/></em>' +
-			'<em>16. Belt Storage: Six months maximum subject to belt should be rotated 90º approx. wind/unwind every 30 days. Storage should be under roof (No effect of direct sunlight &amp; weather)<br/></em>' +
-			'<em>17. Loading/Unloading damage: SCBL ensures proper packaging however transit damage is out of liability coverage. SCBL suggest to use cloth sling during lifting/unloading of the belt.<br/></em>' +
-			'<em>18. Carcass opening in Belt due to Improper selection of pulley diameter below minimum ratings ;<br/></em>' +
-			'<em>19. Pulley Cover Swelling and peeling due to hydrocarbon based oil / grease spillage from idlers due to excessive lubrication ;<br/></em>' +
-			'<em>20. Star Breaks on Surface of Belt Cover due to Impact of Sharp Material on Belt at Loading Point; Chute Design and Gap<br/></em>' +
-			'<em>21. Any types of Jointing Failure.<br/></em></p>';
+		// const contentBlock = convertFromHTML('<p></p>');
 
-		const contentBlock = convertFromHTML(html);
-
-		let editorState = '';
-		if (contentBlock) {
-			const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-			editorState = EditorState.createWithContent(contentState);
-			this.state = {
-				isLoading: false,
-				showEditor: false,
-				showScheduler: false,
-				companyEmailId: '',
-				to: '',
-				cc: '',
-				bcc: '',
-				subject: 'Provide Subject',
-				scheduleId: '',
-				showCloseCase: false,
-				showDispatchSummary: false,
-				isDiscard: false,
-				showEmail: false,
-				CreateQuoteShow: false,
-				selectedFile: [],
-				currencyHtmlCode: [],
-				editorState: editorState // Editor
-			}
+		// let editorState = '';
+		// if (contentBlock) {
+		// const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+		// editorState = EditorState.createWithContent(contentState);
+		this.state = {
+			isLoading: false,
+			showEditor: false,
+			showScheduler: false,
+			html: '',
+			companyEmailId: '',
+			to: '',
+			cc: '',
+			bcc: '',
+			subject: 'Provide Subject',
+			scheduleId: '',
+			showCloseCase: false,
+			showDispatchSummary: false,
+			isDiscard: false,
+			showEmail: false,
+			CreateQuoteShow: false,
+			selectedFile: [],
+			currencyHtmlCode: [],
+			editorState: '' // Editor
+			// }
 		}
 
 
@@ -136,7 +160,19 @@ class Home extends Component {
 
 		self.props.fetchQuoteDetails(quoteId, (data) => {
 			getById().then((emailId) => {
-				self.setState({ companyEmailId: data.quoteDetails.userEmail, to: data.quoteDetails.email });
+				let terms = html;
+
+				if (data.quoteDetails.userEmail.indexOf('export') > -1) {
+					terms = exportHtml;
+				}
+
+				const contentBlock = convertFromHTML(terms);
+
+				if (contentBlock) {
+					const editorState = EditorState.createWithContent(ContentState.createFromBlockArray(contentBlock.contentBlocks));
+
+					self.setState({ companyEmailId: data.quoteDetails.userEmail, to: data.quoteDetails.email, editorState: editorState });
+				}
 			});
 		});
 
@@ -280,23 +316,15 @@ class Home extends Component {
 			// body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="NOTE"/>', document.getElementById('about-product').value)
 			// body = body.replace('<textarea cols="40" rows="3" id="thanks" name="thanks"></textarea>', document.getElementById('thanks').value);
 
-			// const post = document.createElement('p');
-			// post.style.cssText = 'line-height: 1; color:black;';
-			// const postText = document.getElementById('terms').value;
-			// post.textContent = postText;
-			// post.innerHTML = post.innerHTML.replace(/\n/g, '<br style="line-height:">\n');  // <-- THIS FIXES THE LINE BREAKS
-			// const card = document.createElement('div');
-			// card.appendChild(post);
-			// const cardStack = document.getElementById('term-data');
-			// cardStack.insertBefore(card, cardStack.firstChild);
+			// const termsAndCondition = draftToHtml(
+			// 	convertToRaw(
+			// 		this.state.editorState.getCurrentContent()
+			// 	)
+			// )
 
-			const termsAndCondition = draftToHtml(
-				convertToRaw(
-					this.state.editorState.getCurrentContent()
-				)
-			)
+			let html = stateToHTML(this.state.editorState.getCurrentContent())
 
-			body = body.replace('<div id="terms" name="terms"></div>', termsAndCondition);
+			body = body.replace('<div id="terms" name="terms"></div>', html);
 
 			this.props.details.products.map((e, index) => {
 				body = body.replace('src="/img/product/' + e.imgName + '"', 'src="cid:EmbeddedContent_' + index + '"');
@@ -378,11 +406,24 @@ class Home extends Component {
 
 		const { editorState } = this.state;
 
+		const blockRenderMap = DefaultDraftBlockRenderMap.merge(
+			Immutable.Map({
+				// 'header-six': {
+				// 	wrapper: <Hello quoteDetails={quoteDetails} products={products} />
+				// },
+				'header-five': {
+					element: 'div',
+					wrapper: <CodeBlock />
+				}
+			})
+		);
+
 		// If the user changes block type before entering any text, we can
 		// either style the placeholder or hide it. Let's just hide it now.
 		let className = 'RichEditor-editor';
-		var contentState = editorState.getCurrentContent();
-		if (!contentState.hasText()) {
+
+		const contentState = editorState && editorState.getCurrentContent();
+		if (contentState && !contentState.hasText()) {
 			if (contentState.getBlockMap().first().getType() !== 'unstyled') {
 				className += ' RichEditor-hidePlaceholder';
 			}
@@ -585,7 +626,7 @@ class Home extends Component {
 
 						{/* Editor */}
 
-						{this.state.emailBody ? '' : <div className={styles + " RichEditor-root"}>
+						{this.state.emailBody && this.state.editorState != '' ? '' : <div className={styles + " RichEditor-root"}>
 							<BlockStyleControls
 								editorState={editorState}
 								onToggle={this.toggleBlockType}
@@ -597,6 +638,7 @@ class Home extends Component {
 							<div className={className} onClick={this.focus}>
 								<Editor
 									blockStyleFn={getBlockStyle}
+									blockRenderMap={blockRenderMap}
 									customStyleMap={styleMap}
 									editorState={editorState}
 									handleKeyCommand={this.handleKeyCommand}
@@ -658,9 +700,23 @@ const styleMap = {
 		backgroundColor: 'rgba(0, 0, 0, 0.05)',
 		fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
 		fontSize: 16,
-		padding: 2,
+		padding: 2
 	},
 };
+
+class CodeBlock extends React.Component {
+	render() {
+		return (
+			<div
+				className="justified-row"
+				data-offset-key={this.props["data-offset-key"]}
+				width='100%'
+			>
+				{this.props.children}
+			</div>
+		);
+	}
+}
 
 function getBlockStyle(block) {
 	switch (block.getType()) {
