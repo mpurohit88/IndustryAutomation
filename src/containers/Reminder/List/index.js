@@ -103,7 +103,7 @@ class List extends Component {
             <Col xs={2} md={2}>
               <Input label='To Date:' handleError={() => { }} onBlur={() => { }} onChange={this.handleInput} value={this.state.filterCriteria.to_date} name='to_date' id='to_date' type='date' />
             </Col>
-            <Col xs={2} md={2} style={{ paddingTop: '12px' }}>
+            <Col xs={3} md={3} style={{ paddingTop: '12px' }}>
               <Button variant="primary" type='button' onClick={this.filterList}>
                 Filter Reimnder
 						</Button>

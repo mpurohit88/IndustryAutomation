@@ -7,7 +7,12 @@ export function createQuote(newQuote) {
 		post('api/quote/create', newQuote.data)
 			.then((data) => {
 				newQuote.cb();
+
+				newQuote.data.quote.id ? 
+				dispatch(quoteAction.quoteDetailsFetchDataSuccess(data))
+				:
 				dispatch(quoteAction.quoteListFetchDataSuccess(data))
+
 			})
 			.catch(() => dispatch(quoteAction.quoteListHaveError(true)));
 	};

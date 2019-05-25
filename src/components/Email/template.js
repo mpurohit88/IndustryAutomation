@@ -56,7 +56,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
     }
 
     return <Email title="Quotation" headCSS={css} className={styles} className="quotation" id="quotation">
-        <Box width="100%" style={{ lineHeight: 2 }}>
+        <Box width="700" style={{ lineHeight: 2 }}>
             <Item width="100%" style={{ textAlign: 'center' }}>
                 <center><div style={{ textAlign: 'center', textDecoration: 'underline', fontWeight: 'bold', fontSize: 20 + 'px' }}>QUOTATION</div></center>
                 <br /> <br />
@@ -80,7 +80,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                         <td style={{ textAlign: 'right', lineHeight: '1.4' }}>
                             <strong>Kind Atten: {constactPerson[0].name}</strong> <br />
                             {constactPerson[0].designation ? <span>Designation: {constactPerson[0].designation}<br /></span> : ''}
-                            Phone No.: {quoteDetails.phoneNo}<br />
+                            Phone No.: {quoteDetails.mobileNo}<br />
                             Email: {constactPerson[0].email}<br />
                             {constactPerson[0].email === quoteDetails.email ? '' : quoteDetails.email}
                         </td>
@@ -113,7 +113,7 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                                 <tr>
                                     <th style={{ border: '1px solid black', padding: '10px', width: '68px' }}>S. No.</th>
                                     <th style={{ border: '1px solid black', padding: '10px', width: '225px' }}>{particular}</th>
-                                    {showImageColumn && <th style={{ border: '1px solid black', padding: '10px' }}>Image</th>}
+                                    {showImageColumn && <th style={{ border: '1px solid black', padding: '10px', width: '190px' }}>Image</th>}
                                     <th style={{ border: '1px solid black', padding: '10px' }}>HSN code</th>
                                     <th style={{ border: '1px solid black', padding: '10px' }}>Qty.</th>
                                     <th style={{ border: '1px solid black', padding: '10px', width: '100px' }}>Rate</th>
@@ -128,9 +128,9 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                                             </td>
                                             <td style={{ border: '1px solid black', padding: '10px', lineHeight: '1.3' }}>{product.name} <br /> {product.description}</td>
                                             {showImageColumn && <td style={{ border: '1px solid black', padding: '10px' }}>
-                                                {product.imgName ? <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} />
-                                                :
-                                                <img height="80" id={'img-' + index} src={`/img/blankImg.png`} alt={product.imgName} />}
+                                                {product.imgName ? <img height="80" width="100" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} />
+                                                    :
+                                                    <img height="80" width="150" id={'img-' + index} src={`/img/blankImg.png`} alt={product.imgName} />}
                                             </td>}
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.hsnCode}</td>
                                             <td style={{ border: '1px solid black', padding: '10px' }}>{product.quantity} {product.unit}</td>
@@ -154,7 +154,6 @@ const ContactMeTemplate = function ({ quoteDetails, products, constactPerson, pa
                     </tr>
                     <tr>
                         <td colSpan='2' style={{ lineHeight: '1.6', pageBreakBefore: 'always' }}>
-                            Terms & Conditions: <br />
                             <div id='terms' name='terms' />
                             <p id="term-data" style={{ lineHeight: '1.6' }}></p>
                         </td>

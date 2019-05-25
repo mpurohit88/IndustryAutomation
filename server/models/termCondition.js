@@ -4,7 +4,7 @@ const TermCondition = function () {
   this.isActive = 1;
 }
 
-TermCondition.prototype.getByCompanyId = function (companyId) {
+TermCondition.prototype.getByCompanyId = function (companyId, type) {
   const self = this;
 
   return new Promise(function (resolve, reject) {
@@ -13,7 +13,7 @@ TermCondition.prototype.getByCompanyId = function (companyId) {
         throw error;
       }
 
-      connection.query('select text from email_log where isActive=? order by dateTimeCreated desc', [self.isActive], function (error, rows, fields) {
+      connection.query('select text from term_condition where company_id=? and type = ? and isActive=? order by dateTimeCreated desc', [companyId, type, self.isActive], function (error, rows, fields) {
 
         if (!error) {
           resolve(rows);

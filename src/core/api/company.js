@@ -38,3 +38,15 @@ export const getById = function () {
 			});
 	});
 }
+
+export const getTermCondition = function (type) {
+	return new Promise(function (resolve, reject) {
+		get('api/termCondition/getTermCondition', { type })
+			.then(result => {
+				resolve(result);
+			}).catch(err => {
+				console.log(err);
+				reject(err);
+			});
+	});
+}

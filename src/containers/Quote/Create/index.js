@@ -425,6 +425,7 @@ class Create extends Component {
 		// });
 
 		let product = this.state.products.map(function (product, index) {
+			let isPathExists = product.imgName.indexOf('img/product') > 1;
 			return (
 				<tr key={product.id}>
 					{/* <td>{index + 1}</td> */}
@@ -435,7 +436,7 @@ class Create extends Component {
 					<td><span dangerouslySetInnerHTML={{ __html: that.getCurrencySymbole(that.state.newQuote.currency_type) }} /> {product.rate}{that.getRateSybmole(that.state.newQuote.currency_type)} per {product.unit}</td>
 					<td>{product.unit}</td>
 					<td>{product.gstn}</td>
-					<td>{that.state.imgSrc && <Zoom src={that.state.imgSrc} />
+					<td>{product.imgName ? <Zoom src={isPathExists ? product.imgName : `img/product/${product.imgName}`} /> : that.state.imgSrc && <Zoom src={that.state.imgSrc} />
 					}</td>
 					<td className='link'>
 						<a id='edit_quote' href='#' onClick={() => that.handleRowEdit(product, index)}>Edit</a><br />

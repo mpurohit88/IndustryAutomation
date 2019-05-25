@@ -62,4 +62,31 @@ TaskEmail.prototype.getEmailBody = function (task_id) {
     });
 }
 
+
+TaskEmail.prototype.InactivateEmail = function (task_id, next_task_id) {
+    const self = this;
+
+    return new Promise(function (resolve, reject) {
+        connection.getConnection(function (error, connection) {
+            if (error) {
+                throw error;
+            }
+
+            let updateSql = 'update task_email set isActive = 0 where task_id in (?)'
+
+            connection.query(updateSql, [[task_id, next_task_id]], function (error, rows, fields) {
+                if (!error) {
+                    resolve(rows);
+                } else {
+                    console.log("Error...", error);
+                    reject(error);
+                }
+
+                connection.release();
+                console.log('Process Complete %d', connection.threadId);
+            });
+        });
+    });
+}
+
 module.exports = TaskEmail;
