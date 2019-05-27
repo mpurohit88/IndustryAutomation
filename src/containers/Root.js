@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // import { ConnectedRouter } from 'connected-react-router';
-import { Router } from 'react-router-dom'
+import { HashRouter as Router } from 'react-router-dom'
 
 import { Provider } from 'react-redux';
 import App from './App';

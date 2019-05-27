@@ -390,7 +390,7 @@ class Home extends Component {
 					<div className='flex-center head'>
 						<div className='imgEdit'>
 							<img height='17' src='/img/userEdit.png' />
-							<a href='#' style={{ color: 'white' }} onClick={() => this.handleQuoteEditClick(true, quoteDetails.status > 3)}><strong>Quote No.: </strong>{quoteDetails.id}</a>
+							<a style={{ color: 'white', cursor: 'pointer' }} onClick={() => this.handleQuoteEditClick(true, quoteDetails.status > 3)}><strong>Quote No.: </strong>{quoteDetails.id}</a>
 						</div>
 
 						<div>
