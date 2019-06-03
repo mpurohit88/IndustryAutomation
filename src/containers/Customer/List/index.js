@@ -57,10 +57,10 @@ class List extends Component {
 									{/* <td>{customer.id}</td> */}
 									<td className='imgEdit'>
 										<img height='17' src='/img/userEdit.png' />
-										<a href='#' onClick={() => this.handleCustomerRegClick(true, customer)}>{customer.name}</a>
+										<a style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} onClick={() => this.handleCustomerRegClick(true, customer)}>{customer.name}</a>
 									</td>
 									<td>{customer.address}</td>
-									<td>{customer.customerContact.length > 0 ? <a href='#' onClick={() => this.handleCustomerRegClick(true, customer)}>View</a> : ''}</td>
+									<td>{customer.customerContact.length > 0 ? <a style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} onClick={() => this.handleCustomerRegClick(true, customer)}>View</a> : ''}</td>
 									<td>{customer.telephone}</td>
 									<td>{customer.gstn}</td>
 									<td>{customer.email}</td>

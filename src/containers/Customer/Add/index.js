@@ -170,7 +170,7 @@ class Add extends Component {
 					<td>{person.department}</td>
 					<td>{person.email}</td>
 					<td>{person.mobileNo}</td>
-					<td className='link'><a id='remove_person' href='#' onClick={() => that.handleRowDel(person)}>Remove</a></td>
+					<td className='link'><a id='remove_person' style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} onClick={() => that.handleRowDel(person)}>Remove</a></td>
 				</tr>)
 		});
 

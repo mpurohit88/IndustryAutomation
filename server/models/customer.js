@@ -166,10 +166,10 @@ Customer.prototype.getUniqueNames = function (companyId) {
 			let sql = 'select id as value, name as text from customer where isActive=?'
 			let params = [isActive];
 
-			// if (companyId) {
-			// 	sql += ' and companyId = ?';
-			// 	params.push(customerId);
-			// }
+			if (companyId) {
+				sql += ' and companyId = ?';
+				params.push(customerId);
+			}
 
 			sql += ' order by name';
 

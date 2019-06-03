@@ -57,7 +57,7 @@ class List extends Component {
 									{/* <td>{product.id}</td> */}
 									<td className='imgEdit' onClick={() => this.handleProductRegClick(true, product)} >
 										<img height='17' src='/img/userEdit.png' />
-										<a href='#' onClick={() => this.handleProductRegClick(true, product)}>{product.name}</a>
+										<a style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} onClick={() => this.handleProductRegClick(true, product)}>{product.name}</a>
 									</td>
 									{/* <td>{product.description}</td> */}
 									<td>{product.unit}</td>

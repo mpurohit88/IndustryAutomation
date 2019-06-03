@@ -439,8 +439,8 @@ class Create extends Component {
 					<td>{product.imgName ? <Zoom src={isPathExists ? product.imgName : `img/product/${product.imgName}`} /> : that.state.imgSrc && <Zoom src={that.state.imgSrc} />
 					}</td>
 					<td className='link'>
-						<a id='edit_quote' href='#' onClick={() => that.handleRowEdit(product, index)}>Edit</a><br />
-						<a id='remove_quote' href='#' onClick={() => that.handleRowDel(product, index).bind(this)}>Remove</a>
+						<a id='edit_quote' style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} onClick={() => that.handleRowEdit(product, index)}>Edit</a><br />
+						<a id='remove_quote' style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} onClick={() => that.handleRowDel(product, index).bind(this)}>Remove</a>
 					</td>
 				</tr>)
 		});
