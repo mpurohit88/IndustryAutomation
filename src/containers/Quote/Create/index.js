@@ -187,15 +187,6 @@ class Create extends Component {
 	};
 
 	handleRowDel(product, index) {
-		// let index = -1;
-		// const clength = this.state.products.length;
-		// for (var i = 0; i < clength; i++) {
-		// 	if (this.state.products[i].id === product.id) {
-		// 		index = i;
-		// 		break;
-		// 	}
-		// }
-
 		this.setState(state => {
 			const products = state.products.filter((product, j) => index !== j);
 

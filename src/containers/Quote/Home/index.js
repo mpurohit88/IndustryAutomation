@@ -15,7 +15,7 @@ import AppBar from 'components/AppBar'
 import { getAdmin, getUserName, getCompanyName, getCompanyLogo, getFullUserName } from '../../../configs/user'
 import { getISODateTime } from '../../helper'
 import Button from '../../../components/Button'
-import getTemplate from '../../../components/Email'
+import { getTemplate } from '../../../components/Email'
 import { StandardModal } from '../../../components/Modals'
 import Scheduler from '../Scheduler'
 import CloseQuote from './closeQuote'
@@ -60,6 +60,8 @@ class Home extends Component {
 			scheduleId: '',
 			showCloseCase: false,
 			showDispatchSummary: false,
+			viewDispatchSummary: false,
+			dispatchEmailBody: '',
 			isDiscard: false,
 			showEmail: false,
 			CreateQuoteShow: false,
@@ -82,6 +84,7 @@ class Home extends Component {
 		this.showEmailBody = this.showEmailBody.bind(this);
 		this.handleQuoteEditClick = this.handleQuoteEditClick.bind(this);
 		this.updateContent = this.updateContent.bind(this);
+		this.viewDispatchSummary = this.viewDispatchSummary.bind(this);
 
 		// Editor
 		this.focus = () => this.refs.editor.focus();
@@ -193,7 +196,7 @@ class Home extends Component {
 	}
 
 	lgClose() {
-		this.setState({ showEditor: false, showEmail: false, showCloseCase: false, showDispatchSummary: false })
+		this.setState({ showEditor: false, showEmail: false, showCloseCase: false, showDispatchSummary: false, viewDispatchSummary: false })
 	}
 
 	schedulerClose() {
@@ -202,6 +205,12 @@ class Home extends Component {
 
 	showDispatchSummary(acivityTaskId) {
 		this.setState({ showDispatchSummary: true, acivityTaskId: acivityTaskId })
+	}
+
+	viewDispatchSummary(task_id) {
+		getEmailBody(task_id).then((data) => {
+			this.setState({ dispatchEmailBody: data.body.body, viewDispatchSummary: true });
+		});
 	}
 
 	handleSchedulerClick(id, nextId, userActivityId, scheduleId) {
@@ -251,15 +260,6 @@ class Home extends Component {
 			body = body.replace('<textarea cols="60" rows="2" id="about-product" name="about-product"></textarea>', document.getElementById('about-product').value)
 			body = body.replace('<textarea cols="107" rows="2" id="refMsg" name="refMsg">We thank you very much for your above enquiry and pleased to quote our lowest offer as under:-</textarea>', document.getElementById('refMsg').value)
 			body = body.replace('<label id="subjectLabel"></label>', document.getElementById('subjectLabel').innerHTML)
-
-			// body = body.replace('<input type="text" size="70" id="about-product" name="about-product" value="NOTE"/>', document.getElementById('about-product').value)
-			// body = body.replace('<textarea cols="40" rows="3" id="thanks" name="thanks"></textarea>', document.getElementById('thanks').value);
-
-			// const termsAndCondition = draftToHtml(
-			// 	convertToRaw(
-			// 		this.state.editorState.getCurrentContent()
-			// 	)
-			// )
 
 			let html = stateToHTML(this.state.editorState.getCurrentContent())
 
@@ -489,10 +489,39 @@ class Home extends Component {
 											>
 												Upload
 											</Button>
+											<Button variant="outline-primary" type="button" isDisabled={false}
+												onClick={(e) => { this.viewDispatchSummary(task.id) }}
+											>
+												View Dispatch Summary
+											</Button>
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-												onClick={(e) => { this.doneTask(task.id, undefined, task.userActivityId, task.scheduleId, quoteDetails.id, 8) }}
+												onClick={(e) => { this.doneTask(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId, quoteDetails.id, 8) }}
 											>
 												Done
+											</Button>
+										</div>
+									}
+
+									{
+										task.taskId === 5 && <div>
+											{
+												task.scheduleId ?
+													<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+														onClick={(e) => { this.handleSchedulerClick(task.id, undefined, task.userActivityId, task.scheduleId) }}
+													>
+														View Reminder
+												</Button>
+													:
+													<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+														onClick={(e) => { this.handleSchedulerClick(task.id, undefined, task.userActivityId, task.scheduleId) }}
+													>
+														Set Reminder
+												</Button>
+											}
+											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+												onClick={(e) => { this.doneTask(task.id, undefined, task.userActivityId, task.scheduleId, quoteDetails.id, 5) }}
+											>
+												Stop Reminder
 											</Button>
 										</div>
 									}
@@ -599,6 +628,14 @@ class Home extends Component {
 					</StandardModal>
 					: null
 				}
+
+				{
+					this.state.viewDispatchSummary &&
+					<StandardModal btnText='Send Dispatch Summary' heading='Dispatch Summary' isLoading={false} handleSubmit={() => this.sendEmailToCustomer(this.state.acivityTaskId, this.state.nextActivityTaskId, this.state.userActivityId)} show={this.state.viewDispatchSummary} lgClose={this.lgClose} handleModelClick={this.lgClose}>
+						<div id="printDispatchSummary" dangerouslySetInnerHTML={{ __html: this.state.dispatchEmailBody }} />
+					</StandardModal>
+				}
+
 				{
 					this.state.showScheduler ?
 						<Scheduler scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showScheduler} quoteDetails={quoteDetails} /> : null

@@ -8,10 +8,10 @@ export function createQuote(newQuote) {
 			.then((data) => {
 				newQuote.cb();
 
-				newQuote.data.quote.id ? 
-				dispatch(quoteAction.quoteDetailsFetchDataSuccess(data))
-				:
-				dispatch(quoteAction.quoteListFetchDataSuccess(data))
+				newQuote.data.quote.id ?
+					dispatch(quoteAction.quoteDetailsFetchDataSuccess(data))
+					:
+					dispatch(quoteAction.quoteListFetchDataSuccess(data))
 
 			})
 			.catch(() => dispatch(quoteAction.quoteListHaveError(true)));
@@ -78,11 +78,11 @@ export function updateStatus(quoteId, status, cb) {
 	};
 }
 
-export function updateDispatchSummary(quoteId, customerId, acivityTaskId, data, cb) {
+export function updateDispatchSummary(quoteId, customerId, acivityTaskId, data, products, body, cb) {
 	return (dispatch) => {
 		dispatch(quoteAction.quoteStartIsLoading(true));
 
-		post('api/quote/updateDispatchSummary', { quoteId, customerId, acivityTaskId, data, })
+		post('api/quote/updateDispatchSummary', { quoteId, customerId, acivityTaskId, data, products, body })
 			.then((data) => {
 				dispatch(quoteAction.quoteStartIsLoading(false));
 				return data;

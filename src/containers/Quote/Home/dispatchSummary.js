@@ -1,39 +1,139 @@
-import React, { Component } from 'React'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Row, Col } from 'react-bootstrap'
 
 import { StandardModal } from '../../../components/Modals'
+import { getDispatchTemplate } from '../../../components/Email'
+import { getTermCondition } from '../../../core/api/company'
 
 import Input from '../../../components/Input'
 import { updateDispatchSummary } from '../../../core/api/quote'
+import { getTodaysDate } from '../../../utils/dates'
+import { quoteContactDetail } from '../../../core/api/customerContact'
 
 class DispatchSummary extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      products: [],
+      constactPerson: undefined,
       dispatchSummary: {
-        party_detail: '',
+        companyEmailId: '',
+        to: '',
+        cc: '',
+        bcc: '',
         order_no: '',
-        order_date: '',
         invoice_no: '',
         invoice_date: '',
-        builty_no: '',
-        up_to: ''
+        transporter_name: '',
+        bilty_no: '',
+        up_to: '',
+        amount: ''
       }
     }
 
     this.handleInput = this.handleInput.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.lgClose = this.lgClose.bind(this);
+
+    this.handleAddEvent = this.handleAddEvent.bind(this);
   }
 
-  handleSubmit() {
-    const self = this;
+  componentDidMount() {
+    const that = this;
 
-    this.props.dispatchSummary(self.props.quoteDetails.id, self.props.quoteDetails.customer_id, self.props.acivityTaskId, this.state.dispatchSummary, () => {
-      self.lgClose();
+    getTermCondition(3).then((termCondition) => {
+      let terms = termCondition ? termCondition.TermCondition ? (termCondition.TermCondition.text && termCondition.TermCondition.text !== '') ? termCondition.TermCondition.text : 'Template is missing' : 'Template is missing' : 'Template is missing';
+
+      that.setState({ footerBody: terms });
     });
+
+    quoteContactDetail(this.props.quoteDetails.contact_person_id).then((result) => {
+      this.setState(prevState => {
+        return {
+          constactPerson: result,
+          dispatchSummary: {
+            ...prevState.dispatchSummary, ['companyEmailId']: that.props.quoteDetails.userEmail, ['to']: that.props.quoteDetails.email
+          }
+        }
+      }, () => { }
+      );
+    });
+
+    document.getElementById('order_no').focus();
+  }
+
+  reset() {
+    this.refs.qty.value = '';
+    this.refs.description.value = '';
+    this.refs.unit.value = '';
+
+    this.refs.description.focus();
+  }
+
+  handleAddEvent() {
+    if (this.refs.qty.value && parseInt(this.refs.qty.value) > 0) {
+
+      let id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
+      // let isExists = false;
+
+      var product = {
+        id: id,
+        description: this.refs.description.value,
+        qty: this.refs.qty.value,
+        unit: this.refs.unit.value
+      }
+
+      let productsListTemp = this.state.products;
+      productsListTemp.push(product);
+      this.setState({ products: productsListTemp });
+      this.reset();
+
+    } else {
+      alert("Product quantity should be greater then Zero");
+      this.refs.description.focus();
+    }
+  }
+
+  handleRowDel(index) {
+    this.setState(state => {
+      const products = state.products.filter((product, j) => index !== j);
+
+      return {
+        products,
+      };
+    });
+  };
+
+  handleSubmit() {
+    if (this.state.products.length === 0) {
+      alert('Please add product.')
+    } else {
+      const self = this;
+
+      const productBody = this.state.products.map(function (product, index) {
+        return (
+          <tr key={product.id}>
+            <td>{product.description}</td>
+            <td>{product.qty}</td>
+            <td>{product.unit}</td>
+            {(index === 0) && <td rowspan={self.state.products.length}>{self.state.dispatchSummary.amount}</td>}
+            {(index === 0) && <td rowspan={self.state.products.length}>{self.props.quoteDetails.companyName}</td>}
+          </tr>)
+      });
+
+      let body = getDispatchTemplate(this.props.quoteDetails.companyId, productBody, this.props.quoteDetails, this.state.constactPerson[0], this.props.quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode, this.state.dispatchSummary, this.state.footerBody);
+
+      body = body.replace('<input type="text" id="refId" name="refId"/>', document.getElementById('refId').value)
+
+      self.setState({ isLoading: true });
+
+      this.props.dispatchSummary(self.props.quoteDetails.id, self.props.quoteDetails.customer_id, self.props.acivityTaskId, this.state.dispatchSummary, this.state.products, body, () => {
+        self.lgClose();
+        self.setState({ isLoading: false });
+      });
+    }
   }
 
   lgClose() {
@@ -55,7 +155,9 @@ class DispatchSummary extends Component {
   }
 
   render() {
+    const that = this;
     let showImageColumn = false;
+    const constactPerson = this.state.constactPerson ? this.state.constactPerson[0] : {};
 
     if (this.props.products) {
       this.props.products.map((product) => {
@@ -65,34 +167,64 @@ class DispatchSummary extends Component {
       })
     }
 
+    let product = this.state.products.map(function (product, index) {
+      return (
+        <tr key={product.id}>
+          <td>{product.description}</td>
+          <td>{product.qty}</td>
+          <td>{product.unit}</td>
+          {(index === 0) && <td rowSpan={that.state.products.length}>{that.state.dispatchSummary.amount}</td>}
+          {(index === 0) && <td rowSpan={that.state.products.length}>{that.props.quoteDetails.companyName}</td>}
+          <td className='link'>
+            {/* <a id='edit_quote' style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} onClick={() => that.handleRowEdit(product, index)}>Edit</a><br />
+            <a id='remove_quote' style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} onClick={() => that.handleRowDel(product, index).bind(this)}>Remove</a> */}
+            <a id='remove_product' style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} onClick={() => that.handleRowDel(index).bind(this)}>Remove</a>
+          </td>
+        </tr>)
+    });
+
+    const productBody = this.state.products.map(function (product, index) {
+      return (
+        <tr key={product.id}>
+          <td>{product.description}</td>
+          <td>{product.qty}</td>
+          <td>{product.unit}</td>
+          {(index === 0) && <td rowspan={that.state.products.length}>{that.state.dispatchSummary.amount}</td>}
+          {(index === 0) && <td rowspan={that.state.products.length}>{that.props.quoteDetails.companyName}</td>}
+        </tr>)
+    });
+
     return (
-      <StandardModal btnText='Update Summary' heading='Dispatch Summary' isLoading={false} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.lgClose} handleModelClick={this.lgClose}>
+      <StandardModal btnText='Update Summary' heading='Dispatch Summary' isLoading={this.state.isLoading} handleSubmit={this.handleSubmit} show={this.props.show} lgClose={this.lgClose} handleModelClick={this.lgClose}>
         <Form>
           <Row className="show-grid">
-            {/* <Col xs={8} md={12}>
-              <Dropdown
-                id='party_detail'
-                name='party_detail'
-                label='Party Details'
-                value={this.state.dispatchSummary.party_detail}
-                onChange={this.handleInput}
-                placeholder='--Select Status--'
-                options={[{ text: 'Confirmed', value: 100 },
-                { text: 'Not Confirmed', value: 101 }
-                ]}
-              />
-            </Col> */}
             <Col xs={8} md={12}>
               <div className="form-group">
                 <label>Party Name: <strong>{this.props.quoteDetails.companyName}</strong></label>
               </div>
             </Col>
-            <Col xs={8} md={6}>
-              <Input label='Purchase Order No:' handleError={() => { }} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.dispatchSummary.order_no} name='order_no' id='order_no' placeholder='Enter Purchase Order Number' />
+            <Col xs={4} md={6}>
+              <Input hint='Please Use Comma(,) or Semicolon(;) to send Multiple Emails' label='From:' onChange={this.handleInput} value={this.state.dispatchSummary.companyEmailId} name='companyEmailId' id='companyEmailId' type='email' />
+            </Col>
+            <Col xs={4} md={6}>
+              <Input hint='Please Use Comma(,) or Semicolon(;) to send Multiple Emails' label='To:' onChange={this.handleInput} value={this.state.dispatchSummary.to} name='to' id='to' type='email' />
+            </Col>
+            <Col xs={4} md={6}>
+              <Input hint='Please Use Comma(,) or Semicolon(;) to send Multiple Emails' label='CC:' onChange={this.handleInput} value={this.state.dispatchSummary.cc} name='cc' id='cc' type='email' />
+            </Col>
+            <Col xs={4} md={6}>
+              <Input hint='Please Use Comma(,) or Semicolon(;) to send Multiple Emails' label='BCC:' onChange={this.handleInput} value={this.state.dispatchSummary.bcc} name='bcc' id='bcc' type='email' />
+            </Col>
+            <Col xs={12} md={12}>
+              <strong>Add Invoice Detail</strong>
+              <hr />
             </Col>
             <Col xs={8} md={6}>
+              <Input label='Purchase Order No And Date:' handleError={() => { }} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.dispatchSummary.order_no} name='order_no' id='order_no' placeholder='Enter Purchase Order Number' />
+            </Col>
+            {/* <Col xs={8} md={6}>
               <Input label='Purchase Order Date:' handleError={() => { }} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.dispatchSummary.order_date} name='order_date' id='order_date' placeholder='Enter Purchase Order Date' />
-            </Col>
+            </Col> */}
             <Col xs={8} md={6}>
               <Input label='Invoice No:' handleError={() => { }} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.dispatchSummary.invoice_no} name='invoice_no' id='invoice_no' placeholder='Enter Purchase Invoice Number' />
             </Col>
@@ -100,43 +232,69 @@ class DispatchSummary extends Component {
               <Input label='Invoice Date:' handleError={() => { }} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.dispatchSummary.invoice_date} name='invoice_date' id='invoice_date' placeholder='Enter Purchase Invoice Date' />
             </Col>
             <Col xs={8} md={6}>
-              <Input label='Builty No:' handleError={() => { }} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.dispatchSummary.builty_no} name='builty_no' id='builty_no' placeholder='Enter Purchase Builty Number' />
+              <Input label="Transporter's Name:" handleError={() => { }} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.dispatchSummary.transporter_name} name='transporter_name' id='transporter_name' placeholder='Enter Transporter Name' />
+            </Col>
+            <Col xs={8} md={6}>
+              <Input label='Bilty No:' handleError={() => { }} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.dispatchSummary.bilty_no} name='bilty_no' id='bilty_no' placeholder='Enter Purchase Builty Number' />
             </Col>
             <Col xs={8} md={6}>
               <Input label='Up To:' handleError={() => { }} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.dispatchSummary.up_to} name='up_to' id='up_to' placeholder='Enter Up To' />
             </Col>
-            <Col xs={8} md={12}>
-              <table width="100%" height="100%" cellPadding="0" cellSpacing="0" border="0" align="left" valign="top">
-                <tr>
-                  <th style={{ border: '1px solid black', padding: '10px' }}>Sr. No.</th>
-                  <th style={{ border: '1px solid black', padding: '10px' }}>Particular</th>
-                  {showImageColumn && <th style={{ border: '1px solid black', padding: '10px' }}>Image</th>}
-                  <th style={{ border: '1px solid black', padding: '10px' }}>HSN code</th>
-                  <th style={{ border: '1px solid black', padding: '10px' }}>Qty.</th>
-                  <th style={{ border: '1px solid black', padding: '10px' }}>Rate</th>
-                  <th style={{ border: '1px solid black', padding: '10px' }}>GST</th>
-                </tr>
-                {
-                  this.props.products.map((product, index) => {
-                    return <tr>
-                      <td style={{ border: '1px solid black', padding: '10px' }}>
-                        {index + 1}
-                      </td>
-                      <td style={{ border: '1px solid black', padding: '10px' }}>{product.name}</td>
-                      {showImageColumn && <td style={{ border: '1px solid black', padding: '10px' }}>
-                        <img height="80" id={'img-' + index} src={`/img/product/${product.imgName}`} alt={product.imgName} />
-                      </td>}
-                      <td style={{ border: '1px solid black', padding: '10px' }}>{product.hsnCode}</td>
-                      <td style={{ border: '1px solid black', padding: '10px' }}>{product.quantity}</td>
-                      <td style={{ border: '1px solid black', padding: '10px' }}>Rs. {product.rate}/-each</td>
-                      <td style={{ border: '1px solid black', padding: '10px' }}>{product.gstn}%</td>
-                    </tr>
-                  })
-                }
+            <Col xs={8} md={6}>
+              <Input label='Amount:' handleError={() => { }} onBlur={() => { }} type='input' onChange={this.handleInput} value={this.state.dispatchSummary.amount} name='amount' id='amount' placeholder='Enter Amount' />
+            </Col>
+            <Col xs={12} md={12}>
+              <strong>Add Product Detail</strong>
+              <hr />
+            </Col>
+            <Col xs={12} md={12}>
+              <table width="100%" height="100%" cellPadding="0" cellSpacing="0" border="1" align="left" valign="top">
+                <thead>
+                  <tr style={{ background: '#ededed' }}>
+                    <th style={{ border: '1px solid black', padding: '10px', width: '250px' }}>DESCRIPTION</th>
+                    <th style={{ border: '1px solid black', padding: '10px', width: '145px' }}>QTY</th>
+                    <th style={{ border: '1px solid black', padding: '10px', width: '100px' }}>UNIT</th>
+                    <th style={{ border: '1px solid black', padding: '10px', width: '145px' }}>AMOUNT</th>
+                    <th style={{ border: '1px solid black', padding: '10px', width: '167px' }}>CUSTOMER'S NAME</th>
+                    <th style={{ border: '1px solid black', padding: '10px' }}>ACTION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <input type='input' className='form-control' ref='description' />
+                    </td>
+                    <td>
+                      <input type='number' className='form-control' ref='qty' />
+                    </td>
+                    <td>
+                      <input type='input' className='form-control' ref='unit' />
+                    </td>
+                    <td>
+                      <label>
+                        {that.state.dispatchSummary.amount}
+                      </label>
+                    </td>
+                    <td>
+                      <label>
+                        {that.props.quoteDetails.companyName}
+                      </label>
+                    </td>
+                    <td>
+                      <input type='button' value='Add' onClick={this.handleAddEvent} />
+                    </td>
+                  </tr>
+                  {product}
+                </tbody>
               </table>
             </Col>
           </Row>
         </Form>
+        <hr />
+        <br />
+
+        {this.state.constactPerson && <div dangerouslySetInnerHTML={{ __html: getDispatchTemplate(this.props.quoteDetails.companyId, productBody, this.props.quoteDetails, constactPerson, this.props.quoteDetails.companyId === 1 ? <div dangerouslySetInnerHTML={{ __html: 'Belt Size and Specification.<br/>As per IS 1891(1994 Latest)<br/>MAKE – SOMIFLEX' }} /> : 'Particular', this.state.currencyHtmlCode, this.state.dispatchSummary, this.state.footerBody) }} />}
+
       </StandardModal>
     )
   }
@@ -144,7 +302,7 @@ class DispatchSummary extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    dispatchSummary: (quoteId, companyId, acivityTaskId, data, cb) => dispatch(updateDispatchSummary(quoteId, customerId, acivityTaskId, data, cb))
+    dispatchSummary: (quoteId, customerId, acivityTaskId, data, products, body, cb) => dispatch(updateDispatchSummary(quoteId, customerId, acivityTaskId, data, products, body, cb))
   };
 };
 
