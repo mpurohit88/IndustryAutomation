@@ -29,6 +29,8 @@ import { getTermCondition } from '../../../core/api/company'
 import { quoteContactDetail } from '../../../core/api/customerContact'
 import { taskDone } from '../../../core/api/schedule'
 import { getEmailBody } from '../../../core/api/taskkEmail'
+import { uploadDocument } from '../../../core/api/quote'
+
 // import Toaster from '../../../components/Toaster';
 
 import { getCurrencyType } from '../../../core/api/currencyType'
@@ -173,6 +175,14 @@ class Home extends Component {
 	// End
 
 	handleQuoteEditClick = (flag, isNonEditable) => this.setState({ CreateQuoteShow: flag, isNonEditable: isNonEditable });
+
+	uploadDocument(taskId, nextTaskid, userActivityId, scheduleId, quoteId, status) {
+		const formData = new FormData();
+		formData.append('data', JSON.stringify({ taskId: taskId, nextTaskid, userActivityId, scheduleId, quoteId, status }));
+		formData.append('avatar', document.getElementById('order_confirmation').files[0])
+
+		this.props.uploadDocument({ formData: formData, cb: this.handleReset });
+	}
 
 	doneTask(taskId, nextTaskid, userActivityId, scheduleId, quoteId, status) {
 		this.props.taskDone(taskId, nextTaskid, userActivityId, scheduleId, quoteId, status);
@@ -469,11 +479,15 @@ class Home extends Component {
 
 									{
 										task.taskId === 3 && <div>
+											<input className="margin btn btn-outline-primary" type='file' disabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)} onChange={this.handleInput} name='order_confirmation' id='order_confirmation' />
+
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-												onClick={(e) => { this.doneTask(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId, quoteDetails.id, 6) }}
+												onClick={(e) => { this.uploadDocument(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId, quoteDetails.id, 6) }}
 											>
-												If Yes, Upload
+												Yes
 											</Button>
+
+
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 												onClick={(e) => { }}
 											>
@@ -667,7 +681,8 @@ const mapDispatchToProps = (dispatch) => {
 		taskDone: (taskHistId, nextTaskHistId, userActivityId, scheduleId, quoteId, status) => dispatch(taskDone(taskHistId, nextTaskHistId, userActivityId, scheduleId, quoteId, status)),
 		fetchQuoteDetails: (quoteId, cb) => dispatch(itemsFetchQuoteDetails(quoteId, cb)),
 		quoteStartAction: (taskHistId, quoteId) => dispatch(quoteStart(taskHistId, quoteId)),
-		sendEmailAction: (data) => dispatch(sendEmail(data))
+		sendEmailAction: (data) => dispatch(sendEmail(data)),
+		uploadDocument: (newDocument) => dispatch(uploadDocument(newDocument))
 	};
 };
 

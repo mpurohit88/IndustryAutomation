@@ -94,3 +94,22 @@ export function updateDispatchSummary(quoteId, customerId, acivityTaskId, data, 
 			.catch(() => dispatch(quoteAction.quoteStartHaveError(true)));
 	};
 }
+
+export function uploadDocument(newProduct) {
+	return (dispatch) => {
+		post('api/quote/uploadDocument', newProduct.formData)
+			.then((data) => {
+				dispatch(quoteAction.quoteStartUpdateDataSuccess(data));
+			})
+			.catch(() => dispatch(quoteAction.quoteDetailsHaveError(true)));
+	};
+
+	// 	return (dispatch) => {
+	// 		post('api/scheduler/done', { taskId: taskId, nextTaskId: nextTaskId, userActivityId: userActivityId, scheduleId, quoteId, status })
+	// 				.then((data) => {
+	// 						dispatch(quoteAction.quoteStartUpdateDataSuccess(data));
+	// 						cb();
+	// 				})
+	// 				.catch(() => dispatch(quoteAction.quoteDetailsHaveError(true)));
+	// };
+}

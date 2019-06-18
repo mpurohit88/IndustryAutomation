@@ -43,7 +43,9 @@ class DispatchSummary extends Component {
   componentDidMount() {
     const that = this;
 
-    getTermCondition(3).then((termCondition) => {
+    let type = thisi.props.quoteDetails.userEmail.indexOf('export') > -1 ? 4 : 3;
+
+    getTermCondition(type).then((termCondition) => {
       let terms = termCondition ? termCondition.TermCondition ? (termCondition.TermCondition.text && termCondition.TermCondition.text !== '') ? termCondition.TermCondition.text : 'Template is missing' : 'Template is missing' : 'Template is missing';
 
       that.setState({ footerBody: terms });
