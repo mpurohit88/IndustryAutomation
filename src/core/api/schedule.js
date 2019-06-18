@@ -1,9 +1,9 @@
 import { get, post } from '../api/httpClient';
 import * as quoteAction from '../../actions/quote'
 
-export function setReminder(nextSchedule, taskId, nextTaskId, userActivityId, quoteId, cb) {
+export function setReminder(nextSchedule, taskId, nextTaskId, userActivityId, quoteId, is_quote_reminder, is_payment_reminder, cb) {
     return (dispatch) => {
-        post('api/scheduler/add', { 'nextSchedule': nextSchedule, taskId: taskId, nextTaskId: nextTaskId, userActivityId: userActivityId, quoteId: quoteId })
+        post('api/scheduler/add', { 'nextSchedule': nextSchedule, taskId: taskId, nextTaskId: nextTaskId, userActivityId: userActivityId, quoteId: quoteId, is_quote_reminder: is_quote_reminder, is_payment_reminder: is_payment_reminder })
             .then((data) => {
                 dispatch(quoteAction.quoteStartUpdateDataSuccess(data));
                 cb();

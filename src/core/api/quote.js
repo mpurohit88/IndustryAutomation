@@ -103,13 +103,32 @@ export function uploadDocument(newProduct) {
 			})
 			.catch(() => dispatch(quoteAction.quoteDetailsHaveError(true)));
 	};
+}
 
-	// 	return (dispatch) => {
-	// 		post('api/scheduler/done', { taskId: taskId, nextTaskId: nextTaskId, userActivityId: userActivityId, scheduleId, quoteId, status })
-	// 				.then((data) => {
-	// 						dispatch(quoteAction.quoteStartUpdateDataSuccess(data));
-	// 						cb();
-	// 				})
-	// 				.catch(() => dispatch(quoteAction.quoteDetailsHaveError(true)));
-	// };
+export function getDispatchSummary(quote_id) {
+	return new Promise(function (resolve, reject) {
+		get('api/quote/getDispatchSummary', { quote_id })
+			.then(result => {
+				resolve(result);
+			}).catch(err => {
+				console.log(err);
+				reject(err);
+			});
+	});
+}
+export function sendPaymentReminder(quoteId, nextActivityTaskId, acivityTaskId, data, products, body, cb) {
+	return (dispatch) => {
+		dispatch(quoteAction.quoteStartIsLoading(true));
+
+		post('api/quote/sendPaymentReminder', { quoteId, nextActivityTaskId, acivityTaskId, data, products, body })
+			.then((data) => {
+				dispatch(quoteAction.quoteStartIsLoading(false));
+				return data;
+			})
+			.then((data) => {
+				dispatch(quoteAction.quoteStartFetchDataSuccess(data));
+				cb(data);
+			})
+			.catch(() => dispatch(quoteAction.quoteStartHaveError(true)));
+	};
 }

@@ -29,7 +29,7 @@ class List extends Component {
 			quoteProductList: [],
 			customerList: [],
 			userList: [],
-			statusList: [{ text: 'New', value: '1' }, { text: 'Started', value: '2' }, { text: 'Quote Sent', value: '3' }, { text: 'Scheduled', value: '4' }, { text: 'Quote Closed', value: '100' }, { text: 'Quote Discarded', value: '102' }],
+			statusList: [{ text: 'New', value: '1' }, { text: 'Started', value: '2' }, { text: 'Quote Sent', value: '3' }, { text: 'Scheduled', value: '4' }, { text: 'Waiting Order Confirmation', value: '5' }, { text: 'Order Confirmed', value: '6' }, { text: 'Order Dispatched', value: '7' }, { text: 'Payment Reminder Send', value: '9' }, { text: 'Quote Closed', value: '100' }, { text: 'Quote Discarded', value: '102' }],
 			filterCriteria: {
 				customerId: null,
 				userId: null,

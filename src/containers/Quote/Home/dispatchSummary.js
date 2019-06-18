@@ -43,7 +43,7 @@ class DispatchSummary extends Component {
   componentDidMount() {
     const that = this;
 
-    let type = thisi.props.quoteDetails.userEmail.indexOf('export') > -1 ? 4 : 3;
+    let type = this.props.quoteDetails.userEmail.indexOf('export') > -1 ? 4 : 3;
 
     getTermCondition(type).then((termCondition) => {
       let terms = termCondition ? termCondition.TermCondition ? (termCondition.TermCondition.text && termCondition.TermCondition.text !== '') ? termCondition.TermCondition.text : 'Template is missing' : 'Template is missing' : 'Template is missing';
@@ -82,6 +82,7 @@ class DispatchSummary extends Component {
 
       var product = {
         id: id,
+        product_id: this.refs.productId.value,
         description: this.refs.description.value,
         qty: this.refs.qty.value,
         unit: this.refs.unit.value
@@ -160,6 +161,11 @@ class DispatchSummary extends Component {
     const that = this;
     let showImageColumn = false;
     const constactPerson = this.state.constactPerson ? this.state.constactPerson[0] : {};
+    const { productList } = that.props;
+
+    let productDrpDwn = productList.map((party) => {
+      return { text: party.name, value: party.id };
+    });
 
     if (this.props.products) {
       this.props.products.map((product) => {
@@ -253,6 +259,7 @@ class DispatchSummary extends Component {
               <table width="100%" height="100%" cellPadding="0" cellSpacing="0" border="1" align="left" valign="top">
                 <thead>
                   <tr style={{ background: '#ededed' }}>
+                    <th style={{ border: '1px solid black', padding: '10px', width: '250px' }}>PRODUCT</th>
                     <th style={{ border: '1px solid black', padding: '10px', width: '250px' }}>DESCRIPTION</th>
                     <th style={{ border: '1px solid black', padding: '10px', width: '145px' }}>QTY</th>
                     <th style={{ border: '1px solid black', padding: '10px', width: '100px' }}>UNIT</th>
@@ -263,6 +270,16 @@ class DispatchSummary extends Component {
                 </thead>
                 <tbody>
                   <tr>
+                    <td>
+                      <select className='form-control' id='productId' ref="productId" onChange={this.handleProductChange} defaultValue='0'>
+                        <option value='0' disabled>--Select Product--</option>
+                        {
+                          productDrpDwn.map((product) => {
+                            return <option value={product.value}>{product.text}</option>;
+                          })
+                        }
+                      </select>
+                    </td>
                     <td>
                       <input type='input' className='form-control' ref='description' />
                     </td>
@@ -302,10 +319,16 @@ class DispatchSummary extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    productList: state.product.list,
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     dispatchSummary: (quoteId, customerId, acivityTaskId, data, products, body, cb) => dispatch(updateDispatchSummary(quoteId, customerId, acivityTaskId, data, products, body, cb))
   };
 };
 
-export default connect(null, mapDispatchToProps)(DispatchSummary);
+export default connect(mapStateToProps, mapDispatchToProps)(DispatchSummary);

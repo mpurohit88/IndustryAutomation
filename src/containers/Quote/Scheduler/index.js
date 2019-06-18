@@ -69,7 +69,7 @@ class Scheduler extends Component {
     handleSubmit() {
         const self = this;
 
-        this.props.setReminderAction(self.state.newSchedule, self.props.acivityTaskId, self.props.nextActivityTaskId, self.props.userActivityId, self.props.quoteDetails.id, () => {
+        this.props.setReminderAction(self.state.newSchedule, self.props.acivityTaskId, self.props.nextActivityTaskId, self.props.userActivityId, self.props.quoteDetails.id, self.props.is_quote_reminder, self.props.is_payment_reminder, () => {
             self.lgClose();
         });
     }
@@ -183,7 +183,7 @@ class Scheduler extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setReminderAction: (newSchedule, taskHistId, nextTaskHistId, userActivityId, quoteId, cb) => dispatch(setReminder(newSchedule, taskHistId, nextTaskHistId, userActivityId, quoteId, cb))
+        setReminderAction: (newSchedule, taskHistId, nextTaskHistId, userActivityId, quoteId, is_quote_reminder, is_payment_reminder, cb) => dispatch(setReminder(newSchedule, taskHistId, nextTaskHistId, userActivityId, quoteId, is_quote_reminder, is_payment_reminder, cb))
     };
 };
 

@@ -22,6 +22,7 @@ import CloseQuote from './closeQuote'
 import DispatchSummary from './dispatchSummary'
 import Input from '../../../components/Input'
 import MyEditor from '../../../components/Editor/MyEditor'
+import PaymentReminder from './paymentReminder'
 
 import { itemsFetchQuoteDetails, quoteStart } from '../../../core/api/quote'
 import { sendEmail } from '../../../core/api/email'
@@ -87,6 +88,7 @@ class Home extends Component {
 		this.handleQuoteEditClick = this.handleQuoteEditClick.bind(this);
 		this.updateContent = this.updateContent.bind(this);
 		this.viewDispatchSummary = this.viewDispatchSummary.bind(this);
+		this.showPaymentEmailBody = this.showPaymentEmailBody.bind(this);
 
 		// Editor
 		this.focus = () => this.refs.editor.focus();
@@ -206,7 +208,7 @@ class Home extends Component {
 	}
 
 	lgClose() {
-		this.setState({ showEditor: false, showEmail: false, showCloseCase: false, showDispatchSummary: false, viewDispatchSummary: false })
+		this.setState({ showEditor: false, showEmail: false, showCloseCase: false, showDispatchSummary: false, viewDispatchSummary: false, paymentReminder: false })
 	}
 
 	schedulerClose() {
@@ -223,8 +225,8 @@ class Home extends Component {
 		});
 	}
 
-	handleSchedulerClick(id, nextId, userActivityId, scheduleId) {
-		this.setState({ showScheduler: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId, scheduleId: scheduleId })
+	handleSchedulerClick(id, nextId, userActivityId, scheduleId, is_quote_reminder, is_payment_reminder) {
+		this.setState({ showScheduler: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId, scheduleId: scheduleId, is_quote_reminder: is_quote_reminder, is_payment_reminder: is_payment_reminder })
 	}
 
 	showEmail(id, nextId, userActivityId) {
@@ -232,6 +234,10 @@ class Home extends Component {
 		quoteContactDetail(this.props.details.quoteDetails.contact_person_id).then((result) => {
 			this.setState({ emailBody: null, constactPerson: result, showEditor: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId });
 		})
+	}
+
+	showPaymentEmailBody(id, nextId, userActivityId) {
+		this.setState({ paymentReminder: true, acivityTaskId: id, nextActivityTaskId: nextId, userActivityId: userActivityId })
 	}
 
 	showEmailBody(task_id, nextId, userActivityId) {
@@ -464,7 +470,7 @@ class Home extends Component {
 												</Button>
 													:
 													<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-														onClick={(e) => { this.handleSchedulerClick(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId) }}
+														onClick={(e) => { this.handleSchedulerClick(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId, true, false) }}
 													>
 														Set Reminder
 												</Button>
@@ -509,7 +515,7 @@ class Home extends Component {
 												View Dispatch Summary
 											</Button>
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-												onClick={(e) => { this.doneTask(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId, quoteDetails.id, 8) }}
+												onClick={(e) => { this.doneTask(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId, quoteDetails.id, 7) }}
 											>
 												Done
 											</Button>
@@ -519,6 +525,23 @@ class Home extends Component {
 									{
 										task.taskId === 5 && <div>
 											{
+												<Button variant="outline-primary" type="button"
+													onClick={(e) => this.showPaymentEmailBody(task.id, tasks[index + 1].id, task.userActivityId)}
+												>
+													Send Email
+												</Button>
+											}
+											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
+												onClick={(e) => { this.doneTask(task.id, tasks[index + 1].id, task.userActivityId, task.scheduleId, quoteDetails.id, 9) }}
+											>
+												Done
+											</Button>
+										</div>
+									}
+
+									{
+										task.taskId === 6 && <div>
+											{
 												task.scheduleId ?
 													<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
 														onClick={(e) => { this.handleSchedulerClick(task.id, undefined, task.userActivityId, task.scheduleId) }}
@@ -527,13 +550,13 @@ class Home extends Component {
 												</Button>
 													:
 													<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-														onClick={(e) => { this.handleSchedulerClick(task.id, undefined, task.userActivityId, task.scheduleId) }}
+														onClick={(e) => { this.handleSchedulerClick(task.id, undefined, task.userActivityId, task.scheduleId, false, true) }}
 													>
 														Set Reminder
 												</Button>
 											}
 											<Button variant="outline-primary" type="button" isDisabled={this.isDisabled(quoteDetails.status, task.startDate, task.endDate)}
-												onClick={(e) => { this.doneTask(task.id, undefined, task.userActivityId, task.scheduleId, quoteDetails.id, 5) }}
+												onClick={(e) => { this.doneTask(task.id, undefined, task.userActivityId, task.scheduleId, quoteDetails.id, 10) }}
 											>
 												Stop Reminder
 											</Button>
@@ -652,7 +675,7 @@ class Home extends Component {
 
 				{
 					this.state.showScheduler ?
-						<Scheduler scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showScheduler} quoteDetails={quoteDetails} /> : null
+						<Scheduler scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showScheduler} quoteDetails={quoteDetails} is_quote_reminder={this.state.is_quote_reminder} is_payment_reminder={this.state.is_payment_reminder} /> : null
 				}
 				{
 					this.state.showCloseCase ? <CloseQuote isDiscard={this.state.isDiscard} scheduleId={this.state.scheduleId} lgClose={this.schedulerClose} acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} show={this.state.showCloseCase} quoteDetails={quoteDetails} /> : null
@@ -664,6 +687,10 @@ class Home extends Component {
 					this.state.CreateQuoteShow ? <Create heading='Quote Edit' show={this.state.CreateQuoteShow} isNonEditable={this.state.isNonEditable} newQuote={quoteDetails} products={products} lgClose={() => this.handleQuoteEditClick(false)} handleModelClick={this.handleQuoteEditClick} />
 						:
 						null
+				}
+
+				{
+					this.state.paymentReminder ? <PaymentReminder acivityTaskId={this.state.acivityTaskId} nextActivityTaskId={this.state.nextActivityTaskId} userActivityId={this.state.userActivityId} companyId={quoteDetails.companyId} quote_id={quoteDetails.id} lgClose={this.lgClose} show={this.state.paymentReminder} quoteDetails={quoteDetails} /> : null
 				}
 			</Fragment>
 		)
