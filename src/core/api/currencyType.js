@@ -4,6 +4,7 @@ export function addCurrency(newCurrency) {
   return (dispatch) => {
     post('api/currencyType/add', newCurrency)
       .then((data) => {
+        resolve(data);
       })
       .catch((error) => console.log("Currency not Added"));
   };

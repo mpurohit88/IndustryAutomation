@@ -50,3 +50,15 @@ export const getTermCondition = function (type) {
 			});
 	});
 }
+
+export const updateTermCondition = function (text, type) {
+	return new Promise(function (resolve, reject) {
+		post('api/termCondition/updateTermCondition', { text: text, type: type })
+			.then(result => {
+				resolve(result);
+			}).catch(err => {
+				console.log(err);
+				reject(err);
+			});
+	});
+}

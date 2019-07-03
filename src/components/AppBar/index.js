@@ -9,6 +9,7 @@ import { Registration as UserRegistration } from '../../containers/User'
 import { Add as AddProduct } from '../../containers/Product'
 import { Add as AddCustomer } from '../../containers/Customer'
 import { Add as AddCurrency } from '../../containers/Currency'
+import Template from '../../containers/Template'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -25,7 +26,8 @@ export default class AppBar extends React.Component {
       productShow: false,
       successShow: false,
       customerShow: false,
-      currencyShow: false
+      currencyShow: false,
+      showTemplate: false
     };
   }
 
@@ -42,6 +44,8 @@ export default class AppBar extends React.Component {
   handleCustomerClick = (flag) => this.setState({ customerShow: flag });
 
   handleCurrencyClick = (flag) => this.setState({ currencyShow: flag });
+
+  handleTemplateClick = (flag) => this.setState({ showTemplate: flag });
 
   handleSuccessModal = (flag, response) => this.setState({ successShow: flag, msg: response });
 
@@ -75,6 +79,7 @@ export default class AppBar extends React.Component {
               {!isAdmin && <li className="menu-item"><a style={{ color: 'white', cursor: 'pointer' }} onClick={() => this.handleProductClick(true)}>Add Product</a></li>}
               {!isAdmin && <li className="menu-item"><a style={{ color: 'white', cursor: 'pointer' }} onClick={() => this.handleCustomerClick(true)}>Add Customer</a></li>}
               {<li className="menu-item"><a style={{ color: 'white', cursor: 'pointer' }} onClick={() => this.handleCurrencyClick(true)}>Add Currency</a></li>}
+              {<li className="menu-item"><a style={{ color: 'white', cursor: 'pointer', width: '138px', padding: '2px' }} onClick={() => this.handleTemplateClick(true)}>Reminder Template</a></li>}
             </ul>
           </nav>
           <div style={{ display: 'flex', width: '326px', padding: '15px' }}>
@@ -116,6 +121,10 @@ export default class AppBar extends React.Component {
 
         {
           this.state.currencyShow && <AddCurrency heading='Add Currency' show={this.state.currencyShow} lgClose={this.handleCurrencyClick} handleModelClick={this.handleCurrencyClick} />
+        }
+
+        {
+          this.state.showTemplate && <Template heading='Manage Email Template' show={this.state.showTemplate} lgClose={this.handleTemplateClick} handleModelClick={this.handleTemplateClick} />
         }
 
         <Modal heading='Success' show={this.state.successShow} lgClose={() => this.handleSuccessModal(false)} handleModelClick={this.handleSuccessModal}>
