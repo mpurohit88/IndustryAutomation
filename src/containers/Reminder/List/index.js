@@ -105,7 +105,7 @@ class List extends Component {
             </Col>
             <Col xs={3} md={3} style={{ paddingTop: '12px' }}>
               <Button variant="primary" type='button' onClick={this.filterList}>
-                Filter Reimnder
+                Filter Reminder
 						</Button>
               <Button variant="secondary" type='button' onClick={this.reset} style={{ marginLeft: '20px' }}>
                 Reset

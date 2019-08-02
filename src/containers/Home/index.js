@@ -11,6 +11,7 @@ import { CustomerList } from '../Customer'
 import { UserList } from '../User'
 import { EmailLogList } from '../EmailLog'
 import { ReminderList } from '../Reminder'
+import Email from '../Marketing/email'
 
 /* component styles */
 import { styles } from './styles.scss'
@@ -74,6 +75,11 @@ class Home extends Component {
           {
             isAdmin && <Tab eventKey="email" title={"Email Error Log (" + this.state.errorCount + ")"}>
               <EmailLogList setErrorCount={this.setErrorCount} />
+            </Tab>
+          }
+          {
+            <Tab eventKey="marketingEmail" title={"Marketing Email"}>
+              <Email />
             </Tab>
           }
         </Tabs>

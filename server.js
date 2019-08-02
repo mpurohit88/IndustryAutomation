@@ -28,6 +28,7 @@ app.use(require('morgan')('short'));
   const currencyTypeRouter = require('./server/routes/currencyType');
   const reminderRouter = require('./server/routes/reminder');
   const termConditionRouter = require('./server/routes/termCondition');
+  const marketingRouter = require('./server/routes/marketing');
   const authRouter = require('./server/routes/auth');
 
   app.use(bodyParser.json());
@@ -69,6 +70,7 @@ app.use(require('morgan')('short'));
   app.use('/api/emailLog', emailLogRouter);
   app.use('/api/reminder', reminderRouter);
   app.use('/api/termCondition', termConditionRouter);
+  app.use('/api/marketing', marketingRouter);
 })()
 
 app.get('/*', function root(req, res) {
