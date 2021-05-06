@@ -90,7 +90,7 @@
     "prop-types": "^15.6.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "react-draft-wysiwyg": "^1.13.1",
+    "react-draft-wysiwyg": "^1.14.6",
     "react-hot-loader": "^4.6.5",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",
